@@ -25,7 +25,6 @@ import android.opengl.EGLDisplay;
 import android.opengl.EGLSurface;
 import android.view.Surface;
 
-@TargetApi(17)
 public class InputSurface {
 
     private static final int EGL_RECORDABLE_ANDROID = 0x3142;
