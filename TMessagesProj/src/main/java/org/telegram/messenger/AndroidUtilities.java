@@ -8,6 +8,9 @@
 
 package org.telegram.messenger;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -53,10 +56,6 @@ import net.hockeyapp.android.UpdateManager;
 
 import org.telegram.tgnet.ConnectionsManager;
 import org.telegram.tgnet.TLRPC;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.Components.ForegroundDetector;
 import org.telegram.ui.Components.NumberPicker;
 import org.telegram.ui.Components.TypefaceSpan;
@@ -698,20 +697,19 @@ public class AndroidUtilities {
 
     public static void shakeView(final View view, final float x, final int num) {
         if (num == 6) {
-            ViewProxy.setTranslationX(view, 0);
+            view.setTranslationX(0);
             view.clearAnimation();
             return;
         }
-        AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-        animatorSetProxy.playTogether(ObjectAnimatorProxy.ofFloat(view, "translationX", AndroidUtilities.dp(x)));
-        animatorSetProxy.setDuration(50);
-        animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(ObjectAnimator.ofFloat(view, "translationX", AndroidUtilities.dp(x)));
+        animatorSet.setDuration(50);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animation) {
                 shakeView(view, num == 5 ? 0 : -x, num + 1);
             }
         });
-        animatorSetProxy.start();
+        animatorSet.start();
     }
 
 
