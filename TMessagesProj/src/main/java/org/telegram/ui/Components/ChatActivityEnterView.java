@@ -9,6 +9,9 @@
 package org.telegram.ui.Components;
 
 import android.Manifest;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -59,10 +62,6 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.messenger.UserConfig;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.BaseFragment;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.ui.StickersActivity;
 
@@ -194,9 +193,9 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
     private boolean hasBotCommands;
 
     private PowerManager.WakeLock mWakeLock;
-    private AnimatorSetProxy runningAnimation;
-    private AnimatorSetProxy runningAnimation2;
-    private AnimatorSetProxy runningAnimationAudio;
+    private AnimatorSet runningAnimation;
+    private AnimatorSet runningAnimation2;
+    private AnimatorSet runningAnimationAudio;
     private int runningAnimationType;
     private int audioInterfaceState;
 
@@ -232,7 +231,7 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
     private boolean topViewShowed;
     private boolean needShowTopView;
     private boolean allowShowTopView;
-    private AnimatorSetProxy currentTopViewAnimation;
+    private AnimatorSet currentTopViewAnimation;
 
     private boolean waitingForKeyboardOpen;
     private Runnable openKeyboardRunnable = new Runnable() {
@@ -539,7 +538,7 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
             attachButton = new LinearLayout(context);
             attachButton.setOrientation(LinearLayout.HORIZONTAL);
             attachButton.setEnabled(false);
-            ViewProxy.setPivotX(attachButton, AndroidUtilities.dp(48));
+            attachButton.setPivotX(AndroidUtilities.dp(48));
             frameLayout.addView(attachButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 48, Gravity.BOTTOM | Gravity.RIGHT));
 
             botButton = new ImageView(context);
@@ -675,11 +674,11 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                         updateAudioRecordIntefrace();
                     }
 
-                    x = x + ViewProxy.getX(audioSendButton);
+                    x = x + audioSendButton.getX();
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText.getLayoutParams();
                     if (startedDraggingX != -1) {
                         float dist = (x - startedDraggingX);
-                        ViewProxy.setTranslationX(recordCircle, dist);
+                        recordCircle.setTranslationX(dist);
                         params.leftMargin = AndroidUtilities.dp(30) + (int) dist;
                         slideText.setLayoutParams(params);
                         float alpha = 1.0f + dist / distCanMove;
@@ -688,9 +687,9 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                         } else if (alpha < 0) {
                             alpha = 0;
                         }
-                        ViewProxy.setAlpha(slideText, alpha);
+                        slideText.setAlpha(alpha);
                     }
-                    if (x <= ViewProxy.getX(slideText) + slideText.getWidth() + AndroidUtilities.dp(30)) {
+                    if (x <= slideText.getX() + slideText.getWidth() + AndroidUtilities.dp(30)) {
                         if (startedDraggingX == -1) {
                             startedDraggingX = x;
                             distCanMove = (recordPanel.getMeasuredWidth() - slideText.getMeasuredWidth() - AndroidUtilities.dp(48)) / 2.0f;
@@ -703,9 +702,9 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                     }
                     if (params.leftMargin > AndroidUtilities.dp(30)) {
                         params.leftMargin = AndroidUtilities.dp(30);
-                        ViewProxy.setTranslationX(recordCircle, 0);
+                        recordCircle.setTranslationX(0);
                         slideText.setLayoutParams(params);
-                        ViewProxy.setAlpha(slideText, 1);
+                        slideText.setAlpha(1);
                         startedDraggingX = -1;
                     }
                 }
@@ -723,9 +722,9 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
         sendButton.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         sendButton.setImageResource(R.drawable.ic_send);
         sendButton.setSoundEffectsEnabled(false);
-        ViewProxy.setScaleX(sendButton, 0.1f);
-        ViewProxy.setScaleY(sendButton, 0.1f);
-        ViewProxy.setAlpha(sendButton, 0.0f);
+        sendButton.setScaleX(0.1f);
+        sendButton.setScaleY(0.1f);
+        sendButton.setAlpha(0.0f);
         sendButton.clearAnimation();
         frameLayout1.addView(sendButton, LayoutHelper.createFrame(48, 48));
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -815,12 +814,11 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
             }
             if (animated) {
                 if (keyboardVisible || isPopupShowing()) {
-                    currentTopViewAnimation = new AnimatorSetProxy();
+                    currentTopViewAnimation = new AnimatorSet();
                     currentTopViewAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(ChatActivityEnterView.this, "topViewAnimation", 1.0f)
+                            ObjectAnimator.ofFloat(ChatActivityEnterView.this, "topViewAnimation", 1.0f)
                     );
-                    currentTopViewAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    currentTopViewAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             if (currentTopViewAnimation != null && currentTopViewAnimation.equals(animation)) {
                                 setTopViewAnimation(1.0f);
@@ -860,12 +858,11 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                 currentTopViewAnimation = null;
             }
             if (animated) {
-                currentTopViewAnimation = new AnimatorSetProxy();
+                currentTopViewAnimation = new AnimatorSet();
                 currentTopViewAnimation.playTogether(
-                        ObjectAnimatorProxy.ofFloat(ChatActivityEnterView.this, "topViewAnimation", resumeValue, 0.0f)
+                        ObjectAnimator.ofFloat(ChatActivityEnterView.this, "topViewAnimation", resumeValue, 0.0f)
                 );
-                currentTopViewAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                    @Override
+                currentTopViewAnimation.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Object animation) {
                         if (currentTopViewAnimation != null && currentTopViewAnimation.equals(animation)) {
                             topView.setVisibility(GONE);
@@ -1090,14 +1087,13 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                     }
 
                     if (attachButton != null) {
-                        runningAnimation2 = new AnimatorSetProxy();
+                        runningAnimation2 = new AnimatorSet();
                         runningAnimation2.playTogether(
-                                ObjectAnimatorProxy.ofFloat(attachButton, "alpha", 0.0f),
-                                ObjectAnimatorProxy.ofFloat(attachButton, "scaleX", 0.0f)
+                                ObjectAnimator.ofFloat(attachButton, "alpha", 0.0f),
+                                ObjectAnimator.ofFloat(attachButton, "scaleX", 0.0f)
                         );
                         runningAnimation2.setDuration(100);
-                        runningAnimation2.addListener(new AnimatorListenerAdapterProxy() {
-                            @Override
+                        runningAnimation2.addListener(new AnimatorListenerAdapter() {
                             public void onAnimationEnd(Object animation) {
                                 if (runningAnimation2.equals(animation)) {
                                     attachButton.setVisibility(View.GONE);
@@ -1113,21 +1109,20 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                     }
 
                     sendButton.setVisibility(View.VISIBLE);
-                    runningAnimation = new AnimatorSetProxy();
+                    runningAnimation = new AnimatorSet();
                     runningAnimationType = 1;
 
                     runningAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(audioSendButton, "scaleX", 0.1f),
-                            ObjectAnimatorProxy.ofFloat(audioSendButton, "scaleY", 0.1f),
-                            ObjectAnimatorProxy.ofFloat(audioSendButton, "alpha", 0.0f),
-                            ObjectAnimatorProxy.ofFloat(sendButton, "scaleX", 1.0f),
-                            ObjectAnimatorProxy.ofFloat(sendButton, "scaleY", 1.0f),
-                            ObjectAnimatorProxy.ofFloat(sendButton, "alpha", 1.0f)
+                            ObjectAnimator.ofFloat(audioSendButton, "scaleX", 0.1f),
+                            ObjectAnimator.ofFloat(audioSendButton, "scaleY", 0.1f),
+                            ObjectAnimator.ofFloat(audioSendButton, "alpha", 0.0f),
+                            ObjectAnimator.ofFloat(sendButton, "scaleX", 1.0f),
+                            ObjectAnimator.ofFloat(sendButton, "scaleY", 1.0f),
+                            ObjectAnimator.ofFloat(sendButton, "alpha", 1.0f)
                     );
 
                     runningAnimation.setDuration(150);
-                    runningAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    runningAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             if (runningAnimation != null && runningAnimation.equals(animation)) {
                                 sendButton.setVisibility(View.VISIBLE);
@@ -1140,12 +1135,12 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                     });
                     runningAnimation.start();
                 } else {
-                    ViewProxy.setScaleX(audioSendButton, 0.1f);
-                    ViewProxy.setScaleY(audioSendButton, 0.1f);
-                    ViewProxy.setAlpha(audioSendButton, 0.0f);
-                    ViewProxy.setScaleX(sendButton, 1.0f);
-                    ViewProxy.setScaleY(sendButton, 1.0f);
-                    ViewProxy.setAlpha(sendButton, 1.0f);
+                    audioSendButton.setScaleX(0.1f);
+                    audioSendButton.setScaleY(0.1f);
+                    audioSendButton.setAlpha(0.0f);
+                    sendButton.setScaleX(1.0f);
+                    sendButton.setScaleY(1.0f);
+                    sendButton.setAlpha(1.0f);
                     sendButton.setVisibility(View.VISIBLE);
                     audioSendButton.setVisibility(View.GONE);
                     audioSendButton.clearAnimation();
@@ -1174,10 +1169,10 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
 
                 if (attachButton != null) {
                     attachButton.setVisibility(View.VISIBLE);
-                    runningAnimation2 = new AnimatorSetProxy();
+                    runningAnimation2 = new AnimatorSet();
                     runningAnimation2.playTogether(
-                            ObjectAnimatorProxy.ofFloat(attachButton, "alpha", 1.0f),
-                            ObjectAnimatorProxy.ofFloat(attachButton, "scaleX", 1.0f)
+                            ObjectAnimator.ofFloat(attachButton, "alpha", 1.0f),
+                            ObjectAnimator.ofFloat(attachButton, "scaleX", 1.0f)
                     );
                     runningAnimation2.setDuration(100);
                     runningAnimation2.start();
@@ -1188,21 +1183,20 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                 }
 
                 audioSendButton.setVisibility(View.VISIBLE);
-                runningAnimation = new AnimatorSetProxy();
+                runningAnimation = new AnimatorSet();
                 runningAnimationType = 2;
 
                 runningAnimation.playTogether(
-                        ObjectAnimatorProxy.ofFloat(sendButton, "scaleX", 0.1f),
-                        ObjectAnimatorProxy.ofFloat(sendButton, "scaleY", 0.1f),
-                        ObjectAnimatorProxy.ofFloat(sendButton, "alpha", 0.0f),
-                        ObjectAnimatorProxy.ofFloat(audioSendButton, "scaleX", 1.0f),
-                        ObjectAnimatorProxy.ofFloat(audioSendButton, "scaleY", 1.0f),
-                        ObjectAnimatorProxy.ofFloat(audioSendButton, "alpha", 1.0f)
+                        ObjectAnimator.ofFloat(sendButton, "scaleX", 0.1f),
+                        ObjectAnimator.ofFloat(sendButton, "scaleY", 0.1f),
+                        ObjectAnimator.ofFloat(sendButton, "alpha", 0.0f),
+                        ObjectAnimator.ofFloat(audioSendButton, "scaleX", 1.0f),
+                        ObjectAnimator.ofFloat(audioSendButton, "scaleY", 1.0f),
+                        ObjectAnimator.ofFloat(audioSendButton, "alpha", 1.0f)
                 );
 
                 runningAnimation.setDuration(150);
-                runningAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                    @Override
+                runningAnimation.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Object animation) {
                         if (runningAnimation != null && runningAnimation.equals(animation)) {
                             sendButton.setVisibility(View.GONE);
@@ -1215,12 +1209,12 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
                 });
                 runningAnimation.start();
             } else {
-                ViewProxy.setScaleX(sendButton, 0.1f);
-                ViewProxy.setScaleY(sendButton, 0.1f);
-                ViewProxy.setAlpha(sendButton, 0.0f);
-                ViewProxy.setScaleX(audioSendButton, 1.0f);
-                ViewProxy.setScaleY(audioSendButton, 1.0f);
-                ViewProxy.setAlpha(audioSendButton, 1.0f);
+                sendButton.setScaleX(0.1f);
+                sendButton.setScaleY(0.1f);
+                sendButton.setAlpha(0.0f);
+                audioSendButton.setScaleX(1.0f);
+                audioSendButton.setScaleY(1.0f);
+                audioSendButton.setAlpha(1.0f);
                 sendButton.setVisibility(View.GONE);
                 sendButton.clearAnimation();
                 audioSendButton.setVisibility(View.VISIBLE);
@@ -1285,22 +1279,21 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText.getLayoutParams();
             params.leftMargin = AndroidUtilities.dp(30);
             slideText.setLayoutParams(params);
-            ViewProxy.setAlpha(slideText, 1);
-            ViewProxy.setX(recordPanel, AndroidUtilities.displaySize.x);
-            ViewProxy.setTranslationX(recordCircle, 0);
+            slideText.setAlpha(1);
+            recordPanel.setX(AndroidUtilities.displaySize.x);
+            recordCircle.setTranslationX(0);
             if (runningAnimationAudio != null) {
                 runningAnimationAudio.cancel();
             }
-            runningAnimationAudio = new AnimatorSetProxy();
-            runningAnimationAudio.playTogether(ObjectAnimatorProxy.ofFloat(recordPanel, "translationX", 0),
-                    ObjectAnimatorProxy.ofFloat(recordCircle, "scale", 1),
-                    ObjectAnimatorProxy.ofFloat(audioSendButton, "alpha", 0));
+            runningAnimationAudio = new AnimatorSet();
+            runningAnimationAudio.playTogether(ObjectAnimator.ofFloat(recordPanel, "translationX", 0),
+                    ObjectAnimator.ofFloat(recordCircle, "scale", 1),
+                    ObjectAnimator.ofFloat(audioSendButton, "alpha", 0));
             runningAnimationAudio.setDuration(300);
-            runningAnimationAudio.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            runningAnimationAudio.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animator) {
                     if (runningAnimationAudio != null && runningAnimationAudio.equals(animator)) {
-                        ViewProxy.setX(recordPanel, 0);
+                        recordPanel.setX(0);
                         runningAnimationAudio = null;
                     }
                 }
@@ -1325,19 +1318,18 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
             if (runningAnimationAudio != null) {
                 runningAnimationAudio.cancel();
             }
-            runningAnimationAudio = new AnimatorSetProxy();
-            runningAnimationAudio.playTogether(ObjectAnimatorProxy.ofFloat(recordPanel, "translationX", AndroidUtilities.displaySize.x),
-                    ObjectAnimatorProxy.ofFloat(recordCircle, "scale", 0.0f),
-                    ObjectAnimatorProxy.ofFloat(audioSendButton, "alpha", 1.0f));
+            runningAnimationAudio = new AnimatorSet();
+            runningAnimationAudio.playTogether(ObjectAnimator.ofFloat(recordPanel, "translationX", AndroidUtilities.displaySize.x),
+                    ObjectAnimator.ofFloat(recordCircle, "scale", 0.0f),
+                    ObjectAnimator.ofFloat(audioSendButton, "alpha", 1.0f));
             runningAnimationAudio.setDuration(300);
-            runningAnimationAudio.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            runningAnimationAudio.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animator) {
                     if (runningAnimationAudio != null && runningAnimationAudio.equals(animator)) {
                         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) slideText.getLayoutParams();
                         params.leftMargin = AndroidUtilities.dp(30);
                         slideText.setLayoutParams(params);
-                        ViewProxy.setAlpha(slideText, 1);
+                        slideText.setAlpha(1);
                         recordPanel.setVisibility(View.GONE);
                         recordCircle.setVisibility(View.GONE);
                         runningAnimationAudio = null;
@@ -1489,7 +1481,7 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
             botButton.setVisibility(GONE);
         }
         updateFieldRight(2);
-        ViewProxy.setPivotX(attachButton, AndroidUtilities.dp(botButton.getVisibility() == GONE ? 48 : 96));
+        attachButton.setPivotX(AndroidUtilities.dp(botButton.getVisibility() == GONE ? 48 : 96));
         attachButton.clearAnimation();
     }
 

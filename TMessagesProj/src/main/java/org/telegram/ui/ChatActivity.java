@@ -9,6 +9,10 @@
 package org.telegram.ui;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -88,10 +92,6 @@ import org.telegram.ui.ActionBar.BackDrawable;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.Adapters.MentionsAdapter;
 import org.telegram.ui.Adapters.StickersAdapter;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.Cells.ChatActionCell;
 import org.telegram.ui.Cells.ChatAudioCell;
 import org.telegram.ui.Cells.ChatBaseCell;
@@ -133,6 +133,7 @@ import org.telegram.ui.Components.WebFrameLayout;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.Semaphore;
@@ -194,7 +195,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private MentionsAdapter mentionsAdapter;
     private RecyclerListView mentionListView;
     private LinearLayoutManager mentionLayoutManager;
-    private AnimatorSetProxy mentionListAnimation;
+    private AnimatorSet mentionListAnimation;
     private ChatAttachView chatAttachView;
     private BottomSheet chatAttachViewSheet;
     private LinearLayout reportSpamView;
@@ -205,8 +206,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private TextView gifHintTextView;
     private View emojiButtonRed;
 
-    private ObjectAnimatorProxy pagedownButtonAnimation;
-    private AnimatorSetProxy replyButtonAnimation;
+    private ObjectAnimator pagedownButtonAnimation;
+    private AnimatorSet replyButtonAnimation;
 
     private TLRPC.User reportSpamUser;
 
@@ -218,7 +219,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private boolean allowStickersPanel;
     private boolean allowContextBotPanel;
     private boolean allowContextBotPanelSecond = true;
-    private AnimatorSetProxy runningAnimation;
+    private AnimatorSet runningAnimation;
 
     private MessageObject selectedObject;
     private ArrayList<MessageObject> forwardingMessages;
@@ -1764,7 +1765,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         }
 
                         if (mentionListView.getVisibility() == View.VISIBLE) {
-                            ViewProxy.setAlpha(mentionListView, 1.0f);
+                            mentionListView.setAlpha(1.0f);
                             return;
                         } else {
                             mentionLayoutManager.scrollToPositionWithOffset(0, 10000);
@@ -1772,12 +1773,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         if (allowStickersPanel && (!mentionsAdapter.isBotContext() || (allowContextBotPanel || allowContextBotPanelSecond))) {
                             mentionListView.setVisibility(View.VISIBLE);
                             mentionListView.setTag(null);
-                            mentionListAnimation = new AnimatorSetProxy();
+                            mentionListAnimation = new AnimatorSet();
                             mentionListAnimation.playTogether(
-                                    ObjectAnimatorProxy.ofFloat(mentionListView, "alpha", 0.0f, 1.0f)
+                                    ObjectAnimator.ofFloat(mentionListView, "alpha", 0.0f, 1.0f)
                             );
-                            mentionListAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                                @Override
+                            mentionListAnimation.addListener(new AnimatorListenerAdapter() {
                                 public void onAnimationEnd(Object animation) {
                                     if (mentionListAnimation != null && mentionListAnimation.equals(animation)) {
                                         mentionListView.clearAnimation();
@@ -1788,7 +1788,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             mentionListAnimation.setDuration(200);
                             mentionListAnimation.start();
                         } else {
-                            ViewProxy.setAlpha(mentionListView, 1.0f);
+                            mentionListView.setAlpha(1.0f);
                             mentionListView.clearAnimation();
                             mentionListView.setVisibility(View.INVISIBLE);
                         }
@@ -1802,12 +1802,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             return;
                         }
                         if (allowStickersPanel) {
-                            mentionListAnimation = new AnimatorSetProxy();
+                            mentionListAnimation = new AnimatorSet();
                             mentionListAnimation.playTogether(
-                                    ObjectAnimatorProxy.ofFloat(mentionListView, "alpha", 0.0f)
+                                    ObjectAnimator.ofFloat(mentionListView, "alpha", 0.0f)
                             );
-                            mentionListAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                                @Override
+                            mentionListAnimation.addListener(new AnimatorListenerAdapter() {
                                 public void onAnimationEnd(Object animation) {
                                     if (mentionListAnimation != null && mentionListAnimation.equals(animation)) {
                                         mentionListView.clearAnimation();
@@ -2148,13 +2147,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         runningAnimation = null;
                     }
                     if (stickersPanel.getVisibility() != View.INVISIBLE) {
-                        runningAnimation = new AnimatorSetProxy();
+                        runningAnimation = new AnimatorSet();
                         runningAnimation.playTogether(
-                                ObjectAnimatorProxy.ofFloat(stickersPanel, "alpha", show ? 0.0f : 1.0f, show ? 1.0f : 0.0f)
+                                ObjectAnimator.ofFloat(stickersPanel, "alpha", show ? 0.0f : 1.0f, show ? 1.0f : 0.0f)
                         );
                         runningAnimation.setDuration(150);
-                        runningAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                            @Override
+                        runningAnimation.addListener(new AnimatorListenerAdapter() {
                             public void onAnimationEnd(Object animation) {
                                 if (runningAnimation != null && runningAnimation.equals(animation)) {
                                     if (!show) {
@@ -2331,13 +2329,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         gifHintTextView.setGravity(Gravity.CENTER_VERTICAL);
         frameLayout.addView(gifHintTextView, index + 1, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, 32, Gravity.LEFT | Gravity.BOTTOM, 5, 0, 0, 3));
 
-        AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-        animatorSetProxy.playTogether(
-                ObjectAnimatorProxy.ofFloat(gifHintTextView, "alpha", 0.0f, 1.0f),
-                ObjectAnimatorProxy.ofFloat(emojiButtonRed, "alpha", 0.0f, 1.0f)
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(gifHintTextView, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(emojiButtonRed, "alpha", 0.0f, 1.0f)
         );
-        animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animation) {
                 AndroidUtilities.runOnUIThread(new Runnable() {
                     @Override
@@ -2345,12 +2342,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         if (gifHintTextView == null) {
                             return;
                         }
-                        AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-                        animatorSetProxy.playTogether(
-                                ObjectAnimatorProxy.ofFloat(gifHintTextView, "alpha", 0.0f)
+                        AnimatorSet animatorSet = new AnimatorSet();
+                        animatorSet.playTogether(
+                                ObjectAnimator.ofFloat(gifHintTextView, "alpha", 0.0f)
                         );
-                        animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-                            @Override
+                        animatorSet.addListener(new AnimatorListenerAdapter() {
                             public void onAnimationEnd(Object animation) {
                                 if (gifHintTextView != null) {
                                     gifHintTextView.clearAnimation();
@@ -2358,14 +2354,14 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                                 }
                             }
                         });
-                        animatorSetProxy.setDuration(300);
-                        animatorSetProxy.start();
+                        animatorSet.setDuration(300);
+                        animatorSet.start();
                     }
                 }, 2000);
             }
         });
-        animatorSetProxy.setDuration(300);
-        animatorSetProxy.start();
+        animatorSet.setDuration(300);
+        animatorSet.start();
     }
 
     private void checkContextBotPanel() {
@@ -2378,12 +2374,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
 
                     mentionListView.setTag(1);
-                    mentionListAnimation = new AnimatorSetProxy();
+                    mentionListAnimation = new AnimatorSet();
                     mentionListAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(mentionListView, "alpha", 0.0f)
+                            ObjectAnimator.ofFloat(mentionListView, "alpha", 0.0f)
                     );
-                    mentionListAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    mentionListAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             if (mentionListAnimation != null && mentionListAnimation.equals(animation)) {
                                 mentionListView.clearAnimation();
@@ -2403,12 +2398,11 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                     mentionListView.setTag(null);
                     mentionListView.setVisibility(View.VISIBLE);
-                    mentionListAnimation = new AnimatorSetProxy();
+                    mentionListAnimation = new AnimatorSet();
                     mentionListAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(mentionListView, "alpha", 0.0f, 1.0f)
+                            ObjectAnimator.ofFloat(mentionListView, "alpha", 0.0f, 1.0f)
                     );
-                    mentionListAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    mentionListAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             if (mentionListAnimation != null && mentionListAnimation.equals(animation)) {
                                 mentionListView.clearAnimation();
@@ -3200,12 +3194,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     pagedownButtonAnimation = null;
                 }
                 if (animated) {
-                    if (ViewProxy.getTranslationY(pagedownButton) == 0) {
-                        ViewProxy.setTranslationY(pagedownButton, AndroidUtilities.dp(100));
+                    if (pagedownButton.getTranslationY() == 0) {
+                        pagedownButton.setTranslationY(AndroidUtilities.dp(100));
                     }
                     pagedownButton.setVisibility(View.VISIBLE);
                     pagedownButton.setTag(1);
-                    pagedownButtonAnimation = ObjectAnimatorProxy.ofFloatProxy(pagedownButton, "translationY", 0).setDuration(200).start();
+
+
+                    pagedownButtonAnimation.ofFloat(pagedownButton, "translationY");
+                    pagedownButtonAnimation.setDuration(200);
+                    pagedownButtonAnimation.start();
                 } else {
                     pagedownButton.setVisibility(View.VISIBLE);
                 }
@@ -3219,13 +3217,15 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     pagedownButtonAnimation = null;
                 }
                 if (animated) {
-                    pagedownButtonAnimation = ObjectAnimatorProxy.ofFloatProxy(pagedownButton, "translationY", AndroidUtilities.dp(100)).setDuration(200).addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    pagedownButtonAnimation.ofFloat(pagedownButton, "translationY", AndroidUtilities.dp(100));
+                    pagedownButtonAnimation.setDuration(200);
+                    pagedownButtonAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             pagedownButton.clearAnimation();
                             pagedownButton.setVisibility(View.INVISIBLE);
                         }
-                    }).start();
+                    });
+                    pagedownButtonAnimation.start();
                 } else {
                     pagedownButton.clearAnimation();
                     pagedownButton.setVisibility(View.INVISIBLE);
@@ -3490,32 +3490,31 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         }
                         if (copyVisible != newCopyVisible) {
                             if (newVisibility == View.VISIBLE) {
-                                ViewProxy.setAlpha(replyItem, 1.0f);
-                                ViewProxy.setScaleX(replyItem, 1.0f);
+                                replyItem.setAlpha(1.0f);
+                                replyItem.setScaleX(1.0f);
                             } else {
-                                ViewProxy.setAlpha(replyItem, 0.0f);
-                                ViewProxy.setScaleX(replyItem, 0.0f);
+                                replyItem.setAlpha(0.0f);
+                                replyItem.setScaleX(0.0f);
                             }
                             replyItem.setVisibility(newVisibility);
                             replyItem.clearAnimation();
                         } else {
-                            replyButtonAnimation = new AnimatorSetProxy();
-                            ViewProxy.setPivotX(replyItem, AndroidUtilities.dp(54));
+                            replyButtonAnimation = new AnimatorSet();
+                            replyItem.setPivotX(AndroidUtilities.dp(54));
                             if (newVisibility == View.VISIBLE) {
                                 replyItem.setVisibility(newVisibility);
                                 replyButtonAnimation.playTogether(
-                                        ObjectAnimatorProxy.ofFloat(replyItem, "alpha", 1.0f),
-                                        ObjectAnimatorProxy.ofFloat(replyItem, "scaleX", 1.0f)
+                                        ObjectAnimator.ofFloat(replyItem, "alpha", 1.0f),
+                                        ObjectAnimator.ofFloat(replyItem, "scaleX", 1.0f)
                                 );
                             } else {
                                 replyButtonAnimation.playTogether(
-                                        ObjectAnimatorProxy.ofFloat(replyItem, "alpha", 0.0f),
-                                        ObjectAnimatorProxy.ofFloat(replyItem, "scaleX", 0.0f)
+                                        ObjectAnimator.ofFloat(replyItem, "alpha", 0.0f),
+                                        ObjectAnimator.ofFloat(replyItem, "scaleX", 0.0f)
                                 );
                             }
                             replyButtonAnimation.setDuration(100);
-                            replyButtonAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                                @Override
+                            replyButtonAnimation.addListener(new AnimatorListenerAdapter() {
                                 public void onAnimationEnd(Object animation) {
                                     if (replyButtonAnimation.equals(animation)) {
                                         replyItem.clearAnimation();
@@ -5407,8 +5406,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         if (searchUpItem != null) {
             searchUpItem.setEnabled((mask & 1) != 0);
             searchDownItem.setEnabled((mask & 2) != 0);
-            ViewProxy.setAlpha(searchUpItem, searchUpItem.isEnabled() ? 1.0f : 0.6f);
-            ViewProxy.setAlpha(searchDownItem, searchDownItem.isEnabled() ? 1.0f : 0.6f);
+            searchUpItem.setAlpha(searchUpItem.isEnabled() ? 1.0f : 0.6f);
+            searchDownItem.setAlpha(searchDownItem.isEnabled() ? 1.0f : 0.6f);
         }
     }
 
@@ -6103,12 +6102,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         actionBar.showActionMode();
 
         if (Build.VERSION.SDK_INT >= 11) {
-            AnimatorSetProxy animatorSet = new AnimatorSetProxy();
-            ArrayList<Object> animators = new ArrayList<>();
+            AnimatorSet animatorSet = new AnimatorSet();
+            Collection<Animator> animators = new ArrayList<>();
             for (int a = 0; a < actionModeViews.size(); a++) {
                 View view = actionModeViews.get(a);
                 AndroidUtilities.clearDrawableAnimation(view);
-                animators.add(ObjectAnimatorProxy.ofFloat(view, "scaleY", 0.1f, 1.0f));
+                animators.add(ObjectAnimator.ofFloat(view, "scaleY", 0.1f, 1.0f));
             }
             animatorSet.playTogether(animators);
             animatorSet.setDuration(250);

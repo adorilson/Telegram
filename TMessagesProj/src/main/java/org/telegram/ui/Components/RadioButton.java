@@ -8,6 +8,7 @@
 
 package org.telegram.ui.Components;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -18,7 +19,6 @@ import android.graphics.PorterDuffXfermode;
 import android.view.View;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.ImageLoader;
 
@@ -34,7 +34,7 @@ public class RadioButton extends View {
     private int color = 0xffd7e8f7;
 
     private float progress;
-    private ObjectAnimatorProxy checkAnimator;
+    private ObjectAnimator checkAnimator;
 
     private boolean attachedToWindow;
     private boolean isChecked;
@@ -94,7 +94,7 @@ public class RadioButton extends View {
     }
 
     private void animateToCheckedState(boolean newCheckedState) {
-        checkAnimator = ObjectAnimatorProxy.ofFloatProxy(this, "progress", newCheckedState ? 1 : 0);
+        checkAnimator = ObjectAnimator.ofFloat(this, "progress", newCheckedState ? 1 : 0);
         checkAnimator.setDuration(200);
         checkAnimator.start();
     }

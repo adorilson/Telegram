@@ -8,6 +8,9 @@
 
 package org.telegram.ui;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -52,10 +55,6 @@ import org.telegram.messenger.UserConfig;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
 import org.telegram.ui.ActionBar.BaseFragment;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.Components.HintEditText;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.SlideView;
@@ -225,22 +224,20 @@ public class ChangePhoneActivity extends BaseFragment {
             newView.setParams(params);
             actionBar.setTitle(newView.getHeaderName());
             newView.onShow();
-            ViewProxy.setX(newView, back ? -AndroidUtilities.displaySize.x : AndroidUtilities.displaySize.x);
+            newView.setX(back ? -AndroidUtilities.displaySize.x : AndroidUtilities.displaySize.x);
 
-            AnimatorSetProxy animatorSet = new AnimatorSetProxy();
+            AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
             animatorSet.setDuration(300);
             animatorSet.playTogether(
-                    ObjectAnimatorProxy.ofFloat(outView, "translationX", back ? AndroidUtilities.displaySize.x : -AndroidUtilities.displaySize.x),
-                    ObjectAnimatorProxy.ofFloat(newView, "translationX", 0));
-            animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+                    ObjectAnimator.ofFloat(outView, "translationX", back ? AndroidUtilities.displaySize.x : -AndroidUtilities.displaySize.x),
+                    ObjectAnimator.ofFloat(newView, "translationX", 0));
+            animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationStart(Object animation) {
                     newView.setVisibility(View.VISIBLE);
                 }
 
                 @SuppressLint("NewApi")
-                @Override
                 public void onAnimationEnd(Object animation) {
                     outView.setVisibility(View.GONE);
                     outView.setX(0);

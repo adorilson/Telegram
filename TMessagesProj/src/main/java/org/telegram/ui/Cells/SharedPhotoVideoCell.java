@@ -8,6 +8,9 @@
 
 package org.telegram.ui.Cells;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.util.TypedValue;
@@ -19,10 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLoader;
@@ -56,7 +55,7 @@ public class SharedPhotoVideoCell extends FrameLayoutFixed {
         private View selector;
         private CheckBox checkBox;
         private FrameLayoutFixed container;
-        private AnimatorSetProxy animator;
+        private AnimatorSet animator;
 
         public PhotoVideoView(Context context) {
             super(context);
@@ -116,12 +115,11 @@ public class SharedPhotoVideoCell extends FrameLayoutFixed {
                 if (checked) {
                     setBackgroundColor(0xfff5f5f5);
                 }
-                animator = new AnimatorSetProxy();
-                animator.playTogether(ObjectAnimatorProxy.ofFloat(container, "scaleX", checked ? 0.85f : 1.0f),
-                        ObjectAnimatorProxy.ofFloat(container, "scaleY", checked ? 0.85f : 1.0f));
+                animator = new AnimatorSet();
+                animator.playTogether(ObjectAnimator.ofFloat(container, "scaleX", checked ? 0.85f : 1.0f),
+                        ObjectAnimator.ofFloat(container, "scaleY", checked ? 0.85f : 1.0f));
                 animator.setDuration(200);
-                animator.addListener(new AnimatorListenerAdapterProxy() {
-                    @Override
+                animator.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Object animation) {
                         if (animator.equals(animation)) {
                             animator = null;
@@ -134,8 +132,8 @@ public class SharedPhotoVideoCell extends FrameLayoutFixed {
                 animator.start();
             } else {
                 setBackgroundColor(checked ? 0xfff5f5f5 : 0);
-                ViewProxy.setScaleX(container, checked ? 0.85f : 1.0f);
-                ViewProxy.setScaleY(container, checked ? 0.85f : 1.0f);
+                container.setScaleX(checked ? 0.85f : 1.0f);
+                container.setScaleY(checked ? 0.85f : 1.0f);
             }
         }
 

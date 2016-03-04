@@ -9,6 +9,10 @@
 package org.telegram.ui;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -67,10 +71,6 @@ import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.Utilities;
 import org.telegram.ui.Adapters.MentionsAdapter;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
 import org.telegram.ui.ActionBar.ActionBarMenuItem;
@@ -87,6 +87,7 @@ import org.telegram.ui.Components.SizeNotifierFrameLayoutPhoto;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,7 +125,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private ActionBarMenuItem tuneItem;
     private ActionBarMenuItem captionItem;
     private ActionBarMenuItem captionDoneItem;
-    private AnimatorSetProxy currentActionBarAnimation;
+    private AnimatorSet currentActionBarAnimation;
     private PhotoCropView photoCropView;
     private PhotoFilterView photoFilterView;
     private AlertDialog visibleDialog;
@@ -142,7 +143,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private MentionsAdapter mentionsAdapter;
     private RecyclerListView mentionListView;
     private LinearLayoutManager mentionLayoutManager;
-    private AnimatorSetProxy mentionListAnimation;
+    private AnimatorSet mentionListAnimation;
     private boolean allowMentions;
 
     private int animationInProgress = 0;
@@ -188,8 +189,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private float animateToScale;
     private float animationValue;
     private long animationStartTime;
-    private AnimatorSetProxy imageMoveAnimation;
-    private AnimatorSetProxy changeModeAnimation;
+    private AnimatorSet imageMoveAnimation;
+    private AnimatorSet changeModeAnimation;
     private GestureDetector gestureDetector;
     private DecelerateInterpolator interpolator = new DecelerateInterpolator(1.5f);
     private float pinchStartDistance = 0;
@@ -1407,19 +1408,18 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     }
 
                     if (mentionListView.getVisibility() == View.VISIBLE) {
-                        ViewProxy.setAlpha(mentionListView, 1.0f);
+                        mentionListView.setAlpha(1.0f);
                         return;
                     } else {
                         mentionLayoutManager.scrollToPositionWithOffset(0, 10000);
                     }
                     if (allowMentions) {
                         mentionListView.setVisibility(View.VISIBLE);
-                        mentionListAnimation = new AnimatorSetProxy();
+                        mentionListAnimation = new AnimatorSet();
                         mentionListAnimation.playTogether(
-                                ObjectAnimatorProxy.ofFloat(mentionListView, "alpha", 0.0f, 1.0f)
+                                ObjectAnimator.ofFloat(mentionListView, "alpha", 0.0f, 1.0f)
                         );
-                        mentionListAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                            @Override
+                        mentionListAnimation.addListener(new AnimatorListenerAdapter() {
                             public void onAnimationEnd(Object animation) {
                                 if (mentionListAnimation != null && mentionListAnimation.equals(animation)) {
                                     mentionListView.clearAnimation();
@@ -1430,7 +1430,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         mentionListAnimation.setDuration(200);
                         mentionListAnimation.start();
                     } else {
-                        ViewProxy.setAlpha(mentionListView, 1.0f);
+                        mentionListView.setAlpha(1.0f);
                         mentionListView.clearAnimation();
                         mentionListView.setVisibility(View.INVISIBLE);
                     }
@@ -1444,12 +1444,11 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         return;
                     }
                     if (allowMentions) {
-                        mentionListAnimation = new AnimatorSetProxy();
+                        mentionListAnimation = new AnimatorSet();
                         mentionListAnimation.playTogether(
-                                ObjectAnimatorProxy.ofFloat(mentionListView, "alpha", 0.0f)
+                                ObjectAnimator.ofFloat(mentionListView, "alpha", 0.0f)
                         );
-                        mentionListAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                            @Override
+                        mentionListAnimation.addListener(new AnimatorListenerAdapter() {
                             public void onAnimationEnd(Object animation) {
                                 if (mentionListAnimation != null && mentionListAnimation.equals(animation)) {
                                     mentionListView.clearAnimation();
@@ -1690,23 +1689,22 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 zoomAnimation = true;
             }
 
-            imageMoveAnimation = new AnimatorSetProxy();
+            imageMoveAnimation = new AnimatorSet();
             if (currentEditMode == 1) {
                 imageMoveAnimation.playTogether(
-                        ObjectAnimatorProxy.ofFloat(editorDoneLayout, "translationY", AndroidUtilities.dp(48)),
-                        ObjectAnimatorProxy.ofFloat(PhotoViewer.this, "animationValue", 0, 1),
-                        ObjectAnimatorProxy.ofFloat(photoCropView, "alpha", 0)
+                        ObjectAnimator.ofFloat(editorDoneLayout, "translationY", AndroidUtilities.dp(48)),
+                        ObjectAnimator.ofFloat(PhotoViewer.this, "animationValue", 0, 1),
+                        ObjectAnimator.ofFloat(photoCropView, "alpha", 0)
                 );
             } else if (currentEditMode == 2) {
                 photoFilterView.shutdown();
                 imageMoveAnimation.playTogether(
-                        ObjectAnimatorProxy.ofFloat(photoFilterView.getToolsView(), "translationY", AndroidUtilities.dp(126)),
-                        ObjectAnimatorProxy.ofFloat(PhotoViewer.this, "animationValue", 0, 1)
+                        ObjectAnimator.ofFloat(photoFilterView.getToolsView(), "translationY", AndroidUtilities.dp(126)),
+                        ObjectAnimator.ofFloat(PhotoViewer.this, "animationValue", 0, 1)
                 );
             }
             imageMoveAnimation.setDuration(200);
-            imageMoveAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            imageMoveAnimation.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     if (currentEditMode == 1) {
                         photoCropView.clearAnimation();
@@ -1727,20 +1725,19 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     updateMinMax(scale);
                     containerView.invalidate();
 
-                    AnimatorSetProxy animatorSet = new AnimatorSetProxy();
-                    ArrayList<Object> arrayList = new ArrayList<>();
-                    arrayList.add(ObjectAnimatorProxy.ofFloat(pickerView, "translationY", 0));
-                    arrayList.add(ObjectAnimatorProxy.ofFloat(actionBar, "translationY", 0));
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    Collection<Animator> arrayList = new ArrayList<>(); 
+                    arrayList.add(ObjectAnimator.ofFloat(pickerView, "translationY", 0));
+                    arrayList.add(ObjectAnimator.ofFloat(actionBar, "translationY", 0));
                     if (needCaptionLayout) {
-                        arrayList.add(ObjectAnimatorProxy.ofFloat(captionTextView, "translationY", 0));
+                        arrayList.add(ObjectAnimator.ofFloat(captionTextView, "translationY", 0));
                     }
                     if (sendPhotoType == 0) {
-                        arrayList.add(ObjectAnimatorProxy.ofFloat(checkImageView, "alpha", 1));
+                        arrayList.add(ObjectAnimator.ofFloat(checkImageView, "alpha", 1));
                     }
                     animatorSet.playTogether(arrayList);
                     animatorSet.setDuration(200);
-                    animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    animatorSet.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationStart(Object animation) {
                             pickerView.setVisibility(View.VISIBLE);
                             actionBar.setVisibility(View.VISIBLE);
@@ -1752,7 +1749,6 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                             }
                         }
 
-                        @Override
                         public void onAnimationEnd(Object animation) {
                             pickerView.clearAnimation();
                             actionBar.clearAnimation();
@@ -1789,20 +1785,19 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             }
 
             editorDoneLayout.doneButtonTextView.setText(LocaleController.getString("Crop", R.string.Crop));
-            changeModeAnimation = new AnimatorSetProxy();
-            ArrayList<Object> arrayList = new ArrayList<>();
-            arrayList.add(ObjectAnimatorProxy.ofFloat(pickerView, "translationY", 0, AndroidUtilities.dp(96)));
-            arrayList.add(ObjectAnimatorProxy.ofFloat(actionBar, "translationY", 0, -actionBar.getHeight()));
+            changeModeAnimation = new AnimatorSet();
+            Collection<Animator> arrayList = new ArrayList<>();
+            arrayList.add(ObjectAnimator.ofFloat(pickerView, "translationY", 0, AndroidUtilities.dp(96)));
+            arrayList.add(ObjectAnimator.ofFloat(actionBar, "translationY", 0, -actionBar.getHeight()));
             if (needCaptionLayout) {
-                arrayList.add(ObjectAnimatorProxy.ofFloat(captionTextView, "translationY", 0, AndroidUtilities.dp(96)));
+                arrayList.add(ObjectAnimator.ofFloat(captionTextView, "translationY", 0, AndroidUtilities.dp(96)));
             }
             if (sendPhotoType == 0) {
-                arrayList.add(ObjectAnimatorProxy.ofFloat(checkImageView, "alpha", 1, 0));
+                arrayList.add(ObjectAnimator.ofFloat(checkImageView, "alpha", 1, 0));
             }
             changeModeAnimation.playTogether(arrayList);
             changeModeAnimation.setDuration(200);
-            changeModeAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            changeModeAnimation.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     changeModeAnimation = null;
                     pickerView.clearAnimation();
@@ -1838,21 +1833,19 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         zoomAnimation = true;
                     }
 
-                    imageMoveAnimation = new AnimatorSetProxy();
+                    imageMoveAnimation = new AnimatorSet();
                     imageMoveAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(editorDoneLayout, "translationY", AndroidUtilities.dp(48), 0),
-                            ObjectAnimatorProxy.ofFloat(PhotoViewer.this, "animationValue", 0, 1),
-                            ObjectAnimatorProxy.ofFloat(photoCropView, "alpha", 0, 1)
+                            ObjectAnimator.ofFloat(editorDoneLayout, "translationY", AndroidUtilities.dp(48), 0),
+                            ObjectAnimator.ofFloat(PhotoViewer.this, "animationValue", 0, 1),
+                            ObjectAnimator.ofFloat(photoCropView, "alpha", 0, 1)
                     );
                     imageMoveAnimation.setDuration(200);
-                    imageMoveAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    imageMoveAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationStart(Object animation) {
                             editorDoneLayout.setVisibility(View.VISIBLE);
                             photoCropView.setVisibility(View.VISIBLE);
                         }
 
-                        @Override
                         public void onAnimationEnd(Object animation) {
                             imageMoveAnimation = null;
                             currentEditMode = mode;
@@ -1905,23 +1898,22 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     }
                 });
                 //photoFilterView.setEditViewFirst();
-                ViewProxy.setTranslationY(photoFilterView.getToolsView(), AndroidUtilities.dp(126));
+                photoFilterView.getToolsView().setTranslationY(AndroidUtilities.dp(126));
             }
 
-            changeModeAnimation = new AnimatorSetProxy();
-            ArrayList<Object> arrayList = new ArrayList<>();
-            arrayList.add(ObjectAnimatorProxy.ofFloat(pickerView, "translationY", 0, AndroidUtilities.dp(96)));
-            arrayList.add(ObjectAnimatorProxy.ofFloat(actionBar, "translationY", 0, -actionBar.getHeight()));
+            changeModeAnimation = new AnimatorSet();
+            Collection<Animator> arrayList = new ArrayList<>(); 
+            arrayList.add(ObjectAnimator.ofFloat(pickerView, "translationY", 0, AndroidUtilities.dp(96)));
+            arrayList.add(ObjectAnimator.ofFloat(actionBar, "translationY", 0, -actionBar.getHeight()));
             if (needCaptionLayout) {
-                arrayList.add(ObjectAnimatorProxy.ofFloat(captionTextView, "translationY", 0, AndroidUtilities.dp(96)));
+                arrayList.add(ObjectAnimator.ofFloat(captionTextView, "translationY", 0, AndroidUtilities.dp(96)));
             }
             if (sendPhotoType == 0) {
-                arrayList.add(ObjectAnimatorProxy.ofFloat(checkImageView, "alpha", 1, 0));
+                arrayList.add(ObjectAnimator.ofFloat(checkImageView, "alpha", 1, 0));
             }
             changeModeAnimation.playTogether(arrayList);
             changeModeAnimation.setDuration(200);
-            changeModeAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            changeModeAnimation.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     changeModeAnimation = null;
                     pickerView.clearAnimation();
@@ -1956,19 +1948,17 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         zoomAnimation = true;
                     }
 
-                    imageMoveAnimation = new AnimatorSetProxy();
+                    imageMoveAnimation = new AnimatorSet();
                     imageMoveAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(PhotoViewer.this, "animationValue", 0, 1),
-                            ObjectAnimatorProxy.ofFloat(photoFilterView.getToolsView(), "translationY", AndroidUtilities.dp(126), 0)
+                            ObjectAnimator.ofFloat(PhotoViewer.this, "animationValue", 0, 1),
+                            ObjectAnimator.ofFloat(photoFilterView.getToolsView(), "translationY", AndroidUtilities.dp(126), 0)
                     );
                     imageMoveAnimation.setDuration(200);
-                    imageMoveAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    imageMoveAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationStart(Object animation) {
 
                         }
 
-                        @Override
                         public void onAnimationEnd(Object animation) {
                             photoFilterView.init();
                             imageMoveAnimation = null;
@@ -1990,14 +1980,14 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     }
 
     private void toggleCheckImageView(boolean show) {
-        AnimatorSetProxy animatorSet = new AnimatorSetProxy();
-        ArrayList<Object> arrayList = new ArrayList<>();
-        arrayList.add(ObjectAnimatorProxy.ofFloat(pickerView, "alpha", show ? 1.0f : 0.0f));
+        AnimatorSet animatorSet = new AnimatorSet();
+        Collection<Animator> arrayList = new ArrayList<>(); 
+        arrayList.add(ObjectAnimator.ofFloat(pickerView, "alpha", show ? 1.0f : 0.0f));
         if (needCaptionLayout) {
-            arrayList.add(ObjectAnimatorProxy.ofFloat(captionTextView, "alpha", show ? 1.0f : 0.0f));
+            arrayList.add(ObjectAnimator.ofFloat(captionTextView, "alpha", show ? 1.0f : 0.0f));
         }
         if (sendPhotoType == 0) {
-            arrayList.add(ObjectAnimatorProxy.ofFloat(checkImageView, "alpha", show ? 1.0f : 0.0f));
+            arrayList.add(ObjectAnimator.ofFloat(checkImageView, "alpha", show ? 1.0f : 0.0f));
         }
         animatorSet.playTogether(arrayList);
         animatorSet.setDuration(200);
@@ -2019,17 +2009,16 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         bottomLayout.setEnabled(show);
 
         if (animated) {
-            ArrayList<Object> arrayList = new ArrayList<>();
-            arrayList.add(ObjectAnimatorProxy.ofFloat(actionBar, "alpha", show ? 1.0f : 0.0f));
-            arrayList.add(ObjectAnimatorProxy.ofFloat(bottomLayout, "alpha", show ? 1.0f : 0.0f));
+            Collection<Animator> arrayList = new ArrayList<>(); 
+            arrayList.add(ObjectAnimator.ofFloat(actionBar, "alpha", show ? 1.0f : 0.0f));
+            arrayList.add(ObjectAnimator.ofFloat(bottomLayout, "alpha", show ? 1.0f : 0.0f));
             if (captionTextView.getTag() != null) {
-                arrayList.add(ObjectAnimatorProxy.ofFloat(captionTextView, "alpha", show ? 1.0f : 0.0f));
+                arrayList.add(ObjectAnimator.ofFloat(captionTextView, "alpha", show ? 1.0f : 0.0f));
             }
-            currentActionBarAnimation = new AnimatorSetProxy();
+            currentActionBarAnimation = new AnimatorSet();
             currentActionBarAnimation.playTogether(arrayList);
             if (!show) {
-                currentActionBarAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                    @Override
+                currentActionBarAnimation.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Object animation) {
                         if (currentActionBarAnimation != null && currentActionBarAnimation.equals(animation)) {
                             actionBar.setVisibility(View.GONE);
@@ -2050,10 +2039,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             currentActionBarAnimation.setDuration(200);
             currentActionBarAnimation.start();
         } else {
-            ViewProxy.setAlpha(actionBar, show ? 1.0f : 0.0f);
-            ViewProxy.setAlpha(bottomLayout, show ? 1.0f : 0.0f);
+            actionBar.setAlpha(show ? 1.0f : 0.0f);
+            bottomLayout.setAlpha(show ? 1.0f : 0.0f);
             if (captionTextView.getTag() != null) {
-                ViewProxy.setAlpha(captionTextView, show ? 1.0f : 0.0f);
+                captionTextView.setAlpha(show ? 1.0f : 0.0f);
             }
             if (!show) {
                 actionBar.setVisibility(View.GONE);
@@ -2272,10 +2261,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         bottomLayout.setVisibility(View.VISIBLE);
         shareButton.setVisibility(View.GONE);
         menuItem.hideSubItem(gallery_menu_showall);
-        ViewProxy.setTranslationY(actionBar, 0);
-        ViewProxy.setTranslationY(pickerView, 0);
-        ViewProxy.setAlpha(checkImageView, 1.0f);
-        ViewProxy.setAlpha(pickerView, 1.0f);
+        actionBar.setTranslationY(0);
+        pickerView.setTranslationY(0);
+        checkImageView.setAlpha(1.0f);
+        pickerView.setAlpha(1.0f);
         checkImageView.clearAnimation();
         pickerView.clearAnimation();
         editorDoneLayout.clearAnimation();
@@ -2631,7 +2620,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             captionItem.setIcon(R.drawable.photo_text2);
             captionTextView.setTag(caption);
             captionTextView.setText(caption);
-            ViewProxy.setAlpha(captionTextView, bottomLayout.getVisibility() == View.VISIBLE || pickerView.getVisibility() == View.VISIBLE ? 1.0f : 0.0f);
+            captionTextView.setAlpha(bottomLayout.getVisibility() == View.VISIBLE || pickerView.getVisibility() == View.VISIBLE ? 1.0f : 0.0f);
             AndroidUtilities.runOnUIThread(new Runnable() {
                 @Override
                 public void run() {
@@ -2910,13 +2899,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             animatingImageView.setNeedRadius(object.radius != 0);
             animatingImageView.setImageBitmap(object.thumb);
 
-            ViewProxy.setAlpha(animatingImageView, 1.0f);
-            ViewProxy.setPivotX(animatingImageView, 0.0f);
-            ViewProxy.setPivotY(animatingImageView, 0.0f);
-            ViewProxy.setScaleX(animatingImageView, object.scale);
-            ViewProxy.setScaleY(animatingImageView, object.scale);
-            ViewProxy.setTranslationX(animatingImageView, object.viewX + drawRegion.left * object.scale);
-            ViewProxy.setTranslationY(animatingImageView, object.viewY + drawRegion.top * object.scale);
+            animatingImageView.setAlpha(1.0f);
+            animatingImageView.setPivotX(0.0f);
+            animatingImageView.setPivotY(0.0f);
+            animatingImageView.setScaleX(object.scale);
+            animatingImageView.setScaleY(object.scale);
+            animatingImageView.setTranslationX(object.viewX + drawRegion.left * object.scale);
+            animatingImageView.setTranslationY(object.viewY + drawRegion.top * object.scale);
             final ViewGroup.LayoutParams layoutParams = animatingImageView.getLayoutParams();
             layoutParams.width = (drawRegion.right - drawRegion.left);
             layoutParams.height = (drawRegion.bottom - drawRegion.top);
@@ -2945,10 +2934,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             clipTop = Math.max(clipTop, clipVertical);
             clipBottom = Math.max(clipBottom, clipVertical);
 
-            animationValues[0][0] = ViewProxy.getScaleX(animatingImageView);
-            animationValues[0][1] = ViewProxy.getScaleY(animatingImageView);
-            animationValues[0][2] = ViewProxy.getTranslationX(animatingImageView);
-            animationValues[0][3] = ViewProxy.getTranslationY(animatingImageView);
+            animationValues[0][0] = animatingImageView.getScaleX();
+            animationValues[0][1] = animatingImageView.getScaleY();
+            animationValues[0][2] = animatingImageView.getTranslationX();
+            animationValues[0][3] = animatingImageView.getTranslationY();
             animationValues[0][4] = clipHorizontal * object.scale;
             animationValues[0][5] = clipTop * object.scale;
             animationValues[0][6] = clipBottom * object.scale;
@@ -2965,13 +2954,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
             animatingImageView.setAnimationProgress(0);
             backgroundDrawable.setAlpha(0);
-            ViewProxy.setAlpha(containerView, 0);
+            containerView.setAlpha(0);
 
-            final AnimatorSetProxy animatorSet = new AnimatorSetProxy();
+            final AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(
-                    ObjectAnimatorProxy.ofFloat(animatingImageView, "animationProgress", 0.0f, 1.0f),
-                    ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", 0, 255),
-                    ObjectAnimatorProxy.ofFloat(containerView, "alpha", 0.0f, 1.0f)
+                    ObjectAnimator.ofFloat(animatingImageView, "animationProgress", 0.0f, 1.0f),
+                    ObjectAnimator.ofInt(backgroundDrawable, "alpha", 0, 255),
+                    ObjectAnimator.ofFloat(containerView, "alpha", 0.0f, 1.0f)
             );
 
             animationEndRunnable = new Runnable() {
@@ -3006,8 +2995,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             };
 
             animatorSet.setDuration(200);
-            animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     AndroidUtilities.runOnUIThread(new Runnable() {
                         @Override
@@ -3021,7 +3009,6 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     });
                 }
 
-                @Override
                 public void onAnimationCancel(Object animation) {
                     onAnimationEnd(animation);
                 }
@@ -3054,7 +3041,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             }
 
             backgroundDrawable.setAlpha(255);
-            ViewProxy.setAlpha(containerView, 1.0f);
+            containerView.setAlpha(1.0f);
             onPhotoShow(messageObject, fileLocation, messages, photos, index, object);
         }
     }
@@ -3118,7 +3105,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             animatingImageView.setVisibility(View.VISIBLE);
             containerView.invalidate();
 
-            AnimatorSetProxy animatorSet = new AnimatorSetProxy();
+            AnimatorSet animatorSet = new AnimatorSet();
 
             final ViewGroup.LayoutParams layoutParams = animatingImageView.getLayoutParams();
             Rect drawRegion = null;
@@ -3144,10 +3131,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             float height = layoutParams.height * scale * scale2;
             float xPos = (AndroidUtilities.displaySize.x - width) / 2.0f;
             float yPos = (AndroidUtilities.displaySize.y - AndroidUtilities.statusBarHeight - height) / 2.0f;
-            ViewProxy.setTranslationX(animatingImageView, xPos + translationX);
-            ViewProxy.setTranslationY(animatingImageView, yPos + translationY);
-            ViewProxy.setScaleX(animatingImageView, scale * scale2);
-            ViewProxy.setScaleY(animatingImageView, scale * scale2);
+            animatingImageView.setTranslationX(xPos + translationX);
+            animatingImageView.setTranslationY(yPos + translationY);
+            animatingImageView.setScaleX(scale * scale2);
+            animatingImageView.setScaleY(scale * scale2);
 
             if (object != null) {
                 object.imageReceiver.setVisible(false, true);
@@ -3168,10 +3155,10 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 clipTop = Math.max(clipTop, clipVertical);
                 clipBottom = Math.max(clipBottom, clipVertical);
 
-                animationValues[0][0] = ViewProxy.getScaleX(animatingImageView);
-                animationValues[0][1] = ViewProxy.getScaleY(animatingImageView);
-                animationValues[0][2] = ViewProxy.getTranslationX(animatingImageView);
-                animationValues[0][3] = ViewProxy.getTranslationY(animatingImageView);
+                animationValues[0][0] = animatingImageView.getScaleX();
+                animationValues[0][1] = animatingImageView.getScaleY();
+                animationValues[0][2] = animatingImageView.getTranslationX();
+                animationValues[0][3] = animatingImageView.getTranslationY();
                 animationValues[0][4] = 0;
                 animationValues[0][5] = 0;
                 animationValues[0][6] = 0;
@@ -3187,16 +3174,16 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 animationValues[1][7] = object.radius;
 
                 animatorSet.playTogether(
-                        ObjectAnimatorProxy.ofFloat(animatingImageView, "animationProgress", 0.0f, 1.0f),
-                        ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", 0),
-                        ObjectAnimatorProxy.ofFloat(containerView, "alpha", 0.0f)
+                        ObjectAnimator.ofFloat(animatingImageView, "animationProgress", 0.0f, 1.0f),
+                        ObjectAnimator.ofInt(backgroundDrawable, "alpha", 0),
+                        ObjectAnimator.ofFloat(containerView, "alpha", 0.0f)
                 );
             } else {
                 animatorSet.playTogether(
-                        ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", 0),
-                        ObjectAnimatorProxy.ofFloat(animatingImageView, "alpha", 0.0f),
-                        ObjectAnimatorProxy.ofFloat(animatingImageView, "translationY", translationY >= 0 ? AndroidUtilities.displaySize.y : -AndroidUtilities.displaySize.y),
-                        ObjectAnimatorProxy.ofFloat(containerView, "alpha", 0.0f)
+                        ObjectAnimator.ofInt(backgroundDrawable, "alpha", 0),
+                        ObjectAnimator.ofFloat(animatingImageView, "alpha", 0.0f),
+                        ObjectAnimator.ofFloat(animatingImageView, "translationY", translationY >= 0 ? AndroidUtilities.displaySize.y : -AndroidUtilities.displaySize.y),
+                        ObjectAnimator.ofFloat(containerView, "alpha", 0.0f)
                 );
             }
 
@@ -3212,8 +3199,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             };
 
             animatorSet.setDuration(200);
-            animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     AndroidUtilities.runOnUIThread(new Runnable() {
                         @Override
@@ -3226,7 +3212,6 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     });
                 }
 
-                @Override
                 public void onAnimationCancel(Object animation) {
                     onAnimationEnd(animation);
                 }
@@ -3237,12 +3222,12 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             }
             animatorSet.start();
         } else {
-            AnimatorSetProxy animatorSet = new AnimatorSetProxy();
+            AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.playTogether(
-                    ObjectAnimatorProxy.ofFloat(containerView, "scaleX", 0.9f),
-                    ObjectAnimatorProxy.ofFloat(containerView, "scaleY", 0.9f),
-                    ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", 0),
-                    ObjectAnimatorProxy.ofFloat(containerView, "alpha", 0.0f)
+                    ObjectAnimator.ofFloat(containerView, "scaleX", 0.9f),
+                    ObjectAnimator.ofFloat(containerView, "scaleY", 0.9f),
+                    ObjectAnimator.ofInt(backgroundDrawable, "alpha", 0),
+                    ObjectAnimator.ofFloat(containerView, "alpha", 0.0f)
             );
             animationInProgress = 2;
             animationEndRunnable = new Runnable() {
@@ -3256,14 +3241,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     }
                     animationInProgress = 0;
                     onPhotoClosed(object);
-                    ViewProxy.setScaleX(containerView, 1.0f);
-                    ViewProxy.setScaleY(containerView, 1.0f);
+                    containerView.setScaleX(1.0f);
+                    containerView.setScaleY(1.0f);
                     containerView.clearAnimation();
                 }
             };
             animatorSet.setDuration(200);
-            animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     if (animationEndRunnable != null) {
                         animationEndRunnable.run();
@@ -3693,14 +3677,13 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         animateToX = newTx;
         animateToY = newTy;
         animationStartTime = System.currentTimeMillis();
-        imageMoveAnimation = new AnimatorSetProxy();
+        imageMoveAnimation = new AnimatorSet();
         imageMoveAnimation.playTogether(
-                ObjectAnimatorProxy.ofFloat(this, "animationValue", 0, 1)
+                ObjectAnimator.ofFloat(this, "animationValue", 0, 1)
         );
         imageMoveAnimation.setInterpolator(interpolator);
         imageMoveAnimation.setDuration(duration);
-        imageMoveAnimation.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        imageMoveAnimation.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animation) {
                 imageMoveAnimation = null;
                 containerView.invalidate();

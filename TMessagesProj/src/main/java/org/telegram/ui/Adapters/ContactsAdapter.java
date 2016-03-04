@@ -19,7 +19,6 @@ import org.telegram.tgnet.TLRPC;
 import org.telegram.messenger.ContactsController;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.R;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.Cells.DividerCell;
 import org.telegram.ui.Cells.GreySectionCell;
 import org.telegram.ui.Cells.LetterSectionCell;
@@ -253,9 +252,9 @@ public class ContactsAdapter extends BaseSectionsAdapter {
             }
             if (ignoreUsers != null) {
                 if (ignoreUsers.containsKey(user.id)) {
-                    ViewProxy.setAlpha(convertView, 0.5f);
+                    convertView.setAlpha(0.5f);
                 } else {
-                    ViewProxy.setAlpha(convertView, 1.0f);
+                    convertView.setAlpha(1.0f);
                 }
             }
         }

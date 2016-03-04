@@ -33,7 +33,6 @@ import android.widget.TextView;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.Components.FrameLayoutFixed;
 import org.telegram.ui.Components.LayoutHelper;
 
@@ -452,7 +451,7 @@ public class ActionBarMenuItem extends FrameLayoutFixed {
                         listener.onTextChanged(searchField);
                     }
                     if (clearButton != null) {
-                        ViewProxy.setAlpha(clearButton, s == null || s.length() == 0 ? 0.6f : 1.0f);
+                        clearButton.setAlpha(s == null || s.length() == 0 ? 0.6f : 1.0f);
                     }
                 }
 

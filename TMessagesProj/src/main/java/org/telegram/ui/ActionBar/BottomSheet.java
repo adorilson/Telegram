@@ -41,10 +41,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.R;
@@ -518,7 +514,7 @@ public class BottomSheet extends Dialog {
         } else {
             backgroundDrawable.setAlpha(51);
         }
-        ViewProxy.setTranslationY(containerView, 0);
+        containerView.setTranslationY(0);
 
         AnimatorSet animatorSet = new AnimatorSet();
 
@@ -628,17 +624,16 @@ public class BottomSheet extends Dialog {
         if (useRevealAnimation) {
             startRevealAnimation(true);
         } else {
-            ViewProxy.setTranslationY(containerView, containerView.getMeasuredHeight());
+            containerView.setTranslationY(containerView.getMeasuredHeight());
             backgroundDrawable.setAlpha(0);
-            AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-            animatorSetProxy.playTogether(
-                    ObjectAnimatorProxy.ofFloat(containerView, "translationY", 0),
-                    ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", focusable ? 0 : 51));
-            animatorSetProxy.setDuration(200);
-            animatorSetProxy.setStartDelay(20);
-            animatorSetProxy.setInterpolator(new DecelerateInterpolator());
-            animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(
+                    ObjectAnimator.ofFloat(containerView, "translationY", 0),
+                    ObjectAnimator.ofInt(backgroundDrawable, "alpha", focusable ? 0 : 51));
+            animatorSet.setDuration(200);
+            animatorSet.setStartDelay(20);
+            animatorSet.setInterpolator(new DecelerateInterpolator());
+            animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     if (delegate != null) {
                         delegate.onOpenAnimationEnd();
@@ -648,7 +643,7 @@ public class BottomSheet extends Dialog {
                     }
                 }
             });
-            animatorSetProxy.start();
+            animatorSet.start();
         }
     }
 
@@ -681,15 +676,14 @@ public class BottomSheet extends Dialog {
             return;
         }
         dismissed = true;
-        AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-        animatorSetProxy.playTogether(
-                ObjectAnimatorProxy.ofFloat(containerView, "translationY", containerView.getMeasuredHeight() + AndroidUtilities.dp(10)),
-                ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", 0)
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(containerView, "translationY", containerView.getMeasuredHeight() + AndroidUtilities.dp(10)),
+                ObjectAnimator.ofInt(backgroundDrawable, "alpha", 0)
         );
-        animatorSetProxy.setDuration(180);
-        animatorSetProxy.setInterpolator(new AccelerateInterpolator());
-        animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        animatorSet.setDuration(180);
+        animatorSet.setInterpolator(new AccelerateInterpolator());
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animation) {
                 if (onClickListener != null) {
                     onClickListener.onClick(BottomSheet.this, item);
@@ -706,12 +700,11 @@ public class BottomSheet extends Dialog {
                 });
             }
 
-            @Override
             public void onAnimationCancel(Object animation) {
                 onAnimationEnd(animation);
             }
         });
-        animatorSetProxy.start();
+        animatorSet.start();
     }
 
     @Override
@@ -723,15 +716,14 @@ public class BottomSheet extends Dialog {
         if (useRevealAnimation) {
             startRevealAnimation(false);
         } else {
-            AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-            animatorSetProxy.playTogether(
-                    ObjectAnimatorProxy.ofFloat(containerView, "translationY", containerView.getMeasuredHeight() + AndroidUtilities.dp(10)),
-                    ObjectAnimatorProxy.ofInt(backgroundDrawable, "alpha", 0)
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(
+                    ObjectAnimator.ofFloat(containerView, "translationY", containerView.getMeasuredHeight() + AndroidUtilities.dp(10)),
+                    ObjectAnimator.ofInt(backgroundDrawable, "alpha", 0)
             );
-            animatorSetProxy.setDuration(180);
-            animatorSetProxy.setInterpolator(new AccelerateInterpolator());
-            animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animatorSet.setDuration(180);
+            animatorSet.setInterpolator(new AccelerateInterpolator());
+            animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     AndroidUtilities.runOnUIThread(new Runnable() {
                         @Override
@@ -745,12 +737,11 @@ public class BottomSheet extends Dialog {
                     });
                 }
 
-                @Override
                 public void onAnimationCancel(Object animation) {
                     onAnimationEnd(animation);
                 }
             });
-            animatorSetProxy.start();
+            animatorSet.start();
         }
     }
 

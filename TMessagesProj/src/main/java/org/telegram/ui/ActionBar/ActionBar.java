@@ -8,6 +8,10 @@
 
 package org.telegram.ui.ActionBar;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -22,14 +26,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.R;
 import org.telegram.ui.Components.LayoutHelper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class ActionBar extends FrameLayout {
 
@@ -236,16 +238,15 @@ public class ActionBar extends FrameLayout {
         }
         actionModeVisible = true;
         if (Build.VERSION.SDK_INT >= 14) {
-            ArrayList<Object> animators = new ArrayList<>();
-            animators.add(ObjectAnimatorProxy.ofFloat(actionMode, "alpha", 0.0f, 1.0f));
+            Collection<Animator> animators = new ArrayList<>();
+            animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f, 1.0f));
             if (occupyStatusBar && actionModeTop != null) {
-                animators.add(ObjectAnimatorProxy.ofFloat(actionModeTop, "alpha", 0.0f, 1.0f));
+                animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f, 1.0f));
             }
-            AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
+            AnimatorSet animatorSetProxy = new AnimatorSet();
             animatorSetProxy.playTogether(animators);
             animatorSetProxy.setDuration(200);
-            animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animatorSetProxy.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationStart(Object animation) {
                     actionMode.setVisibility(VISIBLE);
                     if (occupyStatusBar && actionModeTop != null) {
@@ -253,7 +254,6 @@ public class ActionBar extends FrameLayout {
                     }
                 }
 
-                @Override
                 public void onAnimationEnd(Object animation) {
                     if (titleTextView != null) {
                         titleTextView.setVisibility(INVISIBLE);
@@ -297,16 +297,15 @@ public class ActionBar extends FrameLayout {
         }
         actionModeVisible = false;
         if (Build.VERSION.SDK_INT >= 14) {
-            ArrayList<Object> animators = new ArrayList<>();
-            animators.add(ObjectAnimatorProxy.ofFloat(actionMode, "alpha", 0.0f));
+            Collection<Animator> animators = new ArrayList<>();
+            animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f));
             if (occupyStatusBar && actionModeTop != null) {
-                animators.add(ObjectAnimatorProxy.ofFloat(actionModeTop, "alpha", 0.0f));
+                animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f));
             }
-            AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
+            AnimatorSet animatorSetProxy = new AnimatorSet();
             animatorSetProxy.playTogether(animators);
             animatorSetProxy.setDuration(200);
-            animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animatorSetProxy.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     actionMode.setVisibility(INVISIBLE);
                     if (occupyStatusBar && actionModeTop != null) {

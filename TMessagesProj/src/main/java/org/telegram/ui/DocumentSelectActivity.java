@@ -8,6 +8,9 @@
 
 package org.telegram.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -36,8 +39,6 @@ import org.telegram.ui.ActionBar.BackDrawable;
 import org.telegram.ui.Adapters.BaseFragmentAdapter;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.ActionBarMenu;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.Cells.SharedDocumentCell;
 import org.telegram.ui.Components.LayoutHelper;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -238,12 +240,12 @@ public class DocumentSelectActivity extends BaseFragment {
                     selectedFiles.put(file.toString(), item);
                     selectedMessagesCountTextView.setNumber(1, false);
                     if (Build.VERSION.SDK_INT >= 11) {
-                        AnimatorSetProxy animatorSet = new AnimatorSetProxy();
-                        ArrayList<Object> animators = new ArrayList<>();
+                        AnimatorSet animatorSet = new AnimatorSet();
+                        Collection<Animator> animators = new ArrayList<>();
                         for (int a = 0; a < actionModeViews.size(); a++) {
                             View view2 = actionModeViews.get(a);
                             AndroidUtilities.clearDrawableAnimation(view2);
-                            animators.add(ObjectAnimatorProxy.ofFloat(view2, "scaleY", 0.1f, 1.0f));
+                            animators.add(ObjectAnimator.ofFloat(view2, "scaleY", 0.1f, 1.0f));
                         }
                         animatorSet.playTogether(animators);
                         animatorSet.setDuration(250);

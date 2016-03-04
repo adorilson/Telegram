@@ -41,7 +41,6 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.Emoji;
 import org.telegram.messenger.EmojiData;
 import org.telegram.messenger.LocaleController;
@@ -858,12 +857,12 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
                             first = false;
                             lastX = ev.getX();
                         }
-                        float newTranslationX = ViewProxy.getTranslationX(scrollSlidingTabStrip);
+                        float newTranslationX = scrollSlidingTabStrip.getTranslationX();
                         if (scrollSlidingTabStrip.getScrollX() == 0 && newTranslationX == 0) {
                             if (!startedScroll && lastX - ev.getX() < 0) {
                                 if (pager.beginFakeDrag()) {
                                     startedScroll = true;
-                                    lastTranslateX = ViewProxy.getTranslationX(scrollSlidingTabStrip);
+                                    lastTranslateX = scrollSlidingTabStrip.getTranslationX();
                                 }
                             } else if (startedScroll && lastX - ev.getX() > 0) {
                                 if (pager.isFakeDragging()) {
@@ -905,7 +904,7 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
             scrollSlidingTabStrip.setUnderlineColor(0xffe2e5e7);
             scrollSlidingTabStrip.setVisibility(INVISIBLE);
             addView(scrollSlidingTabStrip, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 48, Gravity.LEFT | Gravity.TOP));
-            ViewProxy.setTranslationX(scrollSlidingTabStrip, AndroidUtilities.displaySize.x);
+            scrollSlidingTabStrip.setTranslationX(AndroidUtilities.displaySize.x);
             updateStickerTabs();
             scrollSlidingTabStrip.setDelegate(new ScrollSlidingTabStrip.ScrollSlidingTabStripDelegate() {
                 @Override
@@ -1135,9 +1134,9 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
             }
         }
 
-        if (ViewProxy.getTranslationX(pagerSlidingTabStripContainer) != margin) {
-            ViewProxy.setTranslationX(pagerSlidingTabStripContainer, margin);
-            ViewProxy.setTranslationX(scrollSlidingTabStrip, width + margin);
+        if (pagerSlidingTabStripContainer.getTranslationX() != margin) {
+            pagerSlidingTabStripContainer.setTranslationX(margin);
+            pagerSlidingTabStripContainer.setTranslationX(width + margin);
             scrollSlidingTabStrip.setVisibility(margin < 0 ? VISIBLE : INVISIBLE);
             if (Build.VERSION.SDK_INT < 11) {
                 if (margin <= -width) {

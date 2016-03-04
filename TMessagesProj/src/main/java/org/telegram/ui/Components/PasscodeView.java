@@ -8,6 +8,10 @@
 
 package org.telegram.ui.Components;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -52,12 +56,9 @@ import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.R;
 import org.telegram.messenger.UserConfig;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 
 public class PasscodeView extends FrameLayout {
@@ -72,7 +73,7 @@ public class PasscodeView extends FrameLayout {
         private ArrayList<TextView> dotTextViews;
         private StringBuilder stringBuilder;
         private String DOT = "\u2022";
-        private AnimatorSetProxy currentAnimation;
+        private AnimatorSet currentAnimation;
         private Runnable dotRunnable;
 
         public AnimatingTextView(Context context) {
@@ -86,9 +87,9 @@ public class PasscodeView extends FrameLayout {
                 textView.setTextColor(0xffffffff);
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 36);
                 textView.setGravity(Gravity.CENTER);
-                ViewProxy.setAlpha(textView, 0);
-                ViewProxy.setPivotX(textView, AndroidUtilities.dp(25));
-                ViewProxy.setPivotY(textView, AndroidUtilities.dp(25));
+                textView.setAlpha(0);
+                textView.setPivotX(AndroidUtilities.dp(25));
+                textView.setPivotY(AndroidUtilities.dp(25));
                 addView(textView);
                 LayoutParams layoutParams = (LayoutParams) textView.getLayoutParams();
                 layoutParams.width = AndroidUtilities.dp(50);
@@ -101,10 +102,10 @@ public class PasscodeView extends FrameLayout {
                 textView.setTextColor(0xffffffff);
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 36);
                 textView.setGravity(Gravity.CENTER);
-                ViewProxy.setAlpha(textView, 0);
+                textView.setAlpha(0);
                 textView.setText(DOT);
-                ViewProxy.setPivotX(textView, AndroidUtilities.dp(25));
-                ViewProxy.setPivotY(textView, AndroidUtilities.dp(25));
+                textView.setPivotX(AndroidUtilities.dp(25));
+                textView.setPivotY(AndroidUtilities.dp(25));
                 addView(textView);
                 layoutParams = (LayoutParams) textView.getLayoutParams();
                 layoutParams.width = AndroidUtilities.dp(50);
@@ -130,37 +131,37 @@ public class PasscodeView extends FrameLayout {
             }
 
 
-            ArrayList<Object> animators = new ArrayList<>();
+            Collection<Animator> animators  = new ArrayList<>();
             final int newPos = stringBuilder.length();
             stringBuilder.append(c);
 
             TextView textView = characterTextViews.get(newPos);
             textView.setText(c);
-            ViewProxy.setTranslationX(textView, getXForTextView(newPos));
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0, 1));
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0, 1));
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0, 1));
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationY", AndroidUtilities.dp(20), 0));
+            textView.setTranslationX(getXForTextView(newPos));
+            animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0, 1));
+            animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0, 1));
+            animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0, 1));
+            animators.add(ObjectAnimator.ofFloat(textView, "translationY", AndroidUtilities.dp(20), 0));
             textView = dotTextViews.get(newPos);
-            ViewProxy.setTranslationX(textView, getXForTextView(newPos));
-            ViewProxy.setAlpha(textView, 0);
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0, 1));
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0, 1));
-            animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationY", AndroidUtilities.dp(20), 0));
+            textView.setTranslationX(getXForTextView(newPos));
+            textView.setAlpha(0);
+            animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0, 1));
+            animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0, 1));
+            animators.add(ObjectAnimator.ofFloat(textView, "translationY", AndroidUtilities.dp(20), 0));
 
             for (int a = newPos + 1; a < 4; a++) {
                 textView = characterTextViews.get(a);
-                if (ViewProxy.getAlpha(textView) != 0) {
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
+                if (textView.getAlpha() != 0) {
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
                 }
 
                 textView = dotTextViews.get(a);
-                if (ViewProxy.getAlpha(textView) != 0) {
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
+                if (textView.getAlpha() != 0) {
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
                 }
             }
 
@@ -173,22 +174,21 @@ public class PasscodeView extends FrameLayout {
                     if (dotRunnable != this) {
                         return;
                     }
-                    ArrayList<Object> animators = new ArrayList<>();
+                    Collection<Animator> animators = new ArrayList<>();
 
                     TextView textView = characterTextViews.get(newPos);
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
                     textView = dotTextViews.get(newPos);
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 1));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 1));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 1));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 1));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 1));
+                    animators.add(ObjectAnimator.ofFloat(textView, "alpha", 1));
 
-                    currentAnimation = new AnimatorSetProxy();
+                    currentAnimation = new AnimatorSet();
                     currentAnimation.setDuration(150);
                     currentAnimation.playTogether(animators);
-                    currentAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    currentAnimation.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             if (currentAnimation != null && currentAnimation.equals(animation)) {
                                 currentAnimation = null;
@@ -202,27 +202,26 @@ public class PasscodeView extends FrameLayout {
 
             for (int a = 0; a < newPos; a++) {
                 textView = characterTextViews.get(a);
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationX", getXForTextView(a)));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationY", 0));
+                animators.add(ObjectAnimator.ofFloat(textView, "translationX", getXForTextView(a)));
+                animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
+                animators.add(ObjectAnimator.ofFloat(textView, "translationY", 0));
                 textView = dotTextViews.get(a);
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationX", getXForTextView(a)));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 1));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 1));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 1));
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationY", 0));
+                animators.add(ObjectAnimator.ofFloat(textView, "translationX", getXForTextView(a)));
+                animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 1));
+                animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 1));
+                animators.add(ObjectAnimator.ofFloat(textView, "alpha", 1));
+                animators.add(ObjectAnimator.ofFloat(textView, "translationY", 0));
             }
 
             if (currentAnimation != null) {
                 currentAnimation.cancel();
             }
-            currentAnimation = new AnimatorSetProxy();
+            currentAnimation = new AnimatorSet();
             currentAnimation.setDuration(150);
             currentAnimation.playTogether(animators);
-            currentAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            currentAnimation.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     if (currentAnimation != null && currentAnimation.equals(animation)) {
                         currentAnimation = null;
@@ -250,7 +249,7 @@ public class PasscodeView extends FrameLayout {
                 FileLog.e("tmessages", e);
             }
 
-            ArrayList<Object> animators = new ArrayList<>();
+            Collection<Animator> animators = new ArrayList<>();
             int deletingPos = stringBuilder.length() - 1;
             if (deletingPos != 0) {
                 stringBuilder.deleteCharAt(deletingPos);
@@ -258,21 +257,21 @@ public class PasscodeView extends FrameLayout {
 
             for (int a = deletingPos; a < 4; a++) {
                 TextView textView = characterTextViews.get(a);
-                if (ViewProxy.getAlpha(textView) != 0) {
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationX", getXForTextView(a)));
+                if (textView.getAlpha() != 0) {
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "translationY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "translationX", getXForTextView(a)));
                 }
 
                 textView = dotTextViews.get(a);
-                if (ViewProxy.getAlpha(textView) != 0) {
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationY", 0));
-                    animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationX", getXForTextView(a)));
+                if (textView.getAlpha() != 0) {
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "translationY", 0));
+                    animators.add(ObjectAnimator.ofFloat(textView, "translationX", getXForTextView(a)));
                 }
             }
 
@@ -282,9 +281,9 @@ public class PasscodeView extends FrameLayout {
 
             for (int a = 0; a < deletingPos; a++) {
                 TextView textView = characterTextViews.get(a);
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationX", getXForTextView(a)));
+                animators.add(ObjectAnimator.ofFloat(textView, "translationX", getXForTextView(a)));
                 textView = dotTextViews.get(a);
-                animators.add(ObjectAnimatorProxy.ofFloat(textView, "translationX", getXForTextView(a)));
+                animators.add(ObjectAnimator.ofFloat(textView, "translationX", getXForTextView(a)));
             }
 
             if (dotRunnable != null) {
@@ -295,11 +294,10 @@ public class PasscodeView extends FrameLayout {
             if (currentAnimation != null) {
                 currentAnimation.cancel();
             }
-            currentAnimation = new AnimatorSetProxy();
+            currentAnimation = new AnimatorSet();
             currentAnimation.setDuration(150);
             currentAnimation.playTogether(animators);
-            currentAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            currentAnimation.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     if (currentAnimation != null && currentAnimation.equals(animation)) {
                         currentAnimation = null;
@@ -323,29 +321,28 @@ public class PasscodeView extends FrameLayout {
             }
             stringBuilder.delete(0, stringBuilder.length());
             if (animated) {
-                ArrayList<Object> animators = new ArrayList<>();
+                Collection<Animator> animators  = new ArrayList<>();
 
                 for (int a = 0; a < 4; a++) {
                     TextView textView = characterTextViews.get(a);
-                    if (ViewProxy.getAlpha(textView) != 0) {
-                        animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                        animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                        animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
+                    if (textView.getAlpha() != 0) {
+                        animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                        animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                        animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
                     }
 
                     textView = dotTextViews.get(a);
-                    if (ViewProxy.getAlpha(textView) != 0) {
-                        animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleX", 0));
-                        animators.add(ObjectAnimatorProxy.ofFloat(textView, "scaleY", 0));
-                        animators.add(ObjectAnimatorProxy.ofFloat(textView, "alpha", 0));
+                    if (textView.getAlpha() != 0) {
+                        animators.add(ObjectAnimator.ofFloat(textView, "scaleX", 0));
+                        animators.add(ObjectAnimator.ofFloat(textView, "scaleY", 0));
+                        animators.add(ObjectAnimator.ofFloat(textView, "alpha", 0));
                     }
                 }
 
-                currentAnimation = new AnimatorSetProxy();
+                currentAnimation = new AnimatorSet();
                 currentAnimation.setDuration(150);
                 currentAnimation.playTogether(animators);
-                currentAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                    @Override
+                currentAnimation.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Object animation) {
                         if (currentAnimation != null && currentAnimation.equals(animation)) {
                             currentAnimation = null;
@@ -356,9 +353,9 @@ public class PasscodeView extends FrameLayout {
             } else {
                 for (int a = 0; a < 4; a++) {
                     TextView textView = characterTextViews.get(a);
-                    ViewProxy.setAlpha(textView, 0);
+                    textView.setAlpha(0);
                     textView = dotTextViews.get(a);
-                    ViewProxy.setAlpha(textView, 0);
+                    textView.setAlpha(0);
                 }
             }
         }
@@ -377,23 +374,23 @@ public class PasscodeView extends FrameLayout {
             for (int a = 0; a < 4; a++) {
                 if (a < stringBuilder.length()) {
                     TextView textView = characterTextViews.get(a);
-                    ViewProxy.setAlpha(textView, 0);
-                    ViewProxy.setScaleX(textView, 1);
-                    ViewProxy.setScaleY(textView, 1);
-                    ViewProxy.setTranslationY(textView, 0);
-                    ViewProxy.setTranslationX(textView, getXForTextView(a));
+                    textView.setAlpha(0);
+                    textView.setScaleX(1);
+                    textView.setScaleY(1);
+                    textView.setTranslationY(0);
+                    textView.setTranslationX(getXForTextView(a));
 
                     textView = dotTextViews.get(a);
-                    ViewProxy.setAlpha(textView, 1);
-                    ViewProxy.setScaleX(textView, 1);
-                    ViewProxy.setScaleY(textView, 1);
-                    ViewProxy.setTranslationY(textView, 0);
-                    ViewProxy.setTranslationX(textView, getXForTextView(a));
+                    textView.setAlpha(1);
+                    textView.setScaleX(1);
+                    textView.setScaleY(1);
+                    textView.setTranslationY(0);
+                    textView.setTranslationX(getXForTextView(a));
                 } else {
                     TextView textView = characterTextViews.get(a);
-                    ViewProxy.setAlpha(textView, 0);
+                    textView.setAlpha(0);
                     textView = dotTextViews.get(a);
-                    ViewProxy.setAlpha(textView, 0);
+                    textView.setAlpha(0);
                 }
             }
             super.onLayout(changed, left, top, right, bottom);
@@ -765,19 +762,18 @@ public class PasscodeView extends FrameLayout {
         AndroidUtilities.hideKeyboard(passwordEditText);
 
         if (Build.VERSION.SDK_INT >= 14) {
-            AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-            animatorSetProxy.setDuration(200);
-            animatorSetProxy.playTogether(
-                    ObjectAnimatorProxy.ofFloat(this, "translationY", AndroidUtilities.dp(20)),
-                    ObjectAnimatorProxy.ofFloat(this, "alpha", AndroidUtilities.dp(0.0f)));
-            animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.setDuration(200);
+            animatorSet.playTogether(
+                    ObjectAnimator.ofFloat(this, "translationY", AndroidUtilities.dp(20)),
+                    ObjectAnimator.ofFloat(this, "alpha", AndroidUtilities.dp(0.0f)));
+            animatorSet.addListener(new AnimatorListenerAdapter(){
                 public void onAnimationEnd(Object animation) {
                     PasscodeView.this.clearAnimation();
                     setVisibility(View.GONE);
                 }
             });
-            animatorSetProxy.start();
+            animatorSet.start();
         } else {
             setVisibility(View.GONE);
         }
@@ -796,16 +792,15 @@ public class PasscodeView extends FrameLayout {
             passcodeTextView.clearAnimation();
             return;
         }
-        AnimatorSetProxy animatorSetProxy = new AnimatorSetProxy();
-        animatorSetProxy.playTogether(ObjectAnimatorProxy.ofFloat(passcodeTextView, "translationX", AndroidUtilities.dp(x)));
-        animatorSetProxy.setDuration(50);
-        animatorSetProxy.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(ObjectAnimator.ofFloat(passcodeTextView, "translationX", AndroidUtilities.dp(x)));
+        animatorSet.setDuration(50);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animation) {
                 shakeTextView(num == 5 ? 0 : -x, num + 1);
             }
         });
-        animatorSetProxy.start();
+        animatorSet.start();
     }
 
     private void onPasscodeError() {
@@ -987,8 +982,8 @@ public class PasscodeView extends FrameLayout {
             return;
         }
         if (Build.VERSION.SDK_INT >= 14) {
-            ViewProxy.setAlpha(this, 1.0f);
-            ViewProxy.setTranslationY(this, 0);
+            this.setAlpha(1.0f);
+            this.setTranslationY(0);
             this.clearAnimation();
         }
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);

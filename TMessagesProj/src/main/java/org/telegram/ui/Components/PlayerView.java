@@ -8,6 +8,9 @@
 
 package org.telegram.ui.Components;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Build;
@@ -23,10 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.NotificationCenter;
@@ -39,7 +38,7 @@ public class PlayerView extends FrameLayout implements NotificationCenter.Notifi
     private ImageView playButton;
     private TextView titleTextView;
     private MessageObject lastMessageObject;
-    private AnimatorSetProxy animatorSet;
+    private AnimatorSet animatorSet;
     private float yPosition;
     private BaseFragment fragment;
     private float topPadding;
@@ -171,13 +170,12 @@ public class PlayerView extends FrameLayout implements NotificationCenter.Notifi
                         animatorSet.cancel();
                         animatorSet = null;
                     }
-                    animatorSet = new AnimatorSetProxy();
-                    animatorSet.playTogether(ObjectAnimatorProxy.ofFloat(this, "translationY", -AndroidUtilities.dp(36)),
-                            ObjectAnimatorProxy.ofFloat(this, "topPadding", 0));
+                    animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(ObjectAnimator.ofFloat(this, "translationY", -AndroidUtilities.dp(36)),
+                            ObjectAnimator.ofFloat(this, "topPadding", 0));
                     animatorSet.setDuration(200);
-                    animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
-                        public void onAnimationEnd(Object animation) {
+                    animatorSet.addListener(new AnimatorListenerAdapter() {
+                       public void onAnimationEnd(Object animation) {
                             if (animatorSet != null && animatorSet.equals(animation)) {
                                 clearAnimation();
                                 setVisibility(GONE);
@@ -191,7 +189,7 @@ public class PlayerView extends FrameLayout implements NotificationCenter.Notifi
         } else {
             if (create && topPadding == 0) {
                 setTopPadding(AndroidUtilities.dp(36));
-                ViewProxy.setTranslationY(this, 0);
+                this.setTranslationY(0);
                 yPosition = 0;
             }
             if (!visible) {
@@ -200,12 +198,11 @@ public class PlayerView extends FrameLayout implements NotificationCenter.Notifi
                         animatorSet.cancel();
                         animatorSet = null;
                     }
-                    animatorSet = new AnimatorSetProxy();
-                    animatorSet.playTogether(ObjectAnimatorProxy.ofFloat(this, "translationY", -AndroidUtilities.dp(36), 0),
-                            ObjectAnimatorProxy.ofFloat(this, "topPadding", AndroidUtilities.dp(36)));
+                    animatorSet = new AnimatorSet();
+                    animatorSet.playTogether(ObjectAnimator.ofFloat(this, "translationY", -AndroidUtilities.dp(36), 0),
+                            ObjectAnimator.ofFloat(this, "topPadding", AndroidUtilities.dp(36)));
                     animatorSet.setDuration(200);
-                    animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-                        @Override
+                    animatorSet.addListener(new AnimatorListenerAdapter() {
                         public void onAnimationEnd(Object animation) {
                             if (animatorSet != null && animatorSet.equals(animation)) {
                                 animatorSet = null;

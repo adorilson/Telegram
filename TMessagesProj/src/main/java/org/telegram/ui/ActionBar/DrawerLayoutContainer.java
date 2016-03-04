@@ -8,6 +8,9 @@
 
 package org.telegram.ui.ActionBar;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -28,9 +31,6 @@ import android.widget.ListView;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.R;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 
 public class DrawerLayoutContainer extends FrameLayout {
 
@@ -46,7 +46,7 @@ public class DrawerLayoutContainer extends FrameLayout {
     private int startedTrackingPointerId;
     private VelocityTracker velocityTracker = null;
     private boolean beginTrackingSent;
-    private AnimatorSetProxy currentAnimation = null;
+    private AnimatorSet currentAnimation = null;
 
     private Paint scrimPaint = new Paint();
 
@@ -172,9 +172,9 @@ public class DrawerLayoutContainer extends FrameLayout {
             AndroidUtilities.hideKeyboard(parentActionBarLayout.parentActivity.getCurrentFocus());
         }
         cancelCurrentAnimation();
-        AnimatorSetProxy animatorSet = new AnimatorSetProxy();
+        AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
-                ObjectAnimatorProxy.ofFloat(this, "drawerPosition", drawerLayout.getMeasuredWidth())
+                ObjectAnimator.ofFloat(this, "drawerPosition", drawerLayout.getMeasuredWidth())
         );
         animatorSet.setInterpolator(new DecelerateInterpolator());
         if (fast) {
@@ -182,13 +182,11 @@ public class DrawerLayoutContainer extends FrameLayout {
         } else {
             animatorSet.setDuration(300);
         }
-        animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animator) {
                 onDrawerAnimationEnd(true);
             }
 
-            @Override
             public void onAnimationCancel(Object animator) {
                 onDrawerAnimationEnd(true);
             }
@@ -199,9 +197,9 @@ public class DrawerLayoutContainer extends FrameLayout {
 
     public void closeDrawer(boolean fast) {
         cancelCurrentAnimation();
-        AnimatorSetProxy animatorSet = new AnimatorSetProxy();
+        AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
-                ObjectAnimatorProxy.ofFloat(this, "drawerPosition", 0)
+                ObjectAnimator.ofFloat(this, "drawerPosition", 0)
         );
         animatorSet.setInterpolator(new DecelerateInterpolator());
         if (fast) {
@@ -209,13 +207,11 @@ public class DrawerLayoutContainer extends FrameLayout {
         } else {
             animatorSet.setDuration(300);
         }
-        animatorSet.addListener(new AnimatorListenerAdapterProxy() {
-            @Override
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animator) {
                 onDrawerAnimationEnd(false);
             }
 
-            @Override
             public void onAnimationCancel(Object animator) {
                 onDrawerAnimationEnd(false);
             }

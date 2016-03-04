@@ -16,6 +16,7 @@
 
 package org.telegram.ui.Components;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
@@ -33,7 +34,6 @@ import android.widget.CompoundButton;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 
 public class Switch extends CompoundButton {
 
@@ -89,7 +89,7 @@ public class Switch extends CompoundButton {
     private int mSwitchRight;
     private int mSwitchBottom;
 
-    private ObjectAnimatorProxy mPositionAnimator;
+    private ObjectAnimator mPositionAnimator;
 
     private final Rect mTempRect = new Rect();
 
@@ -358,7 +358,7 @@ public class Switch extends CompoundButton {
 
     private void animateThumbToCheckedState(boolean newCheckedState) {
         final float targetPosition = newCheckedState ? 1 : 0;
-        mPositionAnimator = ObjectAnimatorProxy.ofFloatProxy(this, "thumbPosition", targetPosition);
+        mPositionAnimator = ObjectAnimator.ofFloat(this, "thumbPosition", targetPosition);
         mPositionAnimator.setDuration(THUMB_ANIMATION_DURATION);
         mPositionAnimator.start();
     }

@@ -8,6 +8,8 @@
 
 package org.telegram.ui.Components;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -32,8 +34,6 @@ import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.R;
 import org.telegram.tgnet.TLRPC;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 
 public class PhotoViewerCaptionEnterView extends FrameLayoutFixed implements NotificationCenter.NotificationCenterDelegate, SizeNotifierFrameLayoutPhoto.SizeNotifierFrameLayoutPhotoDelegate {
 
@@ -48,9 +48,9 @@ public class PhotoViewerCaptionEnterView extends FrameLayoutFixed implements Not
     private EmojiView emojiView;
     private SizeNotifierFrameLayoutPhoto sizeNotifierLayout;
 
-    private AnimatorSetProxy runningAnimation;
-    private AnimatorSetProxy runningAnimation2;
-    private ObjectAnimatorProxy runningAnimationAudio;
+    private AnimatorSet runningAnimation;
+    private AnimatorSet runningAnimation2;
+    private ObjectAnimator runningAnimationAudio;
     private int runningAnimationType;
     private int audioInterfaceState;
 

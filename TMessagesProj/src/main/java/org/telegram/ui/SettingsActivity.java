@@ -8,6 +8,8 @@
 
 package org.telegram.ui;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.annotation.SuppressLint;
@@ -51,9 +53,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 import org.telegram.PhoneFormat.PhoneFormat;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.UserObject;
@@ -75,7 +74,6 @@ import org.telegram.messenger.UserConfig;
 import org.telegram.messenger.MessageObject;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.Adapters.BaseFragmentAdapter;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.ui.Cells.CheckBoxCell;
 import org.telegram.ui.Cells.TextInfoCell;
 import org.telegram.ui.Cells.EmptyCell;
@@ -106,7 +104,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
     private TextView nameTextView;
     private TextView onlineTextView;
     private ImageView writeButton;
-    private AnimatorSetProxy writeButtonAnimation;
+    private AnimatorSet writeButtonAnimation;
     private AvatarUpdater avatarUpdater = new AvatarUpdater();
     private View extraHeightView;
     private View shadowView;
@@ -624,7 +622,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         frameLayout.addView(actionBar);
 
         extraHeightView = new View(context);
-        ViewProxy.setPivotY(extraHeightView, 0);
+        extraHeightView.setPivotY(0);
         extraHeightView.setBackgroundColor(AvatarDrawable.getProfileBackColorForId(5));
         frameLayout.addView(extraHeightView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 88));
 
@@ -634,8 +632,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
         avatarImage = new BackupImageView(context);
         avatarImage.setRoundRadius(AndroidUtilities.dp(21));
-        ViewProxy.setPivotX(avatarImage, 0);
-        ViewProxy.setPivotY(avatarImage, 0);
+        avatarImage.setPivotX(0);
+        avatarImage.setPivotY(0);
         frameLayout.addView(avatarImage, LayoutHelper.createFrame(42, 42, Gravity.TOP | Gravity.LEFT, 64, 0, 0, 0));
         avatarImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -657,8 +655,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         nameTextView.setEllipsize(TextUtils.TruncateAt.END);
         nameTextView.setGravity(Gravity.LEFT);
         nameTextView.setTypeface(AndroidUtilities.getTypeface("fonts/rmedium.ttf"));
-        ViewProxy.setPivotX(nameTextView, 0);
-        ViewProxy.setPivotY(nameTextView, 0);
+        nameTextView.setPivotX(0);
+        nameTextView.setPivotY(0);
         frameLayout.addView(nameTextView, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP, 118, 0, 48, 0));
 
         onlineTextView = new TextView(context);
@@ -791,7 +789,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 object.thumb = object.imageReceiver.getBitmap();
                 object.size = -1;
                 object.radius = avatarImage.getImageReceiver().getRoundRadius();
-                object.scale = ViewProxy.getScaleX(avatarImage);
+                object.scale = avatarImage.getScaleX();
                 return object;
             }
         }
@@ -973,21 +971,21 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             if (layoutParams.topMargin != newTop) {
                 layoutParams.topMargin = newTop;
                 listView.setLayoutParams(layoutParams);
-                ViewProxy.setTranslationY(extraHeightView, newTop);
+                extraHeightView.setTranslationY(newTop);
             }
         }
 
         if (avatarImage != null) {
             float diff = extraHeight / (float) AndroidUtilities.dp(88);
-            ViewProxy.setScaleY(extraHeightView, diff);
-            ViewProxy.setTranslationY(shadowView, newTop + extraHeight);
+            extraHeightView.setScaleY(diff);
+            shadowView.setTranslationY(newTop + extraHeight);
 
             if (Build.VERSION.SDK_INT < 11) {
                 layoutParams = (FrameLayout.LayoutParams) writeButton.getLayoutParams();
                 layoutParams.topMargin = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f);
                 writeButton.setLayoutParams(layoutParams);
             } else {
-                ViewProxy.setTranslationY(writeButton, (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
+                writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
             }
 
             final boolean setVisible = diff > 0.2f;
@@ -1000,29 +998,28 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     writeButton.setTag(0);
                 }
                 if (writeButtonAnimation != null) {
-                    AnimatorSetProxy old = writeButtonAnimation;
+                    AnimatorSet old = writeButtonAnimation;
                     writeButtonAnimation = null;
                     old.cancel();
                 }
-                writeButtonAnimation = new AnimatorSetProxy();
+                writeButtonAnimation = new AnimatorSet();
                 if (setVisible) {
                     writeButtonAnimation.setInterpolator(new DecelerateInterpolator());
                     writeButtonAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(writeButton, "scaleX", 1.0f),
-                            ObjectAnimatorProxy.ofFloat(writeButton, "scaleY", 1.0f),
-                            ObjectAnimatorProxy.ofFloat(writeButton, "alpha", 1.0f)
+                            ObjectAnimator.ofFloat(writeButton, "scaleX", 1.0f),
+                            ObjectAnimator.ofFloat(writeButton, "scaleY", 1.0f),
+                            ObjectAnimator.ofFloat(writeButton, "alpha", 1.0f)
                     );
                 } else {
                     writeButtonAnimation.setInterpolator(new AccelerateInterpolator());
                     writeButtonAnimation.playTogether(
-                            ObjectAnimatorProxy.ofFloat(writeButton, "scaleX", 0.2f),
-                            ObjectAnimatorProxy.ofFloat(writeButton, "scaleY", 0.2f),
-                            ObjectAnimatorProxy.ofFloat(writeButton, "alpha", 0.0f)
+                            ObjectAnimator.ofFloat(writeButton, "scaleX", 0.2f),
+                            ObjectAnimator.ofFloat(writeButton, "scaleY", 0.2f),
+                            ObjectAnimator.ofFloat(writeButton, "alpha", 0.0f)
                     );
                 }
                 writeButtonAnimation.setDuration(150);
-                writeButtonAnimation.addListener(new AnimatorListenerAdapterProxy() {
-                    @Override
+                writeButtonAnimation.addListener(new AnimatorListenerAdapter() {
                     public void onAnimationEnd(Object animation) {
                         if (writeButtonAnimation != null && writeButtonAnimation.equals(animation)) {
                             writeButton.clearAnimation();
@@ -1034,17 +1031,17 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 writeButtonAnimation.start();
             }
 
-            ViewProxy.setScaleX(avatarImage, (42 + 18 * diff) / 42.0f);
-            ViewProxy.setScaleY(avatarImage, (42 + 18 * diff) / 42.0f);
+            avatarImage.setScaleX((42 + 18 * diff) / 42.0f);
+            avatarImage.setScaleY((42 + 18 * diff) / 42.0f);
             float avatarY = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() / 2.0f * (1.0f + diff) - 21 * AndroidUtilities.density + 27 * AndroidUtilities.density * diff;
-            ViewProxy.setTranslationX(avatarImage, -AndroidUtilities.dp(47) * diff);
-            ViewProxy.setTranslationY(avatarImage, (float) Math.ceil(avatarY));
-            ViewProxy.setTranslationX(nameTextView, -21 * AndroidUtilities.density * diff);
-            ViewProxy.setTranslationY(nameTextView, (float) Math.floor(avatarY) - (float) Math.ceil(AndroidUtilities.density) + (float) Math.floor(7 * AndroidUtilities.density * diff));
-            ViewProxy.setTranslationX(onlineTextView, -21 * AndroidUtilities.density * diff);
-            ViewProxy.setTranslationY(onlineTextView, (float) Math.floor(avatarY) + AndroidUtilities.dp(22) + (float )Math.floor(11 * AndroidUtilities.density) * diff);
-            ViewProxy.setScaleX(nameTextView, 1.0f + 0.12f * diff);
-            ViewProxy.setScaleY(nameTextView, 1.0f + 0.12f * diff);
+            avatarImage.setTranslationX(-AndroidUtilities.dp(47) * diff);
+            avatarImage.setTranslationY((float) Math.ceil(avatarY));
+            nameTextView.setTranslationX(-21 * AndroidUtilities.density * diff);
+            nameTextView.setTranslationY((float) Math.floor(avatarY) - (float) Math.ceil(AndroidUtilities.density) + (float) Math.floor(7 * AndroidUtilities.density * diff));
+            onlineTextView.setTranslationX(-21 * AndroidUtilities.density * diff);
+            onlineTextView.setTranslationY((float) Math.floor(avatarY) + AndroidUtilities.dp(22) + (float) Math.floor(11 * AndroidUtilities.density) * diff);
+            nameTextView.setScaleX(1.0f + 0.12f * diff);
+            nameTextView.setScaleY(1.0f + 0.12f * diff);
         }
     }
 

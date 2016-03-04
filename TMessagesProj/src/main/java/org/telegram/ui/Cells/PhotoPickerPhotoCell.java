@@ -8,15 +8,14 @@
 
 package org.telegram.ui.Cells;
 
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.FrameLayout;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.AnimatorListenerAdapterProxy;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.R;
 import org.telegram.ui.Components.BackupImageView;
 import org.telegram.ui.Components.CheckBox;
@@ -27,7 +26,7 @@ public class PhotoPickerPhotoCell extends FrameLayout {
     public BackupImageView photoImage;
     public FrameLayout checkFrame;
     public CheckBox checkBox;
-    private AnimatorSetProxy animator;
+    private AnimatorSet animator;
     public int itemWidth;
 
     public PhotoPickerPhotoCell(Context context) {
@@ -62,12 +61,11 @@ public class PhotoPickerPhotoCell extends FrameLayout {
             if (checked) {
                 setBackgroundColor(0xff0A0A0A);
             }
-            animator = new AnimatorSetProxy();
-            animator.playTogether(ObjectAnimatorProxy.ofFloat(photoImage, "scaleX", checked ? 0.85f : 1.0f),
-                    ObjectAnimatorProxy.ofFloat(photoImage, "scaleY", checked ? 0.85f : 1.0f));
+            animator = new AnimatorSet();
+            animator.playTogether(ObjectAnimator.ofFloat(photoImage, "scaleX", checked ? 0.85f : 1.0f),
+                    ObjectAnimator.ofFloat(photoImage, "scaleY", checked ? 0.85f : 1.0f));
             animator.setDuration(200);
-            animator.addListener(new AnimatorListenerAdapterProxy() {
-                @Override
+            animator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
                     if (animator.equals(animation)) {
                         animator = null;
@@ -80,8 +78,8 @@ public class PhotoPickerPhotoCell extends FrameLayout {
             animator.start();
         } else {
             setBackgroundColor(checked ? 0xff0A0A0A : 0);
-            ViewProxy.setScaleX(photoImage, checked ? 0.85f : 1.0f);
-            ViewProxy.setScaleY(photoImage, checked ? 0.85f : 1.0f);
+            photoImage.setScaleX(checked ? 0.85f : 1.0f);
+            photoImage.setScaleY(checked ? 0.85f : 1.0f);
         }
     }
 }

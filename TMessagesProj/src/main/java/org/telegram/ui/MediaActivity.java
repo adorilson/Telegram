@@ -8,6 +8,9 @@
 
 package org.telegram.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -63,8 +66,6 @@ import org.telegram.ui.ActionBar.BackDrawable;
 import org.telegram.ui.ActionBar.BottomSheet;
 import org.telegram.ui.Adapters.BaseFragmentAdapter;
 import org.telegram.ui.Adapters.BaseSectionsAdapter;
-import org.telegram.messenger.AnimationCompat.AnimatorSetProxy;
-import org.telegram.messenger.AnimationCompat.ObjectAnimatorProxy;
 import org.telegram.ui.Cells.GreySectionCell;
 import org.telegram.ui.Cells.LoadingCell;
 import org.telegram.ui.Cells.SharedDocumentCell;
@@ -81,6 +82,7 @@ import org.telegram.ui.Components.WebFrameLayout;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Timer;
@@ -972,12 +974,12 @@ public class MediaActivity extends BaseFragment implements NotificationCenter.No
         actionBar.createActionMode().getItem(delete).setVisibility(cantDeleteMessagesCount == 0 ? View.VISIBLE : View.GONE);
         selectedMessagesCountTextView.setNumber(1, false);
         if (Build.VERSION.SDK_INT >= 11) {
-            AnimatorSetProxy animatorSet = new AnimatorSetProxy();
-            ArrayList<Object> animators = new ArrayList<>();
+            AnimatorSet animatorSet = new AnimatorSet();
+            Collection<Animator> animators = new ArrayList<>();
             for (int i = 0; i < actionModeViews.size(); i++) {
                 View view2 = actionModeViews.get(i);
                 AndroidUtilities.clearDrawableAnimation(view2);
-                animators.add(ObjectAnimatorProxy.ofFloat(view2, "scaleY", 0.1f, 1.0f));
+                animators.add(ObjectAnimator.ofFloat(view2, "scaleY", 0.1f, 1.0f));
             }
             animatorSet.playTogether(animators);
             animatorSet.setDuration(250);

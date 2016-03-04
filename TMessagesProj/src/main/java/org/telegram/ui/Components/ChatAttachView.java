@@ -30,7 +30,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MessageObject;
@@ -416,7 +415,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
             object.parentView = attachPhotoRecyclerView;
             object.imageReceiver = cell.getImageView().getImageReceiver();
             object.thumb = object.imageReceiver.getBitmap();
-            object.scale = ViewProxy.getScaleX(cell.getImageView());
+            object.scale = cell.getImageView().getScaleX();
             object.clipBottomAddition = (Build.VERSION.SDK_INT >= 21 ? 0 : -AndroidUtilities.statusBarHeight);
             cell.getCheckBox().setVisibility(View.GONE);
             return object;

@@ -34,7 +34,6 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.telegram.messenger.AndroidUtilities;
-import org.telegram.messenger.AnimationCompat.ViewProxy;
 import org.telegram.messenger.FileLoader;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaController;
@@ -513,7 +512,7 @@ public class PhotoPickerActivity extends BaseFragment implements NotificationCen
             object.viewX = coords[0];
             object.viewY = coords[1] - AndroidUtilities.statusBarHeight;
             if (Build.VERSION.SDK_INT < 11) {
-                float scale = ViewProxy.getScaleX(cell.photoImage);
+                float scale = cell.photoImage.getScaleX();
                 if (scale != 1) {
                     int width = cell.photoImage.getMeasuredWidth();
                     object.viewX += (width - width * scale) / 2;
@@ -523,7 +522,7 @@ public class PhotoPickerActivity extends BaseFragment implements NotificationCen
             object.parentView = listView;
             object.imageReceiver = cell.photoImage.getImageReceiver();
             object.thumb = object.imageReceiver.getBitmap();
-            object.scale = ViewProxy.getScaleX(cell.photoImage);
+            object.scale = cell.photoImage.getScaleX();
             cell.checkBox.setVisibility(View.GONE);
             return object;
         }
