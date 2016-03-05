@@ -62,10 +62,6 @@ public class TextCheckCell extends FrameLayoutFixed {
 
     public void setTextAndCheck(String text, boolean checked, boolean divider) {
         textView.setText(text);
-        if (Build.VERSION.SDK_INT < 11) {
-            checkBox.resetLayout();
-            checkBox.requestLayout();
-        }
         checkBox.setChecked(checked);
         needDivider = divider;
         setWillNotDraw(!divider);

@@ -604,14 +604,9 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
                         return;
                     }
                     try {
-                        if (Build.VERSION.SDK_INT < 11) {
-                            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            clipboard.setText(invite.link);
-                        } else {
-                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                            android.content.ClipData clip = android.content.ClipData.newPlainText("label", invite.link);
-                            clipboard.setPrimaryClip(clip);
-                        }
+                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                        android.content.ClipData clip = android.content.ClipData.newPlainText("label", invite.link);
+                        clipboard.setPrimaryClip(clip);
                         Toast.makeText(getParentActivity(), LocaleController.getString("LinkCopied", R.string.LinkCopied), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         FileLog.e("tmessages", e);
@@ -677,9 +672,8 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
             nameTextView.setHorizontalScrollBarEnabled(false);
             nameTextView.setPadding(0, 0, 0, 0);
             nameTextView.setHint(LocaleController.getString("AddMutual", R.string.AddMutual));
-            if (Build.VERSION.SDK_INT >= 11) {
-                nameTextView.setTextIsSelectable(false);
-            }
+            nameTextView.setTextIsSelectable(false);
+
             nameTextView.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_EXTRACT_UI);
             nameTextView.setGravity((LocaleController.isRTL ? Gravity.RIGHT : Gravity.LEFT) | Gravity.CENTER_VERTICAL);
             AndroidUtilities.clearCursorDrawable(nameTextView);
@@ -739,9 +733,7 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
                                 if (listView != null) {
                                     listView.setAdapter(searchListViewAdapter);
                                     searchListViewAdapter.notifyDataSetChanged();
-                                    if (android.os.Build.VERSION.SDK_INT >= 11) {
-                                        listView.setFastScrollAlwaysVisible(false);
-                                    }
+                                    listView.setFastScrollAlwaysVisible(false);
                                     listView.setFastScrollEnabled(false);
                                     listView.setVerticalScrollBarEnabled(true);
                                 }
@@ -755,9 +747,8 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
                                 searchWas = false;
                                 listView.setAdapter(listViewAdapter);
                                 listViewAdapter.notifyDataSetChanged();
-                                if (android.os.Build.VERSION.SDK_INT >= 11) {
-                                    listView.setFastScrollAlwaysVisible(true);
-                                }
+                                listView.setFastScrollAlwaysVisible(true);
+
                                 listView.setFastScrollEnabled(true);
                                 listView.setVerticalScrollBarEnabled(false);
                                 emptyTextView.setText(LocaleController.getString("NoContacts", R.string.NoContacts));
@@ -796,10 +787,9 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
             listView.setFastScrollEnabled(true);
             listView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
             listView.setAdapter(listViewAdapter);
-            if (Build.VERSION.SDK_INT >= 11) {
-                listView.setFastScrollAlwaysVisible(true);
-                listView.setVerticalScrollbarPosition(LocaleController.isRTL ? ListView.SCROLLBAR_POSITION_LEFT : ListView.SCROLLBAR_POSITION_RIGHT);
-            }
+            listView.setFastScrollAlwaysVisible(true);
+            listView.setVerticalScrollbarPosition(LocaleController.isRTL ? ListView.SCROLLBAR_POSITION_LEFT : ListView.SCROLLBAR_POSITION_RIGHT);
+
             linearLayout.addView(listView, LayoutHelper.createLinear(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -863,9 +853,8 @@ public class ChannelCreateActivity extends BaseFragment implements NotificationC
                         searchWas = false;
                         listView.setAdapter(listViewAdapter);
                         listViewAdapter.notifyDataSetChanged();
-                        if (android.os.Build.VERSION.SDK_INT >= 11) {
-                            listView.setFastScrollAlwaysVisible(true);
-                        }
+                        listView.setFastScrollAlwaysVisible(true);
+
                         listView.setFastScrollEnabled(true);
                         listView.setVerticalScrollBarEnabled(false);
                         emptyTextView.setText(LocaleController.getString("NoContacts", R.string.NoContacts));

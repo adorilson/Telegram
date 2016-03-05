@@ -532,14 +532,7 @@ public class PasscodeView extends FrameLayout {
                 }
             }
         });
-        if (android.os.Build.VERSION.SDK_INT < 11) {
-            passwordEditText.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                    menu.clear();
-                }
-            });
-        } else {
-            passwordEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+        passwordEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
                 public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                     return false;
                 }
@@ -555,7 +548,7 @@ public class PasscodeView extends FrameLayout {
                     return false;
                 }
             });
-        }
+
 
         checkImage = new ImageView(context);
         checkImage.setImageResource(R.drawable.passcode_check);

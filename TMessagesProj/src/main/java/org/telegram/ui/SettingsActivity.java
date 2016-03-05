@@ -241,10 +241,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         mobileDownloadRow = rowCount++;
         wifiDownloadRow = rowCount++;
         roamingDownloadRow = rowCount++;
-        if (Build.VERSION.SDK_INT >= 11) {
-            autoplayGifsRow = rowCount++;
-        }
-        saveToGalleryRow = rowCount++;
+        autoplayGifsRow = rowCount++;
+        SsaveToGalleryRow = rowCount++;
         messagesSectionRow = rowCount++;
         messagesSectionRow2 = rowCount++;
         textSizeRow = rowCount++;
@@ -533,12 +531,8 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                             maskValues[a] = (mask & MediaController.AUTODOWNLOAD_MASK_MUSIC) != 0;
                             name = LocaleController.getString("AttachMusic", R.string.AttachMusic);
                         } else if (a == 5) {
-                            if (Build.VERSION.SDK_INT >= 11) {
-                                maskValues[a] = (mask & MediaController.AUTODOWNLOAD_MASK_GIF) != 0;
-                                name = LocaleController.getString("AttachGif", R.string.AttachGif);
-                            } else {
-                                continue;
-                            }
+                            maskValues[a] = (mask & MediaController.AUTODOWNLOAD_MASK_GIF) != 0;
+                            name = LocaleController.getString("AttachGif", R.string.AttachGif);
                         }
                         CheckBoxCell checkBoxCell = new CheckBoxCell(getParentActivity());
                         checkBoxCell.setTag(a);
@@ -980,13 +974,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             extraHeightView.setScaleY(diff);
             shadowView.setTranslationY(newTop + extraHeight);
 
-            if (Build.VERSION.SDK_INT < 11) {
-                layoutParams = (FrameLayout.LayoutParams) writeButton.getLayoutParams();
-                layoutParams.topMargin = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f);
-                writeButton.setLayoutParams(layoutParams);
-            } else {
-                writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
-            }
+            writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
 
             final boolean setVisible = diff > 0.2f;
             boolean currentVisible = writeButton.getTag() == null;
@@ -1298,13 +1286,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                         }
                         text += LocaleController.getString("AttachMusic", R.string.AttachMusic);
                     }
-                    if (Build.VERSION.SDK_INT >= 11) {
-                        if ((mask & MediaController.AUTODOWNLOAD_MASK_GIF) != 0) {
-                            if (text.length() != 0) {
-                                text += ", ";
-                            }
-                            text += LocaleController.getString("AttachGif", R.string.AttachGif);
+                    if ((mask & MediaController.AUTODOWNLOAD_MASK_GIF) != 0) {
+                        if (text.length() != 0) {
+                            text += ", ";
                         }
+                        text += LocaleController.getString("AttachGif", R.string.AttachGif);
                     }
                     if (text.length() == 0) {
                         text = LocaleController.getString("NoMediaAutoDownload", R.string.NoMediaAutoDownload);

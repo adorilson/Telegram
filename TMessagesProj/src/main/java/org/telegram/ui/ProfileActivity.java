@@ -1012,7 +1012,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             return;
         }
         loadingUsers = true;
-        final int delay = Build.VERSION.SDK_INT >= 11 && !participants.isEmpty() && reload ? 300 : 0;
+        final int delay = !participants.isEmpty() && reload ? 300 : 0;
 
         final TLRPC.TL_channels_getParticipants req = new TLRPC.TL_channels_getParticipants();
         req.channel = MessagesController.getInputChannel(chat_id);
@@ -1131,13 +1131,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             listView.setTopGlowOffset(extraHeight);
 
             if (writeButton != null) {
-                if (Build.VERSION.SDK_INT < 11) {
-                    layoutParams = (FrameLayout.LayoutParams) writeButton.getLayoutParams();
-                    layoutParams.topMargin = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f);
-                    writeButton.setLayoutParams(layoutParams);
-                } else {
-                    writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
-                }
+                writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
+
 
                 if (!openAnimationInProgress) {
                     final boolean setVisible = diff > 0.2f;
@@ -1145,9 +1140,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     if (setVisible != currentVisible) {
                         if (setVisible) {
                             writeButton.setTag(null);
-                            if (Build.VERSION.SDK_INT < 11) {
-                                writeButton.setVisibility(View.VISIBLE);
-                            }
                         } else {
                             writeButton.setTag(0);
                         }
@@ -1177,9 +1169,6 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                             public void onAnimationEnd(Object animation) {
                                 if (writeButtonAnimation != null && writeButtonAnimation.equals(animation)) {
                                     writeButton.clearAnimation();
-                                    if (Build.VERSION.SDK_INT < 11) {
-                                        writeButton.setVisibility(setVisible ? View.VISIBLE : View.GONE);
-                                    }
                                     writeButtonAnimation = null;
                                 }
                             }
@@ -1190,19 +1179,11 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             }
 
             float avatarY = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() / 2.0f * (1.0f + diff) - 21 * AndroidUtilities.density + 27 * AndroidUtilities.density * diff;
-            if (Build.VERSION.SDK_INT < 11) {
-                layoutParams = (FrameLayout.LayoutParams) avatarImage.getLayoutParams();
-                layoutParams.height = layoutParams.width = (int) Math.ceil(AndroidUtilities.dp(42) * (42 + 18 * diff) / 42.0f);
-                layoutParams.leftMargin = (int) Math.ceil(AndroidUtilities.dp(64) - AndroidUtilities.dp(47) * diff);
-                layoutParams.topMargin = (int) Math.ceil(avatarY);
-                avatarImage.setLayoutParams(layoutParams);
-                avatarImage.setRoundRadius(layoutParams.height / 2);
-            } else {
-                avatarImage.setScaleX((42 + 18 * diff) / 42.0f);
-                avatarImage.setScaleY((42 + 18 * diff) / 42.0f);
-                avatarImage.setTranslationX(-AndroidUtilities.dp(47) * diff);
-                avatarImage.setTranslationY((float) Math.ceil(avatarY));
-            }
+            avatarImage.setScaleX((42 + 18 * diff) / 42.0f);
+            avatarImage.setScaleY((42 + 18 * diff) / 42.0f);
+            avatarImage.setTranslationX(-AndroidUtilities.dp(47) * diff);
+            avatarImage.setTranslationY((float) Math.ceil(avatarY));
+
             for (int a = 0; a < 2; a++) {
                 if (nameTextView[a] == null) {
                     continue;
@@ -1450,7 +1431,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
     public void setPlayProfileAnimation(boolean value) {
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
-        if (!AndroidUtilities.isTablet() && Build.VERSION.SDK_INT > 10 && preferences.getBoolean("view_animations", true)) {
+        if (!AndroidUtilities.isTablet() && preferences.getBoolean("view_animations", true)) {
             playProfileAnimation = value;
         }
     }

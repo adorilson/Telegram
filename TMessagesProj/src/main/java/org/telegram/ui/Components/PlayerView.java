@@ -239,16 +239,14 @@ public class PlayerView extends FrameLayout implements NotificationCenter.Notifi
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         int restoreToCount = 0;
-        if (Build.VERSION.SDK_INT >= 11) {
-            restoreToCount = canvas.save();
-            if (yPosition < 0) {
-                canvas.clipRect(0, (int) -yPosition, child.getMeasuredWidth(), AndroidUtilities.dp(39));
-            }
+        restoreToCount = canvas.save();
+        if (yPosition < 0) {
+            canvas.clipRect(0, (int) -yPosition, child.getMeasuredWidth(), AndroidUtilities.dp(39));
         }
+
         final boolean result = super.drawChild(canvas, child, drawingTime);
-        if (Build.VERSION.SDK_INT >= 11) {
-            canvas.restoreToCount(restoreToCount);
-        }
+        canvas.restoreToCount(restoreToCount);
+
         return result;
     }
 }

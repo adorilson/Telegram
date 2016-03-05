@@ -229,7 +229,7 @@ public class ContextLinkCell extends View implements MediaController.FileDownloa
 
             if (mediaWebpage) {
                 width = (int) (w / (h / (float) AndroidUtilities.dp(80)));
-                if (Build.VERSION.SDK_INT >= 11 && isGifDocument) {
+                if (isGifDocument) {
                     currentPhotoFilterThumb = currentPhotoFilter = String.format(Locale.US, "%d_%d_b", (int) (width / AndroidUtilities.density), 80);
                 } else {
                     currentPhotoFilter = String.format(Locale.US, "%d_%d", (int) (width / AndroidUtilities.density), 80);
@@ -240,7 +240,7 @@ public class ContextLinkCell extends View implements MediaController.FileDownloa
             }
 
             if (isGifDocument) {
-                if (document != null && Build.VERSION.SDK_INT >= 11) {
+                if (document != null) {
                     linkImageView.setImage(document, null, currentPhotoObject != null ? currentPhotoObject.location : null, currentPhotoFilter, document.size, null, false);
                 } else {
                     linkImageView.setImage(null, url, null, null, currentPhotoObject != null ? currentPhotoObject.location : null, currentPhotoFilter, -1, null, true);
@@ -417,7 +417,7 @@ public class ContextLinkCell extends View implements MediaController.FileDownloa
     }
 
     public void updateButtonState(boolean animated) {
-        if (!mediaWebpage || Build.VERSION.SDK_INT < 11) {
+        if (!mediaWebpage) {
             return;
         }
         String fileName = null;

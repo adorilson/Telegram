@@ -135,10 +135,8 @@ public class StickerEmojiCell extends FrameLayout {
                     scale = 1.0f;
                 }
             }
-            if (Build.VERSION.SDK_INT >= 11) {
-                imageView.setScaleX(scale);
-                imageView.setScaleY(scale);
-            }
+            imageView.setScaleX(scale);
+            imageView.setScaleY(scale);
             imageView.invalidate();
             invalidate();
         }

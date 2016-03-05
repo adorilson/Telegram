@@ -728,14 +728,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                     if (str.length() != 0) {
                         try {
-                            if (Build.VERSION.SDK_INT < 11) {
-                                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                clipboard.setText(str);
-                            } else {
-                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                android.content.ClipData clip = android.content.ClipData.newPlainText("label", str);
-                                clipboard.setPrimaryClip(clip);
-                            }
+                            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                            android.content.ClipData clip = android.content.ClipData.newPlainText("label", str);
+                            clipboard.setPrimaryClip(clip);
                         } catch (Exception e) {
                             FileLog.e("tmessages", e);
                         }
@@ -6100,18 +6095,16 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         }
         actionBar.showActionMode();
 
-        if (Build.VERSION.SDK_INT >= 11) {
-            AnimatorSet animatorSet = new AnimatorSet();
-            Collection<Animator> animators = new ArrayList<>();
-            for (int a = 0; a < actionModeViews.size(); a++) {
-                View view = actionModeViews.get(a);
-                AndroidUtilities.clearDrawableAnimation(view);
-                animators.add(ObjectAnimator.ofFloat(view, "scaleY", 0.1f, 1.0f));
-            }
-            animatorSet.playTogether(animators);
-            animatorSet.setDuration(250);
-            animatorSet.start();
+        AnimatorSet animatorSet = new AnimatorSet();
+        Collection<Animator> animators = new ArrayList<>();
+        for (int a = 0; a < actionModeViews.size(); a++) {
+            View view = actionModeViews.get(a);
+            AndroidUtilities.clearDrawableAnimation(view);
+            animators.add(ObjectAnimator.ofFloat(view, "scaleY", 0.1f, 1.0f));
         }
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(250);
+        animatorSet.start();
 
         addToSelectedMessages(message);
         selectedMessagesCountTextView.setNumber(1, false);
@@ -6160,14 +6153,9 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             presentFragment(fragment);
         } else if (option == 3) {
             try {
-                if (Build.VERSION.SDK_INT < 11) {
-                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    clipboard.setText(selectedObject.messageText);
-                } else {
-                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                    android.content.ClipData clip = android.content.ClipData.newPlainText("label", selectedObject.messageText);
-                    clipboard.setPrimaryClip(clip);
-                }
+                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                android.content.ClipData clip = android.content.ClipData.newPlainText("label", selectedObject.messageText);
+                clipboard.setPrimaryClip(clip);
             } catch (Exception e) {
                 FileLog.e("tmessages", e);
             }

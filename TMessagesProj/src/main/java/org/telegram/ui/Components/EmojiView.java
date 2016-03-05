@@ -851,51 +851,48 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
 
                 @Override
                 public boolean onTouchEvent(MotionEvent ev) {
-                    if (Build.VERSION.SDK_INT >= 11) {
-                        if (first) {
-                            first = false;
-                            lastX = ev.getX();
-                        }
-                        float newTranslationX = scrollSlidingTabStrip.getTranslationX();
-                        if (scrollSlidingTabStrip.getScrollX() == 0 && newTranslationX == 0) {
-                            if (!startedScroll && lastX - ev.getX() < 0) {
-                                if (pager.beginFakeDrag()) {
-                                    startedScroll = true;
-                                    lastTranslateX = scrollSlidingTabStrip.getTranslationX();
-                                }
-                            } else if (startedScroll && lastX - ev.getX() > 0) {
-                                if (pager.isFakeDragging()) {
-                                    pager.endFakeDrag();
-                                    startedScroll = false;
-                                }
-                            }
-                        }
-                        if (startedScroll) {
-                            int dx = (int) (ev.getX() - lastX + newTranslationX - lastTranslateX);
-                            try {
-                                pager.fakeDragBy(dx);
-                                lastTranslateX = newTranslationX;
-                            } catch (Exception e) {
-                                try {
-                                    pager.endFakeDrag();
-                                } catch (Exception e2) {
-                                    //don't promt
-                                }
-                                startedScroll = false;
-                                FileLog.e("tmessages", e);
-                            }
-                        }
+                    if (first) {
+                        first = false;
                         lastX = ev.getX();
-                        if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
-                            first = true;
-                            if (startedScroll) {
+                    }
+                    float newTranslationX = scrollSlidingTabStrip.getTranslationX();
+                    if (scrollSlidingTabStrip.getScrollX() == 0 && newTranslationX == 0) {
+                        if (!startedScroll && lastX - ev.getX() < 0) {
+                            if (pager.beginFakeDrag()) {
+                                startedScroll = true;
+                                lastTranslateX = scrollSlidingTabStrip.getTranslationX();
+                            }
+                        } else if (startedScroll && lastX - ev.getX() > 0) {
+                            if (pager.isFakeDragging()) {
                                 pager.endFakeDrag();
                                 startedScroll = false;
                             }
                         }
-                        return startedScroll || super.onTouchEvent(ev);
                     }
-                    return super.onTouchEvent(ev);
+                    if (startedScroll) {
+                        int dx = (int) (ev.getX() - lastX + newTranslationX - lastTranslateX);
+                        try {
+                            pager.fakeDragBy(dx);
+                            lastTranslateX = newTranslationX;
+                        } catch (Exception e) {
+                            try {
+                                pager.endFakeDrag();
+                            } catch (Exception e2) {
+                                //don't promt
+                            }
+                            startedScroll = false;
+                            FileLog.e("tmessages", e);
+                        }
+                    }
+                    lastX = ev.getX();
+                    if (ev.getAction() == MotionEvent.ACTION_CANCEL || ev.getAction() == MotionEvent.ACTION_UP) {
+                        first = true;
+                        if (startedScroll) {
+                            pager.endFakeDrag();
+                            startedScroll = false;
+                        }
+                    }
+                    return startedScroll || super.onTouchEvent(ev);
                 }
             };
             scrollSlidingTabStrip.setUnderlineHeight(AndroidUtilities.dp(1));
@@ -1137,17 +1134,6 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
             pagerSlidingTabStripContainer.setTranslationX(margin);
             pagerSlidingTabStripContainer.setTranslationX(width + margin);
             scrollSlidingTabStrip.setVisibility(margin < 0 ? VISIBLE : INVISIBLE);
-            if (Build.VERSION.SDK_INT < 11) {
-                if (margin <= -width) {
-                    pagerSlidingTabStripContainer.clearAnimation();
-                    pagerSlidingTabStripContainer.setVisibility(GONE);
-                } else {
-                    pagerSlidingTabStripContainer.setVisibility(VISIBLE);
-                }
-            }
-        } else if (Build.VERSION.SDK_INT < 11 && pagerSlidingTabStripContainer.getVisibility() == GONE) {
-            pagerSlidingTabStripContainer.clearAnimation();
-            pagerSlidingTabStripContainer.setVisibility(GONE);
         }
     }
 

@@ -174,11 +174,6 @@ public class PhotoPickerActivity extends BaseFragment implements NotificationCen
             @Override
             public void onItemClick(int id) {
                 if (id == -1) {
-                    if (Build.VERSION.SDK_INT < 11) {
-                        listView.setAdapter(null);
-                        listView = null;
-                        listAdapter = null;
-                    }
                     finishFragment();
                 }
             }
@@ -511,14 +506,7 @@ public class PhotoPickerActivity extends BaseFragment implements NotificationCen
             PhotoViewer.PlaceProviderObject object = new PhotoViewer.PlaceProviderObject();
             object.viewX = coords[0];
             object.viewY = coords[1] - AndroidUtilities.statusBarHeight;
-            if (Build.VERSION.SDK_INT < 11) {
-                float scale = cell.photoImage.getScaleX();
-                if (scale != 1) {
-                    int width = cell.photoImage.getMeasuredWidth();
-                    object.viewX += (width - width * scale) / 2;
-                    object.viewY += (width - width * scale) / 2;
-                }
-            }
+
             object.parentView = listView;
             object.imageReceiver = cell.photoImage.getImageReceiver();
             object.thumb = object.imageReceiver.getBitmap();

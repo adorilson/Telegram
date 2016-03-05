@@ -746,7 +746,7 @@ public class AndroidUtilities {
     }*/
 
     /*public static void turnOffHardwareAcceleration(Window window) {
-        if (window == null || Build.MODEL == null || Build.VERSION.SDK_INT < 11) {
+        if (window == null || Build.MODEL == null) {
             return;
         }
         if (Build.MODEL.contains("GT-S5301") ||

@@ -402,31 +402,24 @@ public class ActionBarMenuItem extends FrameLayoutFixed {
             searchField.setPadding(0, 0, 0, 0);
             int inputType = searchField.getInputType() | EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
             searchField.setInputType(inputType);
-            if (android.os.Build.VERSION.SDK_INT < 11) {
-                searchField.setOnCreateContextMenuListener(new OnCreateContextMenuListener() {
-                    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                        menu.clear();
-                    }
-                });
-            } else {
-                searchField.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
+            searchField.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
 
-                    public void onDestroyActionMode(ActionMode mode) {
+                public void onDestroyActionMode(ActionMode mode) {
 
-                    }
+                }
 
-                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                        return false;
-                    }
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    return false;
+                }
 
-                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                        return false;
-                    }
-                });
-            }
+                public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                    return false;
+                }
+            });
+
             searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -468,12 +461,9 @@ public class ActionBarMenuItem extends FrameLayoutFixed {
             } catch (Exception e) {
                 //nothing to do
             }
-            if (Build.VERSION.SDK_INT >= 11) {
-                searchField.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_SEARCH);
-                searchField.setTextIsSelectable(false);
-            } else {
-                searchField.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
-            }
+            searchField.setImeOptions(EditorInfo.IME_FLAG_NO_FULLSCREEN | EditorInfo.IME_ACTION_SEARCH);
+            searchField.setTextIsSelectable(false);
+
             searchContainer.addView(searchField);
             FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) searchField.getLayoutParams();
             layoutParams2.width = LayoutHelper.MATCH_PARENT;

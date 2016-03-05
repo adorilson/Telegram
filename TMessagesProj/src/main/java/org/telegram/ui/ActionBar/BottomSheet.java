@@ -593,9 +593,8 @@ public class BottomSheet extends Dialog {
                     delegate.onRevealAnimationEnd(open);
                 }
                 containerView.invalidate();
-                if (Build.VERSION.SDK_INT >= 11) {
-                    container.setLayerType(View.LAYER_TYPE_NONE, null);
-                }
+                container.setLayerType(View.LAYER_TYPE_NONE, null);
+
                 if (!open) {
                     containerView.setVisibility(View.INVISIBLE);
                     try {
@@ -638,9 +637,7 @@ public class BottomSheet extends Dialog {
                     if (delegate != null) {
                         delegate.onOpenAnimationEnd();
                     }
-                    if (Build.VERSION.SDK_INT >= 11) {
-                        container.setLayerType(View.LAYER_TYPE_NONE, null);
-                    }
+                    container.setLayerType(View.LAYER_TYPE_NONE, null);
                 }
             });
             animatorSet.start();

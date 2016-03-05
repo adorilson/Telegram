@@ -257,14 +257,6 @@ public class MediaActivity extends BaseFragment implements NotificationCenter.No
                         actionBar.hideActionMode();
                         listView.invalidateViews();
                     } else {
-                        if (Build.VERSION.SDK_INT < 11 && listView != null) {
-                            listView.setAdapter(null);
-                            listView = null;
-                            photoVideoAdapter = null;
-                            documentsAdapter = null;
-                            audioAdapter = null;
-                            linksAdapter = null;
-                        }
                         finishFragment();
                     }
                 } else if (id == shared_media_item) {
@@ -973,18 +965,17 @@ public class MediaActivity extends BaseFragment implements NotificationCenter.No
         }
         actionBar.createActionMode().getItem(delete).setVisibility(cantDeleteMessagesCount == 0 ? View.VISIBLE : View.GONE);
         selectedMessagesCountTextView.setNumber(1, false);
-        if (Build.VERSION.SDK_INT >= 11) {
-            AnimatorSet animatorSet = new AnimatorSet();
-            Collection<Animator> animators = new ArrayList<>();
-            for (int i = 0; i < actionModeViews.size(); i++) {
-                View view2 = actionModeViews.get(i);
-                AndroidUtilities.clearDrawableAnimation(view2);
-                animators.add(ObjectAnimator.ofFloat(view2, "scaleY", 0.1f, 1.0f));
-            }
-            animatorSet.playTogether(animators);
-            animatorSet.setDuration(250);
-            animatorSet.start();
+        AnimatorSet animatorSet = new AnimatorSet();
+        Collection<Animator> animators = new ArrayList<>();
+        for (int i = 0; i < actionModeViews.size(); i++) {
+            View view2 = actionModeViews.get(i);
+            AndroidUtilities.clearDrawableAnimation(view2);
+            animators.add(ObjectAnimator.ofFloat(view2, "scaleY", 0.1f, 1.0f));
         }
+        animatorSet.playTogether(animators);
+        animatorSet.setDuration(250);
+        animatorSet.start();
+
         scrolling = false;
         if (view instanceof SharedDocumentCell) {
             ((SharedDocumentCell) view).setChecked(true, true);

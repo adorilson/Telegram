@@ -239,18 +239,18 @@ public class DocumentSelectActivity extends BaseFragment {
                     }
                     selectedFiles.put(file.toString(), item);
                     selectedMessagesCountTextView.setNumber(1, false);
-                    if (Build.VERSION.SDK_INT >= 11) {
-                        AnimatorSet animatorSet = new AnimatorSet();
-                        Collection<Animator> animators = new ArrayList<>();
-                        for (int a = 0; a < actionModeViews.size(); a++) {
-                            View view2 = actionModeViews.get(a);
-                            AndroidUtilities.clearDrawableAnimation(view2);
-                            animators.add(ObjectAnimator.ofFloat(view2, "scaleY", 0.1f, 1.0f));
-                        }
-                        animatorSet.playTogether(animators);
-                        animatorSet.setDuration(250);
-                        animatorSet.start();
+
+                    AnimatorSet animatorSet = new AnimatorSet();
+                    Collection<Animator> animators = new ArrayList<>();
+                    for (int a = 0; a < actionModeViews.size(); a++) {
+                        View view2 = actionModeViews.get(a);
+                        AndroidUtilities.clearDrawableAnimation(view2);
+                        animators.add(ObjectAnimator.ofFloat(view2, "scaleY", 0.1f, 1.0f));
                     }
+                    animatorSet.playTogether(animators);
+                    animatorSet.setDuration(250);
+                    animatorSet.start();
+
                     scrolling = false;
                     if (view instanceof SharedDocumentCell) {
                         ((SharedDocumentCell) view).setChecked(true, true);
