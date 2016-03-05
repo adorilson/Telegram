@@ -1449,9 +1449,8 @@ public class PhotoFilterView extends FrameLayout {
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerListView.setLayoutManager(layoutManager);
         recyclerListView.setClipToPadding(false);
-        if (Build.VERSION.SDK_INT >= 9) {
-            recyclerListView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
-        }
+        recyclerListView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
+
         recyclerListView.setAdapter(toolsAdapter = new ToolsAdapter(context));
         toolsView.addView(recyclerListView);
         layoutParams = (FrameLayout.LayoutParams) recyclerListView.getLayoutParams();

@@ -771,9 +771,8 @@ public class EmojiView extends FrameLayout implements NotificationCenter.Notific
                         return size;
                     }
                 });
-                if (Build.VERSION.SDK_INT >= 9) {
-                    gifsGridView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
-                }
+                gifsGridView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
+
                 gifsGridView.setAdapter(gifsAdapter = new GifsAdapter(context));
                 gifsGridView.setOnItemClickListener(new RecyclerListView.OnItemClickListener() {
                     @Override

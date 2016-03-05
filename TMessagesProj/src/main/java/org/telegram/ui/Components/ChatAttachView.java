@@ -119,9 +119,8 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
         attachPhotoRecyclerView.setPadding(AndroidUtilities.dp(8), 0, AndroidUtilities.dp(8), 0);
         attachPhotoRecyclerView.setItemAnimator(null);
         attachPhotoRecyclerView.setLayoutAnimation(null);
-        if (Build.VERSION.SDK_INT >= 9) {
-            attachPhotoRecyclerView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
-        }
+        attachPhotoRecyclerView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
+
         addView(attachPhotoRecyclerView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 80));
         attachPhotoLayoutManager = new LinearLayoutManager(context) {
             @Override

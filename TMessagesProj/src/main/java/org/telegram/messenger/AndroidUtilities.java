@@ -147,7 +147,7 @@ public class AndroidUtilities {
     }
 
     public static void lockOrientation(Activity activity) {
-        if (activity == null || prevOrientation != -10 || Build.VERSION.SDK_INT < 9) {
+        if (activity == null || prevOrientation != -10) {
             return;
         }
         try {
@@ -158,10 +158,6 @@ public class AndroidUtilities {
                 int orientation = activity.getResources().getConfiguration().orientation;
                 int SCREEN_ORIENTATION_REVERSE_LANDSCAPE = 8;
                 int SCREEN_ORIENTATION_REVERSE_PORTRAIT = 9;
-                if (Build.VERSION.SDK_INT < 9) {
-                    SCREEN_ORIENTATION_REVERSE_LANDSCAPE = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                    SCREEN_ORIENTATION_REVERSE_PORTRAIT = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                }
 
                 if (rotation == Surface.ROTATION_270) {
                     if (orientation == Configuration.ORIENTATION_PORTRAIT) {

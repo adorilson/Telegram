@@ -2121,9 +2121,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         stickersListView.setLayoutManager(layoutManager);
         stickersListView.setClipToPadding(false);
-        if (Build.VERSION.SDK_INT >= 9) {
-            stickersListView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
-        }
+        stickersListView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
+
         stickersPanel.addView(stickersListView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 78));
         if (currentEncryptedChat == null || AndroidUtilities.getPeerLayerVersion(currentEncryptedChat.layer) >= 23) {
             chatActivityEnterView.setAllowStickersAndGifs(true, currentEncryptedChat == null);

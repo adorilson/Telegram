@@ -77,11 +77,10 @@ public class NativeLoader {
             }
             out.close();
 
-            if (Build.VERSION.SDK_INT >= 9) {
-                destLocalFile.setReadable(true, false);
-                destLocalFile.setExecutable(true, false);
-                destLocalFile.setWritable(true);
-            }
+            destLocalFile.setReadable(true, false);
+            destLocalFile.setExecutable(true, false);
+            destLocalFile.setWritable(true);
+
 
             try {
                 System.load(destLocalFile.getAbsolutePath());

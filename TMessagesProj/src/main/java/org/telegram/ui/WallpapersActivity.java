@@ -182,9 +182,8 @@ public class WallpapersActivity extends BaseFragment implements NotificationCent
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         listView.setLayoutManager(layoutManager);
         listView.setDisallowInterceptTouchEvents(true);
-        if (Build.VERSION.SDK_INT >= 9) {
-            listView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
-        }
+        listView.setOverScrollMode(RecyclerListView.OVER_SCROLL_NEVER);
+
         listView.setAdapter(listAdapter = new ListAdapter(context));
         frameLayout.addView(listView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 102, Gravity.LEFT | Gravity.BOTTOM));
         listView.setOnItemClickListener(new RecyclerListView.OnItemClickListener() {

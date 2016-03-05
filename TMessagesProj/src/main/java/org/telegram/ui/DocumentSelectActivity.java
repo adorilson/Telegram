@@ -512,11 +512,10 @@ public class DocumentSelectActivity extends BaseFragment {
 
         HashSet<String> paths = new HashSet<>();
         String defaultPath = Environment.getExternalStorageDirectory().getPath();
-        boolean isDefaultPathRemovable = Build.VERSION.SDK_INT >= 9 && Environment.isExternalStorageRemovable();
         String defaultPathState = Environment.getExternalStorageState();
         if (defaultPathState.equals(Environment.MEDIA_MOUNTED) || defaultPathState.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
             ListItem ext = new ListItem();
-            if (Build.VERSION.SDK_INT < 9 || Environment.isExternalStorageRemovable()) {
+            if (Environment.isExternalStorageRemovable()) {
                 ext.title = LocaleController.getString("SdCard", R.string.SdCard);
                 ext.icon = R.drawable.ic_external_storage;
             } else {
