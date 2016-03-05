@@ -242,7 +242,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         wifiDownloadRow = rowCount++;
         roamingDownloadRow = rowCount++;
         autoplayGifsRow = rowCount++;
-        SsaveToGalleryRow = rowCount++;
+        saveToGalleryRow = rowCount++;
         messagesSectionRow = rowCount++;
         messagesSectionRow2 = rowCount++;
         textSizeRow = rowCount++;
