@@ -505,7 +505,7 @@ public class AndroidUtilities {
     }
 
     public static void clearCursorDrawable(EditText editText) {
-        if (editText == null || Build.VERSION.SDK_INT < 12) {
+        if (editText == null) {
             return;
         }
         try {

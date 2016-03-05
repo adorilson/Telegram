@@ -1104,11 +1104,7 @@ public class ImageLoader {
             @Override
             protected int sizeOf(String key, BitmapDrawable value) {
                 Bitmap b = value.getBitmap();
-                if (Build.VERSION.SDK_INT < 12) {
-                    return b.getRowBytes() * b.getHeight();
-                } else {
-                    return b.getByteCount();
-                }
+                return b.getByteCount();
             }
 
             @Override

@@ -212,9 +212,8 @@ public class Bitmaps {
             }
         }
         bitmap.setDensity(source.getDensity());
-        if (Build.VERSION.SDK_INT >= 12) {
-            bitmap.setHasAlpha(source.hasAlpha());
-        }
+        bitmap.setHasAlpha(source.hasAlpha());
+        
         if (Build.VERSION.SDK_INT >= 19) {
             bitmap.setPremultiplied(source.isPremultiplied());
         }
