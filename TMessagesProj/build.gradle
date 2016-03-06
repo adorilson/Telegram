@@ -83,7 +83,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 720
         versionName "3.4.2"
