@@ -1409,7 +1409,6 @@ public class NotificationsController {
         }
     }
 
-    @SuppressLint("InlinedApi")
     private void showExtraNotifications(NotificationCompat.Builder notificationBuilder, boolean notifyAboutLast) {
         ArrayList<Long> sortedDialogs = new ArrayList<>();
         HashMap<Long, ArrayList<MessageObject>> messagesByDialogs = new HashMap<>();
