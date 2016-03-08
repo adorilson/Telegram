@@ -928,20 +928,6 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                             }
 
                             @Override
-                            public void onRevealAnimationEnd(boolean open) {
-                                if (chatAttachView != null) {
-                                    chatAttachView.onRevealAnimationEnd(open);
-                                }
-                            }
-
-                            @Override
-                            public void onOpenAnimationEnd() {
-                                if (chatAttachView != null) {
-                                    chatAttachView.onRevealAnimationEnd(true);
-                                }
-                            }
-
-                            @Override
                             public View getRevealView() {
                                 return menuItem;
                             }
