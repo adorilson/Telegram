@@ -418,9 +418,6 @@ public class ConnectionsManager {
 
 
     protected static boolean useIpv6Address() {
-        if (Build.VERSION.SDK_INT < 19) {
-            return false;
-        }
         if (BuildVars.DEBUG_VERSION) {
             try {
                 NetworkInterface networkInterface;

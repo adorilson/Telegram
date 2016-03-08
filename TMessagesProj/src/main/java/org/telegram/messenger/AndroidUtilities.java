@@ -587,7 +587,7 @@ public class AndroidUtilities {
         }
     }
 
-    
+
     public static void clearDrawableAnimation(View view) {
         if (Build.VERSION.SDK_INT < 21 || view == null) {
             return;

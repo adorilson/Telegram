@@ -280,29 +280,14 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
         delegate = chatAttachViewDelegate;
     }
 
-    public void onRevealAnimationEnd(boolean open) {
-        if (open && Build.VERSION.SDK_INT <= 19 && MediaController.allPhotosAlbumEntry == null) {
-            MediaController.loadGalleryPhotosAlbums(0);
-        }
-    }
-
-
     public void onRevealAnimationStart(boolean open) {
         if (!open) {
             return;
         }
-        int count = Build.VERSION.SDK_INT <= 19 ? 11 : 8;
+        int count = 8;
         for (int a = 0; a < count; a++) {
-            if (Build.VERSION.SDK_INT <= 19) {
-                if (a < 8) {
-                    views[a].setScaleX(0.1f);
-                    views[a].setScaleY(0.1f);
-                }
-                views[a].setAlpha(0.0f);
-            } else {
-                views[a].setScaleX(0.7f);
-                views[a].setScaleY(0.7f);
-            }
+            views[a].setScaleX(0.7f);
+            views[a].setScaleY(0.7f);
             views[a].setTag(R.string.AppName, null);
             distCache[a] = 0;
         }
@@ -313,7 +298,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
         if (!open) {
             return;
         }
-        int count = Build.VERSION.SDK_INT <= 19 ? 11 : 8;
+        int count = 8;
         for (int a = 0; a < count; a++) {
             if (views[a].getTag(R.string.AppName) == null) {
                 if (distCache[a] == 0) {
@@ -337,9 +322,6 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
                     animators.add(ObjectAnimator.ofFloat(views[a], "scaleY", 0.7f, 1.05f));
                     animators2.add(ObjectAnimator.ofFloat(views[a], "scaleX", 1.0f));
                     animators2.add(ObjectAnimator.ofFloat(views[a], "scaleY", 1.0f));
-                }
-                if (Build.VERSION.SDK_INT <= 19) {
-                    animators.add(ObjectAnimator.ofFloat(views[a], "alpha", 1.0f));
                 }
                 AnimatorSet animatorSet = new AnimatorSet();
                 animatorSet.playTogether(animators);

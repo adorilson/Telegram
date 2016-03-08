@@ -287,11 +287,7 @@ public class ActionBarMenuItem extends FrameLayoutFixed {
         }
         if (popupWindow == null) {
             popupWindow = new ActionBarPopupWindow(popupLayout, LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT);
-            if (Build.VERSION.SDK_INT >= 19) {
-                popupWindow.setAnimationStyle(0);
-            } else {
-                popupWindow.setAnimationStyle(R.style.PopupAnimation);
-            }
+            popupWindow.setAnimationStyle(0);
             popupWindow.setOutsideTouchable(true);
             popupWindow.setClippingEnabled(true);
             popupWindow.setInputMethodMode(ActionBarPopupWindow.INPUT_METHOD_NOT_NEEDED);

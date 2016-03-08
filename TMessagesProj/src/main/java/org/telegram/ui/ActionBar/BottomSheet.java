@@ -221,7 +221,7 @@ public class BottomSheet extends Dialog {
                 boolean isPortrait = width < height;
 
                 if (containerView != null) {
-                    int left = useRevealAnimation && Build.VERSION.SDK_INT <= 19 ? 0 : backgroundPaddingLeft;
+                    int left = backgroundPaddingLeft;
                     if (!fullWidth) {
                         if (AndroidUtilities.isTablet()) {
                             int side = (int) (Math.min(AndroidUtilities.displaySize.x, AndroidUtilities.displaySize.y) * 0.8f);
@@ -356,15 +356,6 @@ public class BottomSheet extends Dialog {
         containerView = new LinearLayout(getContext()) {
 
             @Override
-            protected void onDraw(Canvas canvas) {
-                if (useRevealAnimation && Build.VERSION.SDK_INT <= 19) {
-                    canvas.drawCircle(revealX, revealY, revealRadius, ciclePaint);
-                    //shadowDrawable.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
-                    //shadowDrawable.draw(canvas);
-                }
-            }
-
-            @Override
             protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
                 return super.drawChild(canvas, child, drawingTime);
             }
@@ -479,8 +470,8 @@ public class BottomSheet extends Dialog {
         } else {
             containerView.setBackgroundDrawable(null);
         }
-        int left = useRevealAnimation && Build.VERSION.SDK_INT <= 19 ? 0 : backgroundPaddingLeft;
-        int top = useRevealAnimation && Build.VERSION.SDK_INT <= 19 ? 0 : backgroundPaddingTop;
+        int left = backgroundPaddingLeft;
+        int top = backgroundPaddingTop;
         containerView.setPadding(left, (applyTopPaddings ? AndroidUtilities.dp(8) : 0) + top, left, (applyTopPaddings ? AndroidUtilities.dp(isGrid ? 16 : 8) : 0));
         if (Build.VERSION.SDK_INT >= 21) {
             AndroidUtilities.runOnUIThread(new Runnable() {
@@ -497,9 +488,6 @@ public class BottomSheet extends Dialog {
     protected void setRevealRadius(float radius) {
         revealRadius = radius;
         delegate.onRevealAnimationProgress(!dismissed, radius, revealX, revealY);
-        if (Build.VERSION.SDK_INT <= 19) {
-            containerView.invalidate();
-        }
     }
 
     protected float getRevealRadius() {
@@ -523,16 +511,9 @@ public class BottomSheet extends Dialog {
             final int coords[] = new int[2];
             view.getLocationInWindow(coords);
             float top;
-            if (Build.VERSION.SDK_INT <= 19) {
-                top = AndroidUtilities.displaySize.y - containerView.getMeasuredHeight() - AndroidUtilities.statusBarHeight;
-            } else {
-                top = containerView.getY();
-            }
+            top = containerView.getY();
             revealX = coords[0] + view.getMeasuredWidth() / 2;
             revealY = (int) (coords[1] + view.getMeasuredHeight() / 2 - top);
-            if (Build.VERSION.SDK_INT <= 19) {
-                revealY -= AndroidUtilities.statusBarHeight;
-            }
         } else {
             revealX = AndroidUtilities.displaySize.x / 2 + backgroundPaddingLeft;
             revealY = (int) (AndroidUtilities.displaySize.y - containerView.getY());
@@ -573,9 +554,6 @@ public class BottomSheet extends Dialog {
                 containerView.setScaleX(1);
                 containerView.setScaleY(1);
                 containerView.setAlpha(1);
-                if (Build.VERSION.SDK_INT <= 19) {
-                    animatorSet.setStartDelay(20);
-                }
             }
         }
         animatorSet.playTogether(animators);
