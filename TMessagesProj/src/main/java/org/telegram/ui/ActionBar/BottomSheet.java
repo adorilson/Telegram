@@ -792,7 +792,7 @@ public class BottomSheet extends Dialog {
         }
 
         public Builder setUseRevealAnimation() {
-            if (Build.VERSION.SDK_INT >= 18 && !AndroidUtilities.isTablet()) {
+            if (!AndroidUtilities.isTablet()) {
                 bottomSheet.useRevealAnimation = true;
             }
             return this;

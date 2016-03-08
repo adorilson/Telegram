@@ -1411,10 +1411,6 @@ public class NotificationsController {
 
     @SuppressLint("InlinedApi")
     private void showExtraNotifications(NotificationCompat.Builder notificationBuilder, boolean notifyAboutLast) {
-        if (Build.VERSION.SDK_INT < 18) {
-            return;
-        }
-
         ArrayList<Long> sortedDialogs = new ArrayList<>();
         HashMap<Long, ArrayList<MessageObject>> messagesByDialogs = new HashMap<>();
         for (int a = 0; a < pushMessages.size(); a++) {

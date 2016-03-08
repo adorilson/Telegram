@@ -2533,9 +2533,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                 File video = AndroidUtilities.generateVideoPath();
                 if (video != null) {
-                    if (Build.VERSION.SDK_INT >= 18) {
-                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(video));
-                    }
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(video));
                     takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) (1024 * 1024 * 1536));
                     currentPicturePath = video.getAbsolutePath();
                 }

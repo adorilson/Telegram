@@ -2965,9 +2965,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     if (containerView == null) {
                         return;
                     }
-                    if (Build.VERSION.SDK_INT >= 18) {
-                        containerView.setLayerType(View.LAYER_TYPE_NONE, null);
-                    }
+                    containerView.setLayerType(View.LAYER_TYPE_NONE, null);
                     animationInProgress = 0;
                     transitionAnimationStartTime = 0;
                     setImages();
@@ -3017,9 +3015,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     animatorSet.start();
                 }
             });
-            if (Build.VERSION.SDK_INT >= 18) {
-                containerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            }
+            containerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             backgroundDrawable.drawRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -3186,9 +3182,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             animationEndRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    if (Build.VERSION.SDK_INT >= 18) {
-                        containerView.setLayerType(View.LAYER_TYPE_NONE, null);
-                    }
+                    containerView.setLayerType(View.LAYER_TYPE_NONE, null);
                     animationInProgress = 0;
                     onPhotoClosed(object);
                 }
@@ -3213,9 +3207,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 }
             });
             transitionAnimationStartTime = System.currentTimeMillis();
-            if (Build.VERSION.SDK_INT >= 18) {
-                containerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            }
+            containerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             animatorSet.start();
         } else {
             AnimatorSet animatorSet = new AnimatorSet();
@@ -3232,9 +3224,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     if (containerView == null) {
                         return;
                     }
-                    if (Build.VERSION.SDK_INT >= 18) {
-                        containerView.setLayerType(View.LAYER_TYPE_NONE, null);
-                    }
+                    containerView.setLayerType(View.LAYER_TYPE_NONE, null);
                     animationInProgress = 0;
                     onPhotoClosed(object);
                     containerView.setScaleX(1.0f);
@@ -3252,9 +3242,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                 }
             });
             transitionAnimationStartTime = System.currentTimeMillis();
-            if (Build.VERSION.SDK_INT >= 18) {
-                containerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            }
+            containerView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             animatorSet.start();
         }
     }

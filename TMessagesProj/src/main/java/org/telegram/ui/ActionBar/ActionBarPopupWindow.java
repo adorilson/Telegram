@@ -38,7 +38,6 @@ import java.util.HashMap;
 public class ActionBarPopupWindow extends PopupWindow {
 
     private static final Field superListenerField;
-    private static final boolean animationEnabled = Build.VERSION.SDK_INT >= 18;
     private static DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();
     private AnimatorSet windowAnimatorSet;
     static {
@@ -131,54 +130,51 @@ public class ActionBarPopupWindow extends PopupWindow {
 
         public void setBackScaleY(float value) {
             backScaleY = value;
-            if (animationEnabled) {
-                int count = getItemsCount();
-                int visibleCount = 0;
-                for (int a = 0; a < count; a++) {
-                    visibleCount += getItemAt(a).getVisibility() == VISIBLE ? 1 : 0;
+            int count = getItemsCount();
+            int visibleCount = 0;
+            for (int a = 0; a < count; a++) {
+                visibleCount += getItemAt(a).getVisibility() == VISIBLE ? 1 : 0;
+            }
+            int height = getMeasuredHeight() - AndroidUtilities.dp(16);
+            if (showedFromBotton) {
+                for (int a = lastStartedChild; a >= 0; a--) {
+                    View child = getItemAt(a);
+                    if (child.getVisibility() != VISIBLE) {
+                        continue;
+                    }
+                    Integer position = positions.get(child);
+                    if (position != null && height - (position * AndroidUtilities.dp(48) + AndroidUtilities.dp(32)) > value * height) {
+                        break;
+                    }
+                    lastStartedChild = a - 1;
+                    startChildAnimation(child);
                 }
-                int height = getMeasuredHeight() - AndroidUtilities.dp(16);
-                if (showedFromBotton) {
-                    for (int a = lastStartedChild; a >= 0; a--) {
-                        View child = getItemAt(a);
-                        if (child.getVisibility() != VISIBLE) {
-                            continue;
-                        }
-                        Integer position = positions.get(child);
-                        if (position != null && height - (position * AndroidUtilities.dp(48) + AndroidUtilities.dp(32)) > value * height) {
-                            break;
-                        }
-                        lastStartedChild = a - 1;
-                        startChildAnimation(child);
+            } else {
+                for (int a = lastStartedChild; a < count; a++) {
+                    View child = getItemAt(a);
+                    if (child.getVisibility() != VISIBLE) {
+                        continue;
                     }
-                } else {
-                    for (int a = lastStartedChild; a < count; a++) {
-                        View child = getItemAt(a);
-                        if (child.getVisibility() != VISIBLE) {
-                            continue;
-                        }
-                        Integer position = positions.get(child);
-                        if (position != null && (position + 1) * AndroidUtilities.dp(48) - AndroidUtilities.dp(24) > value * height) {
-                            break;
-                        }
-                        lastStartedChild = a + 1;
-                        startChildAnimation(child);
+                    Integer position = positions.get(child);
+                    if (position != null && (position + 1) * AndroidUtilities.dp(48) - AndroidUtilities.dp(24) > value * height) {
+                        break;
                     }
+                    lastStartedChild = a + 1;
+                    startChildAnimation(child);
                 }
             }
+
             invalidate();
         }
 
         private void startChildAnimation(View child) {
-            if (animationEnabled) {
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playTogether(
-                        ObjectAnimator.ofFloat(child, "alpha", 0.0f, 1.0f),
-                        ObjectAnimator.ofFloat(child, "translationY", AndroidUtilities.dp(showedFromBotton ? 6 : -6), 0));
-                animatorSet.setDuration(180);
-                animatorSet.setInterpolator(decelerateInterpolator);
-                animatorSet.start();
-            }
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(
+                    ObjectAnimator.ofFloat(child, "alpha", 0.0f, 1.0f),
+                    ObjectAnimator.ofFloat(child, "translationY", AndroidUtilities.dp(showedFromBotton ? 6 : -6), 0));
+            animatorSet.setDuration(180);
+            animatorSet.setInterpolator(decelerateInterpolator);
+            animatorSet.start();
         }
 
         @Override
@@ -305,60 +301,58 @@ public class ActionBarPopupWindow extends PopupWindow {
     }
 
     public void startAnimation() {
-        if (animationEnabled) {
-            if (windowAnimatorSet != null) {
-                return;
-            }
-            ActionBarPopupWindowLayout content = (ActionBarPopupWindowLayout) getContentView();
-            content.setTranslationY(0);
-            content.setAlpha(1.0f);
-            content.setPivotX(content.getMeasuredWidth());
-            content.setPivotY(0);
-            int count = content.getItemsCount();
-            content.positions.clear();
-            int visibleCount = 0;
-            for (int a = 0; a < count; a++) {
-                View child = content.getItemAt(a);
-                if (child.getVisibility() != View.VISIBLE) {
-                    continue;
-                }
-                content.positions.put(child, visibleCount);
-                child.setAlpha(0.0f);
-                visibleCount++;
-            }
-            if (content.showedFromBotton) {
-                content.lastStartedChild = count - 1;
-            } else {
-                content.lastStartedChild = 0;
-            }
-            windowAnimatorSet = new AnimatorSet();
-            windowAnimatorSet.playTogether(
-                    ObjectAnimator.ofFloat(content, "backScaleY", 0.0f, 1.0f),
-                    ObjectAnimator.ofInt(content, "backAlpha", 0, 255));
-            windowAnimatorSet.setDuration(150 + 16 * visibleCount);
-            windowAnimatorSet.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    windowAnimatorSet = null;
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-                    onAnimationEnd(animation);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            windowAnimatorSet.start();
+        if (windowAnimatorSet != null) {
+            return;
         }
+        ActionBarPopupWindowLayout content = (ActionBarPopupWindowLayout) getContentView();
+        content.setTranslationY(0);
+        content.setAlpha(1.0f);
+        content.setPivotX(content.getMeasuredWidth());
+        content.setPivotY(0);
+        int count = content.getItemsCount();
+        content.positions.clear();
+        int visibleCount = 0;
+        for (int a = 0; a < count; a++) {
+            View child = content.getItemAt(a);
+            if (child.getVisibility() != View.VISIBLE) {
+                continue;
+            }
+            content.positions.put(child, visibleCount);
+            child.setAlpha(0.0f);
+            visibleCount++;
+        }
+        if (content.showedFromBotton) {
+            content.lastStartedChild = count - 1;
+        } else {
+            content.lastStartedChild = 0;
+        }
+        windowAnimatorSet = new AnimatorSet();
+        windowAnimatorSet.playTogether(
+                ObjectAnimator.ofFloat(content, "backScaleY", 0.0f, 1.0f),
+                ObjectAnimator.ofInt(content, "backAlpha", 0, 255));
+        windowAnimatorSet.setDuration(150 + 16 * visibleCount);
+        windowAnimatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                windowAnimatorSet = null;
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                onAnimationEnd(animation);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        windowAnimatorSet.start();
     }
 
     @Override
@@ -386,7 +380,7 @@ public class ActionBarPopupWindow extends PopupWindow {
 
     public void dismiss(boolean animated) {
         setFocusable(false);
-        if (animationEnabled && animated) {
+        if (animated) {
             if (windowAnimatorSet != null) {
                 windowAnimatorSet.cancel();
             }
