@@ -416,7 +416,7 @@ public class ConnectionsManager {
         });
     }
 
-    @SuppressLint("NewApi")
+
     protected static boolean useIpv6Address() {
         if (Build.VERSION.SDK_INT < 19) {
             return false;

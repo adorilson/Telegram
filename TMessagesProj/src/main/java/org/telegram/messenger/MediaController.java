@@ -2658,7 +2658,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
         }
     }
 
-    @SuppressLint("NewApi")
+
     public static MediaCodecInfo selectCodec(String mimeType) {
         int numCodecs = MediaCodecList.getCodecCount();
         MediaCodecInfo lastCodecInfo = null;
@@ -2695,7 +2695,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
         }
     }
 
-    @SuppressLint("NewApi")
+
     public static int selectColorFormat(MediaCodecInfo codecInfo, String mimeType) {
         MediaCodecInfo.CodecCapabilities capabilities = codecInfo.getCapabilitiesForType(mimeType);
         int lastColorFormat = 0;

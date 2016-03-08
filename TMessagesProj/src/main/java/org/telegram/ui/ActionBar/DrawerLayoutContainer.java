@@ -77,7 +77,7 @@ public class DrawerLayoutContainer extends FrameLayout {
         shadowLeft = getResources().getDrawable(R.drawable.menu_shadow);
     }
 
-    @SuppressLint("NewApi")
+
     private class InsetsListener implements View.OnApplyWindowInsetsListener {
         @Override
         public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
@@ -87,7 +87,7 @@ public class DrawerLayoutContainer extends FrameLayout {
         }
     }
 
-    @SuppressLint("NewApi")
+
     private void dispatchChildInsets(View child, Object insets, int drawerGravity) {
         WindowInsets wi = (WindowInsets) insets;
         if (drawerGravity == Gravity.LEFT) {
@@ -98,7 +98,7 @@ public class DrawerLayoutContainer extends FrameLayout {
         child.dispatchApplyWindowInsets(wi);
     }
 
-    @SuppressLint("NewApi")
+
     private void applyMarginInsets(MarginLayoutParams lp, Object insets, int drawerGravity, boolean topOnly) {
         WindowInsets wi = (WindowInsets) insets;
         if (drawerGravity == Gravity.LEFT) {
@@ -407,7 +407,7 @@ public class DrawerLayoutContainer extends FrameLayout {
         }
     }
 
-    @SuppressLint("NewApi")
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);

@@ -587,7 +587,7 @@ public class AndroidUtilities {
         }
     }
 
-    @SuppressLint("NewApi")
+    
     public static void clearDrawableAnimation(View view) {
         if (Build.VERSION.SDK_INT < 21 || view == null) {
             return;
@@ -815,7 +815,7 @@ public class AndroidUtilities {
         return storageDir;
     }
 
-    @SuppressLint("NewApi")
+
     public static String getPath(final Uri uri) {
         try {
             final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;

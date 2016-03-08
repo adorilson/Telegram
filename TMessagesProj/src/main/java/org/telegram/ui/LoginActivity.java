@@ -329,7 +329,7 @@ public class LoginActivity extends BaseFragment {
                 public void onAnimationStart(Animator animator) {
                 }
 
-                @SuppressLint("NewApi")
+
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     outView.setVisibility(View.GONE);

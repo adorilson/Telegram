@@ -505,7 +505,7 @@ public class DocumentSelectActivity extends BaseFragment {
         new AlertDialog.Builder(getParentActivity()).setTitle(LocaleController.getString("AppName", R.string.AppName)).setMessage(error).setPositiveButton(LocaleController.getString("OK", R.string.OK), null).show();
     }
 
-    @SuppressLint("NewApi")
+
     private void listRoots() {
         currentDir = null;
         items.clear();

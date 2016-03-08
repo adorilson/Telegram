@@ -320,7 +320,7 @@ public class BottomSheet extends Dialog {
         if (Build.VERSION.SDK_INT >= 21 && !focusable) {
             container.setFitsSystemWindows(true);
             container.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
-                @SuppressLint("NewApi")
+
                 @Override
                 public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
                     lastInsets = insets;
@@ -506,7 +506,7 @@ public class BottomSheet extends Dialog {
         return revealRadius;
     }
 
-    @SuppressLint("NewApi")
+
     private void startRevealAnimation(final boolean open) {
         if (open) {
             backgroundDrawable.setAlpha(0);

@@ -286,7 +286,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
         }
     }
 
-    @SuppressLint("NewApi")
+
     public void onRevealAnimationStart(boolean open) {
         if (!open) {
             return;
@@ -308,7 +308,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
         }
     }
 
-    @SuppressLint("NewApi")
+
     public void onRevealAnimationProgress(boolean open, float radius, int x, int y) {
         if (!open) {
             return;

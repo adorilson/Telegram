@@ -81,7 +81,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
         super.onCreate();
     }
 
-    @SuppressLint("NewApi")
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         try {
@@ -119,7 +119,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
         return START_STICKY;
     }
 
-    @SuppressLint("NewApi")
+
     private void createNotification(MessageObject messageObject) {
         String songName = messageObject.getMusicTitle();
         String authorName = messageObject.getMusicAuthor();
@@ -237,7 +237,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
         view.setOnClickPendingIntent(R.id.player_play, pendingIntent);
     }
 
-    @SuppressLint("NewApi")
+
     @Override
     public void onDestroy() {
         super.onDestroy();

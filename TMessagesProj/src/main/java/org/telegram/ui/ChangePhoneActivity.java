@@ -236,7 +236,7 @@ public class ChangePhoneActivity extends BaseFragment {
                 newView.setVisibility(View.VISIBLE);
             }
 
-            @SuppressLint("NewApi")
+
             public void onAnimationEnd(Object animation) {
                 outView.setVisibility(View.GONE);
                 outView.setX(0);
