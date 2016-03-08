@@ -135,9 +135,7 @@ public class WebFrameLayout extends FrameLayout {
         webView = new WebView(context);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        if (Build.VERSION.SDK_INT >= 17) {
-            webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        }
+        webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
 
         String userAgent = webView.getSettings().getUserAgentString();
         if (userAgent != null) {
