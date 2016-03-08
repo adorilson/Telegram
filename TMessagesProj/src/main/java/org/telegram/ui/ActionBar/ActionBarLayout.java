@@ -561,10 +561,8 @@ public class ActionBarLayout extends FrameLayout {
         if (first) {
             animationProgress = 0.0f;
             lastFrameTime = System.nanoTime() / 1000000;
-            if (Build.VERSION.SDK_INT > 15) {
-                containerView.setLayerType(LAYER_TYPE_HARDWARE, null);
-                containerViewBack.setLayerType(LAYER_TYPE_HARDWARE, null);
-            }
+            containerView.setLayerType(LAYER_TYPE_HARDWARE, null);
+            containerViewBack.setLayerType(LAYER_TYPE_HARDWARE, null);
         }
         AndroidUtilities.runOnUIThread(animationRunnable = new Runnable() {
             @Override
@@ -709,10 +707,8 @@ public class ActionBarLayout extends FrameLayout {
                 onOpenAnimationEndRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (Build.VERSION.SDK_INT > 15) {
-                            containerView.setLayerType(LAYER_TYPE_NONE, null);
-                            containerViewBack.setLayerType(LAYER_TYPE_NONE, null);
-                        }
+                        containerView.setLayerType(LAYER_TYPE_NONE, null);
+                        containerViewBack.setLayerType(LAYER_TYPE_NONE, null);
                         presentFragmentInternalRemoveOld(removeLast, currentFragment);
                         fragment.onTransitionAnimationEnd(true, false);
                         fragment.onBecomeFullyVisible();
@@ -731,10 +727,9 @@ public class ActionBarLayout extends FrameLayout {
                     containerView.setTranslationX(48.0f);
                     startLayoutAnimation(true, true);
                 } else {
-                    if (Build.VERSION.SDK_INT > 15) {
-                        //containerView.setLayerType(LAYER_TYPE_HARDWARE, null);
-                        //containerViewBack.setLayerType(LAYER_TYPE_HARDWARE, null);
-                    }
+                    //containerView.setLayerType(LAYER_TYPE_HARDWARE, null);
+                    //containerViewBack.setLayerType(LAYER_TYPE_HARDWARE, null);
+
                     containerView.setAlpha(1.0f);
                     containerView.setTranslationX(0.0f);
                     currentAnimation = animation;
@@ -860,10 +855,8 @@ public class ActionBarLayout extends FrameLayout {
                 onCloseAnimationEndRunnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (Build.VERSION.SDK_INT > 15) {
-                            containerView.setLayerType(LAYER_TYPE_NONE, null);
-                            containerViewBack.setLayerType(LAYER_TYPE_NONE, null);
-                        }
+                        containerView.setLayerType(LAYER_TYPE_NONE, null);
+                        containerViewBack.setLayerType(LAYER_TYPE_NONE, null);
                         closeLastFragmentInternalRemoveOld(currentFragment);
                         containerViewBack.setTranslationX(0);
                         currentFragment.onTransitionAnimationEnd(false, false);
@@ -880,10 +873,8 @@ public class ActionBarLayout extends FrameLayout {
                 if (animation == null) {
                     startLayoutAnimation(false, true);
                 } else {
-                    if (Build.VERSION.SDK_INT > 15) {
-                        //containerView.setLayerType(LAYER_TYPE_HARDWARE, null);
-                        //containerViewBack.setLayerType(LAYER_TYPE_HARDWARE, null);
-                    }
+                    //containerView.setLayerType(LAYER_TYPE_HARDWARE, null);
+                    //containerViewBack.setLayerType(LAYER_TYPE_HARDWARE, null);
                     currentAnimation = animation;
                 }
             } else {

@@ -260,7 +260,7 @@ public class ApplicationLoader extends Application {
 
         applicationContext = getApplicationContext();
         NativeLoader.initNativeLibs(ApplicationLoader.applicationContext);
-        ConnectionsManager.native_setJava(Build.VERSION.SDK_INT == 15);
+        ConnectionsManager.native_setJava(false);
 
         new ForegroundDetector(this);
 

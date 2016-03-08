@@ -1495,9 +1495,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         if (playProfileAnimation) {
             final AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.setDuration(150);
-            if (Build.VERSION.SDK_INT > 15) {
-                listView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            }
+            listView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
             ActionBarMenu menu = actionBar.createMenu();
             if (menu.getItem(10) == null) {
                 if (animatingItem == null) {
@@ -1571,9 +1570,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             }
             animatorSet.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Object animation) {
-                    if (Build.VERSION.SDK_INT > 15) {
-                        listView.setLayerType(View.LAYER_TYPE_NONE, null);
-                    }
+                    listView.setLayerType(View.LAYER_TYPE_NONE, null);
                     if (animatingItem != null) {
                         ActionBarMenu menu = actionBar.createMenu();
                         menu.clearItems();
@@ -1583,9 +1580,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
 
                 public void onAnimationCancel(Object animation) {
-                    if (Build.VERSION.SDK_INT > 15) {
-                        listView.setLayerType(View.LAYER_TYPE_NONE, null);
-                    }
+                    listView.setLayerType(View.LAYER_TYPE_NONE, null);
                 }
             });
             animatorSet.setInterpolator(new DecelerateInterpolator());

@@ -83,11 +83,7 @@ public class ScrollSlidingTabStrip extends HorizontalScrollView {
             return;
         }
         View tab = tabsContainer.getChildAt(num);
-        if (Build.VERSION.SDK_INT >= 15) {
-            tab.callOnClick();
-        } else {
-            tab.performClick();
-        }
+        tab.callOnClick();
     }
 
     public void addIconTab(int resId) {
