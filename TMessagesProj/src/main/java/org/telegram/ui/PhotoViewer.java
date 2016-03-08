@@ -1548,9 +1548,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         }
         cropItem.setVisibility(View.VISIBLE);
         captionItem.setVisibility(View.VISIBLE);
-        if (Build.VERSION.SDK_INT >= 16) {
-            tuneItem.setVisibility(View.VISIBLE);
-        }
+        tuneItem.setVisibility(View.VISIBLE);
         if (sendPhotoType == 0) {
             checkImageView.setVisibility(View.VISIBLE);
         }
@@ -2353,9 +2351,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     captionEditText.onCreate();
                 }
             }
-            if (Build.VERSION.SDK_INT >= 16) {
-                tuneItem.setVisibility(cropItem.getVisibility());
-            }
+            tuneItem.setVisibility(cropItem.getVisibility());
             updateSelectedCount();
         }
 

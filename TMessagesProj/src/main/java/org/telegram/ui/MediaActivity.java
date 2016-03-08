@@ -1097,7 +1097,7 @@ public class MediaActivity extends BaseFragment implements NotificationCenter.No
                     TLRPC.WebPage webPage = message.messageOwner.media.webpage;
                     String link = null;
                     if (webPage != null && !(webPage instanceof TLRPC.TL_webPageEmpty)) {
-                        if (Build.VERSION.SDK_INT >= 16 && webPage.embed_url != null && webPage.embed_url.length() != 0) {
+                        if (webPage.embed_url != null && webPage.embed_url.length() != 0) {
                             openWebView(webPage);
                             return;
                         } else {

@@ -2524,13 +2524,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
                 @Override
                 public boolean didSelectVideo(String path) {
-                    if (Build.VERSION.SDK_INT >= 16) {
-                        return !openVideoEditor(path, true, true);
-                    } else {
-                        SendMessagesHelper.prepareSendingVideo(path, 0, 0, 0, 0, null, dialog_id, replyingMessageObject, chatActivityEnterView == null || chatActivityEnterView.asAdmin());
-                        showReplyPanel(false, null, null, null, false, true);
-                        return true;
-                    }
+                    return !openVideoEditor(path, true, true);
                 }
             });
             presentFragment(fragment);
@@ -3895,15 +3889,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     if (videoPath == null) {
                         showAttachmentError();
                     }
-                    if (Build.VERSION.SDK_INT >= 16) {
-                        if (paused) {
-                            startVideoEdit = videoPath;
-                        } else {
-                            openVideoEditor(videoPath, false, false);
-                        }
+                    if (paused) {
+                        startVideoEdit = videoPath;
                     } else {
-                        SendMessagesHelper.prepareSendingVideo(videoPath, 0, 0, 0, 0, null, dialog_id, replyingMessageObject, chatActivityEnterView == null || chatActivityEnterView.asAdmin());
-                        showReplyPanel(false, null, null, null, false, true);
+                        openVideoEditor(videoPath, false, false);
                     }
                 } else {
                     SendMessagesHelper.prepareSendingPhoto(null, uri, dialog_id, replyingMessageObject, null, chatActivityEnterView == null || chatActivityEnterView.asAdmin());
@@ -3928,15 +3917,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                     }
                     currentPicturePath = null;
                 }
-                if (Build.VERSION.SDK_INT >= 16) {
-                    if (paused) {
-                        startVideoEdit = videoPath;
-                    } else {
-                        openVideoEditor(videoPath, false, false);
-                    }
+                if (paused) {
+                    startVideoEdit = videoPath;
                 } else {
-                    SendMessagesHelper.prepareSendingVideo(videoPath, 0, 0, 0, 0, null, dialog_id, replyingMessageObject, chatActivityEnterView == null || chatActivityEnterView.asAdmin());
-                    showReplyPanel(false, null, null, null, false, true);
+                    openVideoEditor(videoPath, false, false);
                 }
             } else if (requestCode == 21) {
                 if (data == null || data.getData() == null) {

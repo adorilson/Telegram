@@ -240,7 +240,7 @@ public class ChatMessageCell extends ChatBaseCell {
                                     }
                                 } else {
                                     TLRPC.WebPage webPage = currentMessageObject.messageOwner.media.webpage;
-                                    if (Build.VERSION.SDK_INT >= 16 && webPage.embed_url != null && webPage.embed_url.length() != 0) {
+                                    if (webPage.embed_url != null && webPage.embed_url.length() != 0) {
                                         delegate.needOpenWebView(webPage.embed_url, webPage.site_name, webPage.url, webPage.embed_width, webPage.embed_height);
                                     } else {
                                         Uri uri = Uri.parse(webPage.url);

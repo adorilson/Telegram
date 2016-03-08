@@ -1297,21 +1297,16 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             ChatActivity fragment = new ChatActivity(args);
 
             if (videoPath != null) {
-                if(android.os.Build.VERSION.SDK_INT >= 16) {
-                    if (AndroidUtilities.isTablet()) {
-                        actionBarLayout.presentFragment(fragment, false, true, true);
-                    } else {
-                        actionBarLayout.addFragmentToStack(fragment, actionBarLayout.fragmentsStack.size() - 1);
-                    }
-
-                    if (!fragment.openVideoEditor(videoPath, dialogsFragment != null, false) && dialogsFragment != null) {
-                        if (!AndroidUtilities.isTablet()) {
-                            dialogsFragment.finishFragment(true);
-                        }
-                    }
+                if (AndroidUtilities.isTablet()) {
+                    actionBarLayout.presentFragment(fragment, false, true, true);
                 } else {
-                    actionBarLayout.presentFragment(fragment, dialogsFragment != null, dialogsFragment == null, true);
-                    SendMessagesHelper.prepareSendingVideo(videoPath, 0, 0, 0, 0, null, dialog_id, null, true);
+                    actionBarLayout.addFragmentToStack(fragment, actionBarLayout.fragmentsStack.size() - 1);
+                }
+
+                if (!fragment.openVideoEditor(videoPath, dialogsFragment != null, false) && dialogsFragment != null) {
+                    if (!AndroidUtilities.isTablet()) {
+                        dialogsFragment.finishFragment(true);
+                    }
                 }
             } else {
                 actionBarLayout.presentFragment(fragment, dialogsFragment != null, dialogsFragment == null, true);
@@ -1449,11 +1444,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
             public void onGlobalLayout() {
                 needLayout();
                 if (actionBarLayout != null) {
-                    if (Build.VERSION.SDK_INT < 16) {
-                        actionBarLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    } else {
-                        actionBarLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
+                    actionBarLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             }
         });
@@ -1573,11 +1564,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
         try {
             if (onGlobalLayoutListener != null) {
                 final View view = getWindow().getDecorView().getRootView();
-                if (Build.VERSION.SDK_INT < 16) {
-                    view.getViewTreeObserver().removeGlobalOnLayoutListener(onGlobalLayoutListener);
-                } else {
-                    view.getViewTreeObserver().removeOnGlobalLayoutListener(onGlobalLayoutListener);
-                }
+                view.getViewTreeObserver().removeGlobalOnLayoutListener(onGlobalLayoutListener);
             }
         } catch (Exception e) {
             FileLog.e("tmessages", e);

@@ -2958,11 +2958,6 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                                 String codecName = codecInfo.getName();
                                 if (codecName.contains("OMX.qcom.")) {
                                     processorType = PROCESSOR_TYPE_QCOM;
-                                    if (Build.VERSION.SDK_INT == 16) {
-                                        if (manufacturer.equals("lge") || manufacturer.equals("nokia")) {
-                                            swapUV = 1;
-                                        }
-                                    }
                                 } else if (codecName.contains("OMX.Intel.")) {
                                     processorType = PROCESSOR_TYPE_INTEL;
                                 } else if (codecName.equals("OMX.MTK.VIDEO.ENCODER.AVC")) {

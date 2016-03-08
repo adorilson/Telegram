@@ -643,11 +643,7 @@ public class VideoEditorActivity extends BaseFragment implements TextureView.Sur
             public void onGlobalLayout() {
                 fixLayoutInternal();
                 if (fragmentView != null) {
-                    if (Build.VERSION.SDK_INT < 16) {
-                        fragmentView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                    } else {
-                        fragmentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
+                    fragmentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             }
         });

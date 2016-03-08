@@ -387,7 +387,8 @@ public class SharedLinkCell extends FrameLayout {
                             } else if (linkPreviewPressed) {
                                 try {
                                     TLRPC.WebPage webPage = pressedLink == 0 && message.messageOwner.media != null ? message.messageOwner.media.webpage : null;
-                                    if (webPage != null && Build.VERSION.SDK_INT >= 16 && webPage.embed_url != null && webPage.embed_url.length() != 0) {
+                                    if (webPage != null && webPage.embed_url != null
+                                            && webPage.embed_url.length() != 0) {
                                         delegate.needOpenWebView(webPage);
                                     } else {
                                         Uri uri = Uri.parse(links.get(pressedLink));

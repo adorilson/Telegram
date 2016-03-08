@@ -403,11 +403,7 @@ public class AndroidUtilities {
 
     public static int getPhotoSize() {
         if (photoSize == null) {
-            if (Build.VERSION.SDK_INT >= 16) {
-                photoSize = 1280;
-            } else {
-                photoSize = 800;
-            }
+            photoSize = 1280;
         }
         return photoSize;
     }
