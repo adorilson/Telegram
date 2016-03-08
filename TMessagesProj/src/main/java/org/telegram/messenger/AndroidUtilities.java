@@ -676,16 +676,16 @@ public class AndroidUtilities {
 
     public static boolean needShowPasscode(boolean reset) {
         boolean wasInBackground;
-        if (Build.VERSION.SDK_INT >= 14) {
-            wasInBackground = ForegroundDetector.getInstance().isWasInBackground(reset);
-            if (reset) {
-                ForegroundDetector.getInstance().resetBackgroundVar();
-            }
-        } else {
-            wasInBackground = UserConfig.lastPauseTime != 0;
+        wasInBackground = ForegroundDetector.getInstance().isWasInBackground(reset);
+        if (reset) {
+            ForegroundDetector.getInstance().resetBackgroundVar();
         }
-        return UserConfig.passcodeHash.length() > 0 && wasInBackground &&
-                (UserConfig.appLocked || UserConfig.autoLockIn != 0 && UserConfig.lastPauseTime != 0 && !UserConfig.appLocked && (UserConfig.lastPauseTime + UserConfig.autoLockIn) <= ConnectionsManager.getInstance().getCurrentTime());
+        return UserConfig.passcodeHash.length() > 0 &&
+                wasInBackground &&
+                (UserConfig.appLocked || UserConfig.autoLockIn != 0 &&
+                        UserConfig.lastPauseTime != 0 &&
+                        !UserConfig.appLocked &&
+                        (UserConfig.lastPauseTime + UserConfig.autoLockIn) <= ConnectionsManager.getInstance().getCurrentTime());
     }
 
     public static void shakeView(final View view, final float x, final int num) {

@@ -754,22 +754,18 @@ public class PasscodeView extends FrameLayout {
         passwordEditText.clearFocus();
         AndroidUtilities.hideKeyboard(passwordEditText);
 
-        if (Build.VERSION.SDK_INT >= 14) {
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.setDuration(200);
-            animatorSet.playTogether(
-                    ObjectAnimator.ofFloat(this, "translationY", AndroidUtilities.dp(20)),
-                    ObjectAnimator.ofFloat(this, "alpha", AndroidUtilities.dp(0.0f)));
-            animatorSet.addListener(new AnimatorListenerAdapter(){
-                public void onAnimationEnd(Object animation) {
-                    PasscodeView.this.clearAnimation();
-                    setVisibility(View.GONE);
-                }
-            });
-            animatorSet.start();
-        } else {
-            setVisibility(View.GONE);
-        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setDuration(200);
+        animatorSet.playTogether(
+                ObjectAnimator.ofFloat(this, "translationY", AndroidUtilities.dp(20)),
+                ObjectAnimator.ofFloat(this, "alpha", AndroidUtilities.dp(0.0f)));
+        animatorSet.addListener(new AnimatorListenerAdapter(){
+            public void onAnimationEnd(Object animation) {
+                PasscodeView.this.clearAnimation();
+                setVisibility(View.GONE);
+            }
+        });
+        animatorSet.start();
 
         UserConfig.appLocked = false;
         UserConfig.saveConfig(false);
@@ -974,11 +970,9 @@ public class PasscodeView extends FrameLayout {
         if (getVisibility() == View.VISIBLE) {
             return;
         }
-        if (Build.VERSION.SDK_INT >= 14) {
-            this.setAlpha(1.0f);
-            this.setTranslationY(0);
-            this.clearAnimation();
-        }
+        this.setAlpha(1.0f);
+        this.setTranslationY(0);
+        this.clearAnimation();
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE);
         int selectedBackground = preferences.getInt("selectedBackground", 1000001);
         if (selectedBackground == 1000001) {

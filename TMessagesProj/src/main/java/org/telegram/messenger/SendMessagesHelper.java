@@ -2773,34 +2773,32 @@ public class SendMessagesHelper implements NotificationCenter.NotificationCenter
                                 video.size = (int) temp.length();
                             }
                             boolean infoObtained = false;
-                            if (Build.VERSION.SDK_INT >= 14) {
-                                MediaMetadataRetriever mediaMetadataRetriever = null;
+                            MediaMetadataRetriever mediaMetadataRetriever = null;
+                            try {
+                                mediaMetadataRetriever = new MediaMetadataRetriever();
+                                mediaMetadataRetriever.setDataSource(videoPath);
+                                String width = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+                                if (width != null) {
+                                    video.w = Integer.parseInt(width);
+                                }
+                                String height = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
+                                if (height != null) {
+                                    video.h = Integer.parseInt(height);
+                                }
+                                String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+                                if (duration != null) {
+                                    video.duration = (int) Math.ceil(Long.parseLong(duration) / 1000.0f);
+                                }
+                                infoObtained = true;
+                            } catch (Exception e) {
+                                FileLog.e("tmessages", e);
+                            } finally {
                                 try {
-                                    mediaMetadataRetriever = new MediaMetadataRetriever();
-                                    mediaMetadataRetriever.setDataSource(videoPath);
-                                    String width = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-                                    if (width != null) {
-                                        video.w = Integer.parseInt(width);
+                                    if (mediaMetadataRetriever != null) {
+                                        mediaMetadataRetriever.release();
                                     }
-                                    String height = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
-                                    if (height != null) {
-                                        video.h = Integer.parseInt(height);
-                                    }
-                                    String duration = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-                                    if (duration != null) {
-                                        video.duration = (int) Math.ceil(Long.parseLong(duration) / 1000.0f);
-                                    }
-                                    infoObtained = true;
                                 } catch (Exception e) {
                                     FileLog.e("tmessages", e);
-                                } finally {
-                                    try {
-                                        if (mediaMetadataRetriever != null) {
-                                            mediaMetadataRetriever.release();
-                                        }
-                                    } catch (Exception e) {
-                                        FileLog.e("tmessages", e);
-                                    }
                                 }
                             }
                             if (!infoObtained) {

@@ -633,7 +633,7 @@ public class ImageLoader {
                         BitmapFactory.Options opts = new BitmapFactory.Options();
                         opts.inSampleSize = 1;
 
-                        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 21) {
+                        if (Build.VERSION.SDK_INT < 21) {
                             opts.inPurgeable = true;
                         }
 
@@ -784,7 +784,7 @@ public class ImageLoader {
                         } else {
                             opts.inPreferredConfig = Bitmap.Config.RGB_565;
                         }
-                        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 21) {
+                        if (Build.VERSION.SDK_INT < 21) {
                             opts.inPurgeable = true;
                         }
 
@@ -2055,7 +2055,7 @@ public class ImageLoader {
         }
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = (int) scaleFactor;
-        bmOptions.inPurgeable = Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 21;
+        bmOptions.inPurgeable = Build.VERSION.SDK_INT < 21;
 
         String exifPath = null;
         if (path != null) {

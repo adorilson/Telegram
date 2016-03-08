@@ -237,51 +237,36 @@ public class ActionBar extends FrameLayout {
             return;
         }
         actionModeVisible = true;
-        if (Build.VERSION.SDK_INT >= 14) {
-            Collection<Animator> animators = new ArrayList<>();
-            animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f, 1.0f));
-            if (occupyStatusBar && actionModeTop != null) {
-                animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f, 1.0f));
-            }
-            AnimatorSet animatorSetProxy = new AnimatorSet();
-            animatorSetProxy.playTogether(animators);
-            animatorSetProxy.setDuration(200);
-            animatorSetProxy.addListener(new AnimatorListenerAdapter() {
-                public void onAnimationStart(Object animation) {
-                    actionMode.setVisibility(VISIBLE);
-                    if (occupyStatusBar && actionModeTop != null) {
-                        actionModeTop.setVisibility(VISIBLE);
-                    }
-                }
-
-                public void onAnimationEnd(Object animation) {
-                    if (titleTextView != null) {
-                        titleTextView.setVisibility(INVISIBLE);
-                    }
-                    if (subTitleTextView != null) {
-                        subTitleTextView.setVisibility(INVISIBLE);
-                    }
-                    if (menu != null) {
-                        menu.setVisibility(INVISIBLE);
-                    }
-                }
-            });
-            animatorSetProxy.start();
-        } else {
-            actionMode.setVisibility(VISIBLE);
-            if (occupyStatusBar && actionModeTop != null) {
-                actionModeTop.setVisibility(VISIBLE);
-            }
-            if (titleTextView != null) {
-                titleTextView.setVisibility(INVISIBLE);
-            }
-            if (subTitleTextView != null) {
-                subTitleTextView.setVisibility(INVISIBLE);
-            }
-            if (menu != null) {
-                menu.setVisibility(INVISIBLE);
-            }
+        Collection<Animator> animators = new ArrayList<>();
+        animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f, 1.0f));
+        if (occupyStatusBar && actionModeTop != null) {
+            animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f, 1.0f));
         }
+        AnimatorSet animatorSetProxy = new AnimatorSet();
+        animatorSetProxy.playTogether(animators);
+        animatorSetProxy.setDuration(200);
+        animatorSetProxy.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationStart(Object animation) {
+                actionMode.setVisibility(VISIBLE);
+                if (occupyStatusBar && actionModeTop != null) {
+                    actionModeTop.setVisibility(VISIBLE);
+                }
+            }
+
+            public void onAnimationEnd(Object animation) {
+                if (titleTextView != null) {
+                    titleTextView.setVisibility(INVISIBLE);
+                }
+                if (subTitleTextView != null) {
+                    subTitleTextView.setVisibility(INVISIBLE);
+                }
+                if (menu != null) {
+                    menu.setVisibility(INVISIBLE);
+                }
+            }
+        });
+        animatorSetProxy.start();
+
         if (backButtonImageView != null) {
             Drawable drawable = backButtonImageView.getDrawable();
             if (drawable instanceof BackDrawable) {
@@ -296,30 +281,23 @@ public class ActionBar extends FrameLayout {
             return;
         }
         actionModeVisible = false;
-        if (Build.VERSION.SDK_INT >= 14) {
-            Collection<Animator> animators = new ArrayList<>();
-            animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f));
-            if (occupyStatusBar && actionModeTop != null) {
-                animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f));
-            }
-            AnimatorSet animatorSetProxy = new AnimatorSet();
-            animatorSetProxy.playTogether(animators);
-            animatorSetProxy.setDuration(200);
-            animatorSetProxy.addListener(new AnimatorListenerAdapter() {
-                public void onAnimationEnd(Object animation) {
-                    actionMode.setVisibility(INVISIBLE);
-                    if (occupyStatusBar && actionModeTop != null) {
-                        actionModeTop.setVisibility(INVISIBLE);
-                    }
-                }
-            });
-            animatorSetProxy.start();
-        } else {
-            actionMode.setVisibility(INVISIBLE);
-            if (occupyStatusBar && actionModeTop != null) {
-                actionModeTop.setVisibility(INVISIBLE);
-            }
+        Collection<Animator> animators = new ArrayList<>();
+        animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f));
+        if (occupyStatusBar && actionModeTop != null) {
+            animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f));
         }
+        AnimatorSet animatorSetProxy = new AnimatorSet();
+        animatorSetProxy.playTogether(animators);
+        animatorSetProxy.setDuration(200);
+        animatorSetProxy.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Object animation) {
+                actionMode.setVisibility(INVISIBLE);
+                if (occupyStatusBar && actionModeTop != null) {
+                    actionModeTop.setVisibility(INVISIBLE);
+                }
+            }
+        });
+        animatorSetProxy.start();
         if (titleTextView != null) {
             titleTextView.setVisibility(VISIBLE);
         }

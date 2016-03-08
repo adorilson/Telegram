@@ -938,9 +938,6 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
     }
 
     public void startMediaObserver() {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            return;
-        }
         ApplicationLoader.applicationHandler.removeCallbacks(stopMediaObserverRunnable);
         startObserverToken++;
         try {
@@ -960,9 +957,6 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
     }
 
     public void stopMediaObserver() {
-        if (android.os.Build.VERSION.SDK_INT < 14) {
-            return;
-        }
         if (stopMediaObserverRunnable == null) {
             stopMediaObserverRunnable = new StopMediaObserverRunnable();
         }

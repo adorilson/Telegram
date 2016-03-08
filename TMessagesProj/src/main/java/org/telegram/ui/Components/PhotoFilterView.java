@@ -1326,7 +1326,7 @@ public class PhotoFilterView extends FrameLayout {
         orientation = rotation;
 
         textureView = new TextureView(context);
-        if (Build.VERSION.SDK_INT == 14 || Build.VERSION.SDK_INT == 15) {
+        if (Build.VERSION.SDK_INT == 15) {
             //setLayerType(LAYER_TYPE_HARDWARE, null);
             //textureView.setLayerType(LAYER_TYPE_HARDWARE, null);
         }

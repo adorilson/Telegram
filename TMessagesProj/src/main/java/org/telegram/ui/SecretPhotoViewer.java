@@ -260,7 +260,7 @@ public class SecretPhotoViewer implements NotificationCenter.NotificationCenterD
             File file = FileLoader.getPathToAttach(sizeFull);
             Bitmap bitmap = null;
             BitmapFactory.Options options = null;
-            if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 21) {
+            if (Build.VERSION.SDK_INT < 21) {
                 options = new BitmapFactory.Options();
                 options.inDither = true;
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;

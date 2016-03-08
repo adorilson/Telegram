@@ -330,7 +330,7 @@ public class ChatMessageCell extends ChatBaseCell {
         StaticLayout layout = new StaticLayout(text, paint, smallWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
         for (int a = 0; a < linesCount; a++) {
             Layout.Directions directions = layout.getLineDirections(a);
-            if (layout.getLineLeft(a) != 0 || Build.VERSION.SDK_INT >= 14 && (layout.isRtlCharAt(layout.getLineStart(a)) || layout.isRtlCharAt(layout.getLineEnd(a)))) {
+            if ((layout.isRtlCharAt(layout.getLineStart(a)) || layout.isRtlCharAt(layout.getLineEnd(a)))) {
                 maxWidth = smallWidth;
             }
             int pos = layout.getLineEnd(a);

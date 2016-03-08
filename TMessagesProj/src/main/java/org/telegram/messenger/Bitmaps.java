@@ -110,7 +110,7 @@ public class Bitmaps {
 
     public static Bitmap createBitmap(int width, int height, Bitmap.Config config) {
         Bitmap bitmap;
-        if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 21) {
+        if (Build.VERSION.SDK_INT < 21) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inDither = true;
             options.inPreferredConfig = config;

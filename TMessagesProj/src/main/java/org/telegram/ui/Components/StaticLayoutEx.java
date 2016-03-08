@@ -79,27 +79,27 @@ public class StaticLayoutEx {
     }
 
     public static StaticLayout createStaticLayout(CharSequence source, int bufstart, int bufend, TextPaint paint, int outerWidth, Layout.Alignment align, float spacingMult, float spacingAdd, boolean includePad, TextUtils.TruncateAt ellipsize, int ellipsisWidth, int maxLines) {
-        /*if (Build.VERSION.SDK_INT >= 14) {
-            init();
-            try {
-                sConstructorArgs[0] = source;
-                sConstructorArgs[1] = bufstart;
-                sConstructorArgs[2] = bufend;
-                sConstructorArgs[3] = paint;
-                sConstructorArgs[4] = outerWidth;
-                sConstructorArgs[5] = align;
-                sConstructorArgs[6] = sTextDirection;
-                sConstructorArgs[7] = spacingMult;
-                sConstructorArgs[8] = spacingAdd;
-                sConstructorArgs[9] = includePad;
-                sConstructorArgs[10] = ellipsize;
-                sConstructorArgs[11] = ellipsisWidth;
-                sConstructorArgs[12] = maxLines;
-                return sConstructor.newInstance(sConstructorArgs);
-            } catch (Exception e) {
-                FileLog.e("tmessages", e);
-            }
-        }*/
+        /*
+        init();
+        try {
+            sConstructorArgs[0] = source;
+            sConstructorArgs[1] = bufstart;
+            sConstructorArgs[2] = bufend;
+            sConstructorArgs[3] = paint;
+            sConstructorArgs[4] = outerWidth;
+            sConstructorArgs[5] = align;
+            sConstructorArgs[6] = sTextDirection;
+            sConstructorArgs[7] = spacingMult;
+            sConstructorArgs[8] = spacingAdd;
+            sConstructorArgs[9] = includePad;
+            sConstructorArgs[10] = ellipsize;
+            sConstructorArgs[11] = ellipsisWidth;
+            sConstructorArgs[12] = maxLines;
+            return sConstructor.newInstance(sConstructorArgs);
+        } catch (Exception e) {
+            FileLog.e("tmessages", e);
+        }
+        */
         try {
             if (maxLines == 1) {
                 CharSequence text = TextUtils.ellipsize(source, paint, ellipsisWidth, TextUtils.TruncateAt.END);
