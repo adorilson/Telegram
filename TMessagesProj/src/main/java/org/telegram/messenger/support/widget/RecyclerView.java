@@ -146,15 +146,6 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
 
     private static final boolean DEBUG = false;
 
-    /**
-     * On Kitkat and JB MR2, there is a bug which prevents DisplayList from being invalidated if
-     * a View is two levels deep(wrt to ViewHolder.itemView). DisplayList can be invalidated by
-     * setting View's visibility to INVISIBLE when View is detached. On Kitkat and JB MR2, Recycler
-     * recursively traverses itemView and invalidates display list for each ViewGroup that matches
-     * this criteria.
-     */
-    private static final boolean FORCE_INVALIDATE_DISPLAY_LIST = Build.VERSION.SDK_INT == 20;
-
     private static final boolean DISPATCH_TEMP_DETACH = false;
     public static final int HORIZONTAL = 0;
     public static final int VERTICAL = 1;
@@ -4552,9 +4543,6 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
                     holder = getRecycledViewPool().getRecycledView(type);
                     if (holder != null) {
                         holder.resetInternal();
-                        if (FORCE_INVALIDATE_DISPLAY_LIST) {
-                            invalidateDisplayListInt(holder);
-                        }
                     }
                 }
                 if (holder == null) {
@@ -4610,33 +4598,6 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
                     ViewCompat.setAccessibilityDelegate(itemView,
                             mAccessibilityDelegate.getItemDelegate());
                 }
-            }
-        }
-
-        private void invalidateDisplayListInt(ViewHolder holder) {
-            if (holder.itemView instanceof ViewGroup) {
-                invalidateDisplayListInt((ViewGroup) holder.itemView, false);
-            }
-        }
-
-        private void invalidateDisplayListInt(ViewGroup viewGroup, boolean invalidateThis) {
-            for (int i = viewGroup.getChildCount() - 1; i >= 0; i--) {
-                final View view = viewGroup.getChildAt(i);
-                if (view instanceof ViewGroup) {
-                    invalidateDisplayListInt((ViewGroup) view, true);
-                }
-            }
-            if (!invalidateThis) {
-                return;
-            }
-            // we need to force it to become invisible
-            if (viewGroup.getVisibility() == View.INVISIBLE) {
-                viewGroup.setVisibility(View.VISIBLE);
-                viewGroup.setVisibility(View.INVISIBLE);
-            } else {
-                final int visibility = viewGroup.getVisibility();
-                viewGroup.setVisibility(View.INVISIBLE);
-                viewGroup.setVisibility(visibility);
             }
         }
 

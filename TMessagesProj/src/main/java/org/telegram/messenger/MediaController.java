@@ -2871,23 +2871,21 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
         int rotateRender = 0;
         File cacheFile = new File(messageObject.messageOwner.attachPath);
 
-        if (Build.VERSION.SDK_INT > 20) {
-            if (rotationValue == 90) {
-                int temp = resultHeight;
-                resultHeight = resultWidth;
-                resultWidth = temp;
-                rotationValue = 0;
-                rotateRender = 270;
-            } else if (rotationValue == 180) {
-                rotateRender = 180;
-                rotationValue = 0;
-            } else if (rotationValue == 270) {
-                int temp = resultHeight;
-                resultHeight = resultWidth;
-                resultWidth = temp;
-                rotationValue = 0;
-                rotateRender = 90;
-            }
+        if (rotationValue == 90) {
+            int temp = resultHeight;
+            resultHeight = resultWidth;
+            resultWidth = temp;
+            rotationValue = 0;
+            rotateRender = 270;
+        } else if (rotationValue == 180) {
+            rotateRender = 180;
+            rotationValue = 0;
+        } else if (rotationValue == 270) {
+            int temp = resultHeight;
+            resultHeight = resultWidth;
+            resultWidth = temp;
+            rotationValue = 0;
+            rotateRender = 90;
         }
 
         SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences("videoconvert", Activity.MODE_PRIVATE);

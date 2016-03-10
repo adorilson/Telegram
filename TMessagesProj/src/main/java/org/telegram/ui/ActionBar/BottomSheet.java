@@ -592,9 +592,7 @@ public class BottomSheet extends Dialog {
     }
 
     private void startOpenAnimation() {
-        if (Build.VERSION.SDK_INT >= 20) {
-            container.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        }
+        container.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         if (containerView.getMeasuredHeight() == 0) {
             containerView.measure(View.MeasureSpec.makeMeasureSpec(AndroidUtilities.displaySize.x, View.MeasureSpec.AT_MOST), View.MeasureSpec.makeMeasureSpec(AndroidUtilities.displaySize.y, View.MeasureSpec.AT_MOST));
         }
