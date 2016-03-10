@@ -106,12 +106,7 @@ public class NotificationsSettingsActivity extends BaseFragment implements Notif
         messageVibrateRow = rowCount++;
         messagePopupNotificationRow = rowCount++;
         messageSoundRow = rowCount++;
-        if (Build.VERSION.SDK_INT >= 21) {
-            messagePriorityRow = rowCount++;
-        } else {
-            messagePriorityRow = -1;
-        }
-        groupSectionRow2 = rowCount++;
+        messagePriorityRow = rowCount++;
         groupSectionRow = rowCount++;
         groupAlertRow = rowCount++;
         groupPreviewRow = rowCount++;
@@ -119,22 +114,14 @@ public class NotificationsSettingsActivity extends BaseFragment implements Notif
         groupVibrateRow = rowCount++;
         groupPopupNotificationRow = rowCount++;
         groupSoundRow = rowCount++;
-        if (Build.VERSION.SDK_INT >= 21) {
-            groupPriorityRow = rowCount++;
-        } else {
-            groupPriorityRow = -1;
-        }
+        groupPriorityRow = rowCount++;
         inappSectionRow2 = rowCount++;
         inappSectionRow = rowCount++;
         inappSoundRow = rowCount++;
         inappVibrateRow = rowCount++;
         inappPreviewRow = rowCount++;
         inchatSoundRow = rowCount++;
-        if (Build.VERSION.SDK_INT >= 21) {
-            inappPriorityRow = rowCount++;
-        } else {
-            inappPriorityRow = -1;
-        }
+        inappPriorityRow = rowCount++;
         eventsSectionRow2 = rowCount++;
         eventsSectionRow = rowCount++;
         contactJoinedRow = rowCount++;

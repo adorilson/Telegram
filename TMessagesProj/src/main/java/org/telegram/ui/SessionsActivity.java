@@ -431,7 +431,9 @@ public class SessionsActivity extends BaseFragment implements NotificationCenter
             } else if (type == 3) {
                 ViewGroup.LayoutParams layoutParams = emptyLayout.getLayoutParams();
                 if (layoutParams != null) {
-                    layoutParams.height = Math.max(AndroidUtilities.dp(220), AndroidUtilities.displaySize.y - ActionBar.getCurrentActionBarHeight() - AndroidUtilities.dp(128) - (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0));
+                    layoutParams.height = Math.max(AndroidUtilities.dp(220),
+                            AndroidUtilities.displaySize.y - ActionBar.getCurrentActionBarHeight()
+                                    - AndroidUtilities.dp(128) - AndroidUtilities.statusBarHeight);
                     emptyLayout.setLayoutParams(layoutParams);
                 }
                 return emptyLayout;

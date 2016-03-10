@@ -134,7 +134,7 @@ public class ProfileSearchCell extends BaseCell {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (Build.VERSION.SDK_INT >= 21 && getBackground() != null) {
+        if (getBackground() != null) {
             if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
                 getBackground().setHotspot(event.getX(), event.getY());
             }

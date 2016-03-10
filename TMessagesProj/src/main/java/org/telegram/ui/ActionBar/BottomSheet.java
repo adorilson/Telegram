@@ -240,7 +240,7 @@ public class BottomSheet extends Dialog {
                     if (child.getVisibility() == GONE || child == containerView) {
                         continue;
                     }
-                    if (lastInsets != null && Build.VERSION.SDK_INT >= 21) {
+                    if (lastInsets != null) {
                         WindowInsets wi = (WindowInsets) lastInsets;
                         wi = wi.replaceSystemWindowInsets(wi.getSystemWindowInsetLeft(), wi.getSystemWindowInsetTop(), 0, wi.getSystemWindowInsetBottom());
                         child.dispatchApplyWindowInsets(wi);
@@ -317,7 +317,7 @@ public class BottomSheet extends Dialog {
         });
         container.setBackgroundDrawable(backgroundDrawable);
         focusable = needFocus;
-        if (Build.VERSION.SDK_INT >= 21 && !focusable) {
+        if (!focusable) {
             container.setFitsSystemWindows(true);
             container.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
 
@@ -452,9 +452,6 @@ public class BottomSheet extends Dialog {
         } else {
             params.dimAmount = 0.2f;
         }
-        if (Build.VERSION.SDK_INT < 21) {
-            params.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        }
         getWindow().setAttributes(params);
     }
 
@@ -465,24 +462,16 @@ public class BottomSheet extends Dialog {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         }
         dismissed = false;
-        if (Build.VERSION.SDK_INT >= 21 || !useRevealAnimation) {
-            containerView.setBackgroundDrawable(shadowDrawable);
-        } else {
-            containerView.setBackgroundDrawable(null);
-        }
+        containerView.setBackgroundDrawable(shadowDrawable);
         int left = backgroundPaddingLeft;
         int top = backgroundPaddingTop;
         containerView.setPadding(left, (applyTopPaddings ? AndroidUtilities.dp(8) : 0) + top, left, (applyTopPaddings ? AndroidUtilities.dp(isGrid ? 16 : 8) : 0));
-        if (Build.VERSION.SDK_INT >= 21) {
-            AndroidUtilities.runOnUIThread(new Runnable() {
+        AndroidUtilities.runOnUIThread(new Runnable() {
                 @Override
                 public void run() {
                     startOpenAnimation();
                 }
             });
-        } else {
-            startOpenAnimation();
-        }
     }
 
     protected void setRevealRadius(float radius) {
@@ -533,29 +522,13 @@ public class BottomSheet extends Dialog {
         ArrayList<Animator> animators = new ArrayList<>(3);
         animators.add(ObjectAnimator.ofFloat(this, "revealRadius", open ? 0 : finalRevealRadius, open ? finalRevealRadius : 0));
         animators.add(ObjectAnimator.ofInt(backgroundDrawable, "alpha", open ? 51 : 0));
-        if (Build.VERSION.SDK_INT >= 21) {
-            containerView.setElevation(AndroidUtilities.dp(10));
-            try {
-                animators.add(ViewAnimationUtils.createCircularReveal(containerView, revealX <= containerView.getMeasuredWidth() ? revealX : containerView.getMeasuredWidth(), revealY, open ? 0 : finalRevealRadius, open ? finalRevealRadius : 0));
-            } catch (Exception e) {
-                FileLog.e("tmessages", e);
-            }
-            animatorSet.setDuration(300);
-        } else {
-            if (!open) {
-                animatorSet.setDuration(200);
-                containerView.setPivotX(revealX <= containerView.getMeasuredWidth() ? revealX : containerView.getMeasuredWidth());
-                containerView.setPivotY(revealY);
-                animators.add(ObjectAnimator.ofFloat(containerView, "scaleX", 0.0f));
-                animators.add(ObjectAnimator.ofFloat(containerView, "scaleY", 0.0f));
-                animators.add(ObjectAnimator.ofFloat(containerView, "alpha", 0.0f));
-            } else {
-                animatorSet.setDuration(250);
-                containerView.setScaleX(1);
-                containerView.setScaleY(1);
-                containerView.setAlpha(1);
-            }
+        containerView.setElevation(AndroidUtilities.dp(10));
+        try {
+            animators.add(ViewAnimationUtils.createCircularReveal(containerView, revealX <= containerView.getMeasuredWidth() ? revealX : containerView.getMeasuredWidth(), revealY, open ? 0 : finalRevealRadius, open ? finalRevealRadius : 0));
+        } catch (Exception e) {
+            FileLog.e("tmessages", e);
         }
+        animatorSet.setDuration(300);
         animatorSet.playTogether(animators);
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override

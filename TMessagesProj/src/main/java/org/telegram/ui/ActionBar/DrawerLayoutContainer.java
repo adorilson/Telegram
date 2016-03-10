@@ -68,11 +68,9 @@ public class DrawerLayoutContainer extends FrameLayout {
         setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         setFocusableInTouchMode(true);
 
-        if (Build.VERSION.SDK_INT >= 21) {
-            setFitsSystemWindows(true);
-            setOnApplyWindowInsetsListener(new InsetsListener());
-            setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
+        setFitsSystemWindows(true);
+        setOnApplyWindowInsetsListener(new InsetsListener());
+        setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         shadowLeft = getResources().getDrawable(R.drawable.menu_shadow);
     }
@@ -113,10 +111,7 @@ public class DrawerLayoutContainer extends FrameLayout {
     }
 
     private int getTopInset(Object insets) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return insets != null ? ((WindowInsets) insets).getSystemWindowInsetTop() : 0;
-        }
-        return 0;
+        return insets != null ? ((WindowInsets) insets).getSystemWindowInsetTop() : 0;
     }
 
     private void setChildInsets(Object insets, boolean draw) {
@@ -128,9 +123,7 @@ public class DrawerLayoutContainer extends FrameLayout {
     public void setDrawerLayout(ViewGroup layout) {
         drawerLayout = layout;
         addView(drawerLayout);
-        if (Build.VERSION.SDK_INT >= 21) {
-            drawerLayout.setFitsSystemWindows(true);
-        }
+        drawerLayout.setFitsSystemWindows(true);
     }
 
     public void moveDrawerByX(float dx) {
@@ -415,7 +408,7 @@ public class DrawerLayoutContainer extends FrameLayout {
 
         setMeasuredDimension(widthSize, heightSize);
 
-        final boolean applyInsets = lastInsets != null && Build.VERSION.SDK_INT >= 21;
+        final boolean applyInsets = lastInsets != null;
 
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -431,7 +424,7 @@ public class DrawerLayoutContainer extends FrameLayout {
                 if (child.getFitsSystemWindows()) {
                     dispatchChildInsets(child, lastInsets, lp.gravity);
                 } else if (child.getTag() == null) {
-                    applyMarginInsets(lp, lastInsets, lp.gravity, Build.VERSION.SDK_INT >= 21);
+                    applyMarginInsets(lp, lastInsets, lp.gravity, true);
                 }
             }
 

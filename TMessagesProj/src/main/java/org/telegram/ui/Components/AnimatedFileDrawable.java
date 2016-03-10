@@ -109,9 +109,6 @@ public class AnimatedFileDrawable extends BitmapDrawable implements Animatable {
                         }
                     }
                     if (backgroundBitmap != null) {
-                        /*if (Build.VERSION.SDK_INT < 21) {
-                            Utilities.unpinBitmap(backgroundBitmap);
-                        }*/
                         getVideoFrame(nativePtr, backgroundBitmap, metaData);
                     }
                 } catch (Throwable e) {

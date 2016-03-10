@@ -48,21 +48,17 @@ public class ClearCacheService extends IntentService {
                             for (int b = 0; b < array.length; b++) {
                                 File f = array[b];
                                 if (f.isFile()) {
-                                    if (Build.VERSION.SDK_INT >= 21) {
-                                        try {
-                                            StructStat stat = Os.stat(f.getPath());
-                                            if (stat.st_atime != 0) {
-                                                if (stat.st_atime + diff < currentTime) {
-                                                    f.delete();
-                                                }
-                                            } else if (stat.st_mtime + diff < currentTime) {
+                                    try {
+                                        StructStat stat = Os.stat(f.getPath());
+                                        if (stat.st_atime != 0) {
+                                            if (stat.st_atime + diff < currentTime) {
                                                 f.delete();
                                             }
-                                        } catch (Exception e) {
-                                            FileLog.e("tmessages", e);
+                                        } else if (stat.st_mtime + diff < currentTime) {
+                                            f.delete();
                                         }
-                                    } else if (f.lastModified() + diff < currentTime) {
-                                        f.delete();
+                                    } catch (Exception e) {
+                                        FileLog.e("tmessages", e);
                                     }
                                 }
                             }

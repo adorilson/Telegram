@@ -74,11 +74,7 @@ public class ProfileNotificationsActivity extends BaseFragment implements Notifi
         settingsNotificationsRow = rowCount++;
         settingsVibrateRow = rowCount++;
         settingsSoundRow = rowCount++;
-        if (Build.VERSION.SDK_INT >= 21) {
-            settingsPriorityRow = rowCount++;
-        } else {
-            settingsPriorityRow = -1;
-        }
+        settingsPriorityRow = rowCount++;
         int lower_id = (int) dialog_id;
         if (lower_id < 0) {
             smartRow = rowCount++;

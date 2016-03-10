@@ -3002,10 +3002,6 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                             ByteBuffer[] decoderInputBuffers = null;
                             ByteBuffer[] encoderOutputBuffers = null;
                             ByteBuffer[] encoderInputBuffers = null;
-                            if (Build.VERSION.SDK_INT < 21) {
-                                decoderInputBuffers = decoder.getInputBuffers();
-                                encoderOutputBuffers = encoder.getOutputBuffers();
-                            }
 
                             checkConversionCanceled();
 
@@ -3018,11 +3014,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                                         int inputBufIndex = decoder.dequeueInputBuffer(TIMEOUT_USEC);
                                         if (inputBufIndex >= 0) {
                                             ByteBuffer inputBuf;
-                                            if (Build.VERSION.SDK_INT < 21) {
-                                                inputBuf = decoderInputBuffers[inputBufIndex];
-                                            } else {
-                                                inputBuf = decoder.getInputBuffer(inputBufIndex);
-                                            }
+                                            inputBuf = decoder.getInputBuffer(inputBufIndex);
                                             int chunkSize = extractor.readSampleData(inputBuf, 0);
                                             if (chunkSize < 0) {
                                                 decoder.queueInputBuffer(inputBufIndex, 0, 0, 0L, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
@@ -3052,9 +3044,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                                     if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
                                         encoderOutputAvailable = false;
                                     } else if (encoderStatus == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
-                                        if (Build.VERSION.SDK_INT < 21) {
-                                            encoderOutputBuffers = encoder.getOutputBuffers();
-                                        }
+                                        //
                                     } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
                                         MediaFormat newFormat = encoder.getOutputFormat();
                                         if (videoTrackIndex == -5) {
@@ -3064,11 +3054,7 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                                         throw new RuntimeException("unexpected result from encoder.dequeueOutputBuffer: " + encoderStatus);
                                     } else {
                                         ByteBuffer encodedData;
-                                        if (Build.VERSION.SDK_INT < 21) {
-                                            encodedData = encoderOutputBuffers[encoderStatus];
-                                        } else {
-                                            encodedData = encoder.getOutputBuffer(encoderStatus);
-                                        }
+                                        encodedData = encoder.getOutputBuffer(encoderStatus);
                                         if (encodedData == null) {
                                             throw new RuntimeException("encoderOutputBuffer " + encoderStatus + " was null");
                                         }

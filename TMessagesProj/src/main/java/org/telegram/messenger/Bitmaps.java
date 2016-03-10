@@ -110,25 +110,7 @@ public class Bitmaps {
 
     public static Bitmap createBitmap(int width, int height, Bitmap.Config config) {
         Bitmap bitmap;
-        if (Build.VERSION.SDK_INT < 21) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inDither = true;
-            options.inPreferredConfig = config;
-            options.inPurgeable = true;
-            options.inSampleSize = 1;
-            options.inMutable = true;
-            byte[] array = jpegData.get();
-            array[76] = (byte) (height >> 8);
-            array[77] = (byte) (height & 0x00ff);
-            array[78] = (byte) (width >> 8);
-            array[79] = (byte) (width & 0x00ff);
-            bitmap = BitmapFactory.decodeByteArray(array, 0, array.length, options);
-            Utilities.pinBitmap(bitmap);
-            bitmap.setHasAlpha(true);
-            bitmap.eraseColor(0);
-        } else {
-            bitmap = Bitmap.createBitmap(width, height, config);
-        }
+        bitmap = Bitmap.createBitmap(width, height, config);
         if (config == Bitmap.Config.ARGB_8888 || config == Bitmap.Config.ARGB_4444) {
             bitmap.eraseColor(Color.TRANSPARENT);
         }

@@ -133,7 +133,7 @@ public class StickerSetCell extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (Build.VERSION.SDK_INT >= 21 && getBackground() != null) {
+        if (getBackground() != null) {
             optionsButton.getHitRect(rect);
             if (rect.contains((int) event.getX(), (int) event.getY())) {
                 return true;

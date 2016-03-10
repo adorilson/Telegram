@@ -51,7 +51,6 @@ public class ActionBar extends FrameLayout {
     private View actionModeTop;
     private ActionBarMenu menu;
     private ActionBarMenu actionMode;
-    private boolean occupyStatusBar = Build.VERSION.SDK_INT >= 21;
     private boolean actionModeVisible;
     private boolean addToContainer = true;
 
@@ -209,7 +208,7 @@ public class ActionBar extends FrameLayout {
         actionMode = new ActionBarMenu(getContext(), this);
         actionMode.setBackgroundColor(0xffffffff);
         addView(actionMode, indexOfChild(backButtonImageView));
-        actionMode.setPadding(0, occupyStatusBar ? AndroidUtilities.statusBarHeight : 0, 0, 0);
+        actionMode.setPadding(0, AndroidUtilities.statusBarHeight, 0, 0);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)actionMode.getLayoutParams();
         layoutParams.height = LayoutHelper.MATCH_PARENT;
         layoutParams.width = LayoutHelper.MATCH_PARENT;
@@ -217,7 +216,7 @@ public class ActionBar extends FrameLayout {
         actionMode.setLayoutParams(layoutParams);
         actionMode.setVisibility(INVISIBLE);
 
-        if (occupyStatusBar && actionModeTop == null) {
+        if (actionModeTop == null) {
             actionModeTop = new View(getContext());
             actionModeTop.setBackgroundColor(0x99000000);
             addView(actionModeTop);
@@ -239,7 +238,7 @@ public class ActionBar extends FrameLayout {
         actionModeVisible = true;
         Collection<Animator> animators = new ArrayList<>();
         animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f, 1.0f));
-        if (occupyStatusBar && actionModeTop != null) {
+        if (actionModeTop != null) {
             animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f, 1.0f));
         }
         AnimatorSet animatorSetProxy = new AnimatorSet();
@@ -248,7 +247,7 @@ public class ActionBar extends FrameLayout {
         animatorSetProxy.addListener(new AnimatorListenerAdapter() {
             public void onAnimationStart(Object animation) {
                 actionMode.setVisibility(VISIBLE);
-                if (occupyStatusBar && actionModeTop != null) {
+                if (actionModeTop != null) {
                     actionModeTop.setVisibility(VISIBLE);
                 }
             }
@@ -283,7 +282,7 @@ public class ActionBar extends FrameLayout {
         actionModeVisible = false;
         Collection<Animator> animators = new ArrayList<>();
         animators.add(ObjectAnimator.ofFloat(actionMode, "alpha", 0.0f));
-        if (occupyStatusBar && actionModeTop != null) {
+        if (actionModeTop != null) {
             animators.add(ObjectAnimator.ofFloat(actionModeTop, "alpha", 0.0f));
         }
         AnimatorSet animatorSetProxy = new AnimatorSet();
@@ -292,7 +291,7 @@ public class ActionBar extends FrameLayout {
         animatorSetProxy.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Object animation) {
                 actionMode.setVisibility(INVISIBLE);
-                if (occupyStatusBar && actionModeTop != null) {
+                if (actionModeTop != null) {
                     actionModeTop.setVisibility(INVISIBLE);
                 }
             }
@@ -317,7 +316,7 @@ public class ActionBar extends FrameLayout {
     }
 
     public void showActionModeTop() {
-        if (occupyStatusBar && actionModeTop == null) {
+        if (actionModeTop == null) {
             actionModeTop = new View(getContext());
             actionModeTop.setBackgroundColor(0x99000000);
             addView(actionModeTop);
@@ -368,7 +367,7 @@ public class ActionBar extends FrameLayout {
         int actionBarHeight = getCurrentActionBarHeight();
         int actionBarHeightSpec = MeasureSpec.makeMeasureSpec(actionBarHeight, MeasureSpec.EXACTLY);
 
-        setMeasuredDimension(width, actionBarHeight + (occupyStatusBar ? AndroidUtilities.statusBarHeight : 0));
+        setMeasuredDimension(width, actionBarHeight + AndroidUtilities.statusBarHeight);
 
         int textLeft;
         if (backButtonImageView != null && backButtonImageView.getVisibility() != GONE) {
@@ -414,7 +413,7 @@ public class ActionBar extends FrameLayout {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int additionalTop = occupyStatusBar ? AndroidUtilities.statusBarHeight : 0;
+        int additionalTop = AndroidUtilities.statusBarHeight;
 
         int textLeft;
         if (backButtonImageView != null && backButtonImageView.getVisibility() != GONE) {
@@ -530,14 +529,9 @@ public class ActionBar extends FrameLayout {
     }
 
     public void setOccupyStatusBar(boolean value) {
-        occupyStatusBar = value;
         if (actionMode != null) {
-            actionMode.setPadding(0, occupyStatusBar ? AndroidUtilities.statusBarHeight : 0, 0, 0);
+            actionMode.setPadding(0, value ? AndroidUtilities.statusBarHeight : 0, 0, 0);
         }
-    }
-
-    public boolean getOccupyStatusBar() {
-        return occupyStatusBar;
     }
 
     public void setItemsBackground(int resourceId) {

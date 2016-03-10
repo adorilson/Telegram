@@ -937,7 +937,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         builder.setCustomView(chatAttachView);
                         chatAttachViewSheet = builder.create();
                     }
-                    if (Build.VERSION.SDK_INT == 21 || Build.VERSION.SDK_INT == 22) {
+                    if (Build.VERSION.SDK_INT == 22) {
                         chatActivityEnterView.closeKeyboard();
                     }
 
@@ -5794,8 +5794,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                         avatarContainer.setPadding(avatarContainer.getPaddingLeft(), padding, avatarContainer.getPaddingRight(), padding);
                     }
                     FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) avatarContainer.getLayoutParams();
-                    if (layoutParams.topMargin != (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0)) {
-                        layoutParams.topMargin = (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0);
+                    if (layoutParams.topMargin != AndroidUtilities.statusBarHeight) {
+                        layoutParams.topMargin = AndroidUtilities.statusBarHeight;
                         avatarContainer.setLayoutParams(layoutParams);
                     }
                     if (AndroidUtilities.isTablet()) {

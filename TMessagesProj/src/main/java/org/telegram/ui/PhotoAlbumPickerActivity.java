@@ -443,7 +443,7 @@ public class PhotoAlbumPickerActivity extends BaseFragment implements Notificati
         if (dropDownContainer != null) {
             if (!AndroidUtilities.isTablet()) {
                 FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) dropDownContainer.getLayoutParams();
-                layoutParams.topMargin = (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0);
+                layoutParams.topMargin = AndroidUtilities.statusBarHeight;
                 dropDownContainer.setLayoutParams(layoutParams);
             }
 

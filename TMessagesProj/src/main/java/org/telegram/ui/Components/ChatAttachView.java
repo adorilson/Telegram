@@ -106,9 +106,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
 
         NotificationCenter.getInstance().addObserver(this, NotificationCenter.albumsDidLoaded);
         if (MediaController.allPhotosAlbumEntry == null) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                MediaController.loadGalleryPhotosAlbums(0);
-            }
+            MediaController.loadGalleryPhotosAlbums(0);
             loading = true;
         }
 
@@ -392,12 +390,12 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
             cell.getImageView().getLocationInWindow(coords);
             PhotoViewer.PlaceProviderObject object = new PhotoViewer.PlaceProviderObject();
             object.viewX = coords[0];
-            object.viewY = coords[1] - (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0);
+            object.viewY = coords[1] - AndroidUtilities.statusBarHeight;
             object.parentView = attachPhotoRecyclerView;
             object.imageReceiver = cell.getImageView().getImageReceiver();
             object.thumb = object.imageReceiver.getBitmap();
             object.scale = cell.getImageView().getScaleX();
-            object.clipBottomAddition = (Build.VERSION.SDK_INT >= 21 ? 0 : -AndroidUtilities.statusBarHeight);
+            object.clipBottomAddition =  0;
             cell.getCheckBox().setVisibility(View.GONE);
             return object;
         }

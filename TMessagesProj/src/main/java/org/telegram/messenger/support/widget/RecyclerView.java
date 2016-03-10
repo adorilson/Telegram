@@ -1894,7 +1894,7 @@ public class RecyclerView extends ViewGroup implements ScrollingView, NestedScro
     }
 
     void applyEdgeEffectColor(EdgeEffectCompat edgeEffectCompat) {
-        if (Build.VERSION.SDK_INT >= 21 && glowColor != 0) {
+        if (glowColor != 0) {
             try {
                 Field field = EdgeEffectCompat.class.getDeclaredField("mEdgeEffect");
                 field.setAccessible(true);

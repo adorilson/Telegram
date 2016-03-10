@@ -67,9 +67,7 @@ public class WebFrameLayout extends FrameLayout {
 
         fullscreenVideoContainer = new FrameLayout(context);
         fullscreenVideoContainer.setBackgroundColor(0xff000000);
-        if (Build.VERSION.SDK_INT >= 21) {
-            fullscreenVideoContainer.setFitsSystemWindows(true);
-        }
+        fullscreenVideoContainer.setFitsSystemWindows(true);
         dialog.getContainer().addView(fullscreenVideoContainer, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT));
         fullscreenVideoContainer.setVisibility(INVISIBLE);
 
@@ -142,11 +140,9 @@ public class WebFrameLayout extends FrameLayout {
             userAgent = userAgent.replace("Android", "");
             webView.getSettings().setUserAgentString(userAgent);
         }
-        if (Build.VERSION.SDK_INT >= 21) {
-            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptThirdPartyCookies(webView, true);
-        }
+        webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptThirdPartyCookies(webView, true);
 
         webView.setWebChromeClient(new WebChromeClient() {
 

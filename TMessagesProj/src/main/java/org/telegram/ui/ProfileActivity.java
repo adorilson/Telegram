@@ -870,19 +870,17 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
             }
             frameLayout.addView(writeButton, LayoutHelper.createFrame(LayoutHelper.WRAP_CONTENT, LayoutHelper.WRAP_CONTENT, Gravity.RIGHT | Gravity.TOP, 0, 0, 16, 0));
-            if (Build.VERSION.SDK_INT >= 21) {
-                StateListAnimator animator = new StateListAnimator();
-                animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(writeButton, "translationZ", AndroidUtilities.dp(2), AndroidUtilities.dp(4)).setDuration(200));
-                animator.addState(new int[]{}, ObjectAnimator.ofFloat(writeButton, "translationZ", AndroidUtilities.dp(4), AndroidUtilities.dp(2)).setDuration(200));
-                writeButton.setStateListAnimator(animator);
-                writeButton.setOutlineProvider(new ViewOutlineProvider() {
+            StateListAnimator animator = new StateListAnimator();
+            animator.addState(new int[]{android.R.attr.state_pressed}, ObjectAnimator.ofFloat(writeButton, "translationZ", AndroidUtilities.dp(2), AndroidUtilities.dp(4)).setDuration(200));
+            animator.addState(new int[]{}, ObjectAnimator.ofFloat(writeButton, "translationZ", AndroidUtilities.dp(4), AndroidUtilities.dp(2)).setDuration(200));
+            writeButton.setStateListAnimator(animator);
+            writeButton.setOutlineProvider(new ViewOutlineProvider() {
 
-                    @Override
-                    public void getOutline(View view, Outline outline) {
-                        outline.setOval(0, 0, AndroidUtilities.dp(56), AndroidUtilities.dp(56));
-                    }
-                });
-            }
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setOval(0, 0, AndroidUtilities.dp(56), AndroidUtilities.dp(56));
+                }
+            });
             writeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2213,7 +2211,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     view = new TextDetailCell(mContext) {
                         @Override
                         public boolean onTouchEvent(MotionEvent event) {
-                            if (Build.VERSION.SDK_INT >= 21 && getBackground() != null) {
+                            if (getBackground() != null) {
                                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
                                     getBackground().setHotspot(event.getX(), event.getY());
                                 }
@@ -2226,7 +2224,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     view = new TextCell(mContext) {
                         @Override
                         public boolean onTouchEvent(MotionEvent event) {
-                            if (Build.VERSION.SDK_INT >= 21 && getBackground() != null) {
+                            if (getBackground() != null) {
                                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
                                     getBackground().setHotspot(event.getX(), event.getY());
                                 }
@@ -2239,7 +2237,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                     view = new UserCell(mContext, 61, 0) {
                         @Override
                         public boolean onTouchEvent(MotionEvent event) {
-                            if (Build.VERSION.SDK_INT >= 21 && getBackground() != null) {
+                            if (getBackground() != null) {
                                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
                                     getBackground().setHotspot(event.getX(), event.getY());
                                 }

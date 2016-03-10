@@ -214,7 +214,7 @@ public class ManageSpaceActivity extends Activity implements ActionBarLayout.Act
         if (AndroidUtilities.isTablet()) {
             RelativeLayout.LayoutParams relativeLayoutParams = (RelativeLayout.LayoutParams)layersActionBarLayout.getLayoutParams();
             relativeLayoutParams.leftMargin = (AndroidUtilities.displaySize.x - relativeLayoutParams.width) / 2;
-            int y = (Build.VERSION.SDK_INT >= 21 ? AndroidUtilities.statusBarHeight : 0);
+            int y = AndroidUtilities.statusBarHeight;
             relativeLayoutParams.topMargin = y + (AndroidUtilities.displaySize.y - relativeLayoutParams.height - y) / 2;
             layersActionBarLayout.setLayoutParams(relativeLayoutParams);
 

@@ -603,10 +603,6 @@ public class ImageLoader {
                         BitmapFactory.Options opts = new BitmapFactory.Options();
                         opts.inSampleSize = 1;
 
-                        if (Build.VERSION.SDK_INT < 21) {
-                            opts.inPurgeable = true;
-                        }
-
                         if (useNativeWebpLoaded) {
                             RandomAccessFile file = new RandomAccessFile(cacheFileFinal, "r");
                             ByteBuffer buffer = file.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, cacheFileFinal.length());
@@ -693,9 +689,7 @@ public class ImageLoader {
                         if (mediaId != null) {
                             delay = 0;
                         }
-                        if (delay != 0 && lastCacheOutTime != 0 && lastCacheOutTime > System.currentTimeMillis() - delay && Build.VERSION.SDK_INT < 21) {
-                            Thread.sleep(delay);
-                        }
+
                         lastCacheOutTime = System.currentTimeMillis();
                         synchronized (sync) {
                             if (isCancelled) {
@@ -753,9 +747,6 @@ public class ImageLoader {
                             opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
                         } else {
                             opts.inPreferredConfig = Bitmap.Config.RGB_565;
-                        }
-                        if (Build.VERSION.SDK_INT < 21) {
-                            opts.inPurgeable = true;
                         }
 
                         opts.inDither = false;
@@ -2025,7 +2016,7 @@ public class ImageLoader {
         }
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = (int) scaleFactor;
-        bmOptions.inPurgeable = Build.VERSION.SDK_INT < 21;
+        bmOptions.inPurgeable = false;
 
         String exifPath = null;
         if (path != null) {
