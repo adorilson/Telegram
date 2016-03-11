@@ -548,18 +548,7 @@ public class AndroidUtilities {
         Point size = new Point();
         try {
             WindowManager windowManager = (WindowManager) ApplicationLoader.applicationContext.getSystemService(Context.WINDOW_SERVICE);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                windowManager.getDefaultDisplay().getRealSize(size);
-            } else {
-                try {
-                    Method mGetRawW = Display.class.getMethod("getRawWidth");
-                    Method mGetRawH = Display.class.getMethod("getRawHeight");
-                    size.set((Integer) mGetRawW.invoke(windowManager.getDefaultDisplay()), (Integer) mGetRawH.invoke(windowManager.getDefaultDisplay()));
-                } catch (Exception e) {
-                    size.set(windowManager.getDefaultDisplay().getWidth(), windowManager.getDefaultDisplay().getHeight());
-                    FileLog.e("tmessages", e);
-                }
-            }
+            windowManager.getDefaultDisplay().getRealSize(size);
         } catch (Exception e) {
             FileLog.e("tmessages", e);
         }
@@ -817,8 +806,7 @@ public class AndroidUtilities {
 
     public static String getPath(final Uri uri) {
         try {
-            final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-            if (isKitKat && DocumentsContract.isDocumentUri(ApplicationLoader.applicationContext, uri)) {
+            if (DocumentsContract.isDocumentUri(ApplicationLoader.applicationContext, uri)) {
                 if (isExternalStorageDocument(uri)) {
                     final String docId = DocumentsContract.getDocumentId(uri);
                     final String[] split = docId.split(":");

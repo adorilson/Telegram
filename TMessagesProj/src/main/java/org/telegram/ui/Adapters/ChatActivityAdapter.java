@@ -282,14 +282,9 @@ public class ChatActivityAdapter {
                                                     FileLog.e("tmessages", e);
                                                 }
                                             } else if (i == 0) {
-                                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                                                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                                    clipboard.setText(messageObject.messageOwner.media.phone_number);
-                                                } else {
-                                                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                                    android.content.ClipData clip = android.content.ClipData.newPlainText("label", messageObject.messageOwner.media.phone_number);
-                                                    clipboard.setPrimaryClip(clip);
-                                                }
+                                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                                android.content.ClipData clip = android.content.ClipData.newPlainText("label", messageObject.messageOwner.media.phone_number);
+                                                clipboard.setPrimaryClip(clip);
                                             }
                                         }
                                     }

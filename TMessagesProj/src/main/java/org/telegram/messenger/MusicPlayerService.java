@@ -42,9 +42,6 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
     private static boolean ignoreAudioFocus = false;
     private PhoneStateListener phoneStateListener;
 
-    private static boolean supportBigNotifications = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    private static boolean supportLockScreenControls = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -95,22 +92,20 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
                 });
                 return START_STICKY;
             }
-            if (supportLockScreenControls) {
-                ComponentName remoteComponentName = new ComponentName(getApplicationContext(), MusicPlayerReceiver.class.getName());
-                try {
-                    if (remoteControlClient == null) {
-                        audioManager.registerMediaButtonEventReceiver(remoteComponentName);
-                        Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-                        mediaButtonIntent.setComponent(remoteComponentName);
-                        PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
-                        remoteControlClient = new RemoteControlClient(mediaPendingIntent);
-                        audioManager.registerRemoteControlClient(remoteControlClient);
-                    }
-                    remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE |
-                            RemoteControlClient.FLAG_KEY_MEDIA_STOP | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS | RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
-                } catch (Exception e) {
-                    FileLog.e("tmessages", e);
+            ComponentName remoteComponentName = new ComponentName(getApplicationContext(), MusicPlayerReceiver.class.getName());
+            try {
+                if (remoteControlClient == null) {
+                    audioManager.registerMediaButtonEventReceiver(remoteComponentName);
+                    Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                    mediaButtonIntent.setComponent(remoteComponentName);
+                    PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
+                    remoteControlClient = new RemoteControlClient(mediaPendingIntent);
+                    audioManager.registerRemoteControlClient(remoteControlClient);
                 }
+                remoteControlClient.setTransportControlFlags(RemoteControlClient.FLAG_KEY_MEDIA_PLAY | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE |
+                        RemoteControlClient.FLAG_KEY_MEDIA_STOP | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS | RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
+            } catch (Exception e) {
+                FileLog.e("tmessages", e);
             }
             createNotification(messageObject);
         } catch (Exception e) {
@@ -127,9 +122,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
 
         RemoteViews simpleContentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.player_small_notification);
         RemoteViews expandedView = null;
-        if (supportBigNotifications) {
-            expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.player_big_notification);
-        }
+        expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.player_big_notification);
 
         Intent intent = new Intent(ApplicationLoader.applicationContext, LaunchActivity.class);
         intent.setAction("com.tmessages.openplayer");
@@ -142,26 +135,18 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
                 .setContentTitle(songName).build();
 
         notification.contentView = simpleContentView;
-        if (supportBigNotifications) {
-            notification.bigContentView = expandedView;
-        }
+        notification.bigContentView = expandedView;
 
         setListeners(simpleContentView);
-        if (supportBigNotifications) {
-            setListeners(expandedView);
-        }
+        setListeners(expandedView);
 
         Bitmap albumArt = audioInfo != null ? audioInfo.getSmallCover() : null;
         if (albumArt != null) {
             notification.contentView.setImageViewBitmap(R.id.player_album_art, albumArt);
-            if (supportBigNotifications) {
-                notification.bigContentView.setImageViewBitmap(R.id.player_album_art, albumArt);
-            }
+            notification.bigContentView.setImageViewBitmap(R.id.player_album_art, albumArt);
         } else {
             notification.contentView.setImageViewResource(R.id.player_album_art, R.drawable.nocover_small);
-            if (supportBigNotifications) {
-                notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.nocover_big);
-            }
+            notification.bigContentView.setImageViewResource(R.id.player_album_art, R.drawable.nocover_big);
         }
         if (MediaController.getInstance().isDownloadingCurrentMessage()) {
             notification.contentView.setViewVisibility(R.id.player_pause, View.GONE);
@@ -169,47 +154,36 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
             notification.contentView.setViewVisibility(R.id.player_next, View.GONE);
             notification.contentView.setViewVisibility(R.id.player_previous, View.GONE);
             notification.contentView.setViewVisibility(R.id.player_progress_bar, View.VISIBLE);
-            if (supportBigNotifications) {
-                notification.bigContentView.setViewVisibility(R.id.player_pause, View.GONE);
-                notification.bigContentView.setViewVisibility(R.id.player_play, View.GONE);
-                notification.bigContentView.setViewVisibility(R.id.player_next, View.GONE);
-                notification.bigContentView.setViewVisibility(R.id.player_previous, View.GONE);
-                notification.bigContentView.setViewVisibility(R.id.player_progress_bar, View.VISIBLE);
-            }
+            notification.bigContentView.setViewVisibility(R.id.player_pause, View.GONE);
+            notification.bigContentView.setViewVisibility(R.id.player_play, View.GONE);
+            notification.bigContentView.setViewVisibility(R.id.player_next, View.GONE);
+            notification.bigContentView.setViewVisibility(R.id.player_previous, View.GONE);
+            notification.bigContentView.setViewVisibility(R.id.player_progress_bar, View.VISIBLE);
         } else {
             notification.contentView.setViewVisibility(R.id.player_progress_bar, View.GONE);
             notification.contentView.setViewVisibility(R.id.player_next, View.VISIBLE);
             notification.contentView.setViewVisibility(R.id.player_previous, View.VISIBLE);
-            if (supportBigNotifications) {
-                notification.bigContentView.setViewVisibility(R.id.player_next, View.VISIBLE);
-                notification.bigContentView.setViewVisibility(R.id.player_previous, View.VISIBLE);
-                notification.bigContentView.setViewVisibility(R.id.player_progress_bar, View.GONE);
-            }
-
+            notification.bigContentView.setViewVisibility(R.id.player_next, View.VISIBLE);
+            notification.bigContentView.setViewVisibility(R.id.player_previous, View.VISIBLE);
+            notification.bigContentView.setViewVisibility(R.id.player_progress_bar, View.GONE);
             if (MediaController.getInstance().isAudioPaused()) {
                 notification.contentView.setViewVisibility(R.id.player_pause, View.GONE);
                 notification.contentView.setViewVisibility(R.id.player_play, View.VISIBLE);
-                if (supportBigNotifications) {
-                    notification.bigContentView.setViewVisibility(R.id.player_pause, View.GONE);
-                    notification.bigContentView.setViewVisibility(R.id.player_play, View.VISIBLE);
-                }
+                notification.bigContentView.setViewVisibility(R.id.player_pause, View.GONE);
+                notification.bigContentView.setViewVisibility(R.id.player_play, View.VISIBLE);
             } else {
                 notification.contentView.setViewVisibility(R.id.player_pause, View.VISIBLE);
                 notification.contentView.setViewVisibility(R.id.player_play, View.GONE);
-                if (supportBigNotifications) {
-                    notification.bigContentView.setViewVisibility(R.id.player_pause, View.VISIBLE);
-                    notification.bigContentView.setViewVisibility(R.id.player_play, View.GONE);
-                }
+                notification.bigContentView.setViewVisibility(R.id.player_pause, View.VISIBLE);
+                notification.bigContentView.setViewVisibility(R.id.player_play, View.GONE);
             }
         }
 
         notification.contentView.setTextViewText(R.id.player_song_name, songName);
         notification.contentView.setTextViewText(R.id.player_author_name, authorName);
-        if (supportBigNotifications) {
-            notification.bigContentView.setTextViewText(R.id.player_song_name, songName);
-            notification.bigContentView.setTextViewText(R.id.player_author_name, authorName);
-        }
-        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        notification.bigContentView.setTextViewText(R.id.player_song_name, songName);
+        notification.bigContentView.setTextViewText(R.id.player_author_name, authorName);
+       notification.flags |= Notification.FLAG_ONGOING_EVENT;
         startForeground(5, notification);
 
         if (remoteControlClient != null) {

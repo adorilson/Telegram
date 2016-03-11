@@ -957,7 +957,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
     private void needLayout() {
         FrameLayout.LayoutParams layoutParams;
-        int newTop = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight();
+        int newTop = AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight();
         if (listView != null) {
             layoutParams = (FrameLayout.LayoutParams) listView.getLayoutParams();
             if (layoutParams.topMargin != newTop) {
@@ -972,7 +972,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             extraHeightView.setScaleY(diff);
             shadowView.setTranslationY(newTop + extraHeight);
 
-            writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
+            writeButton.setTranslationY(AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
 
             final boolean setVisible = diff > 0.2f;
             boolean currentVisible = writeButton.getTag() == null;
@@ -1019,7 +1019,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
             avatarImage.setScaleX((42 + 18 * diff) / 42.0f);
             avatarImage.setScaleY((42 + 18 * diff) / 42.0f);
-            float avatarY = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() / 2.0f * (1.0f + diff) - 21 * AndroidUtilities.density + 27 * AndroidUtilities.density * diff;
+            float avatarY = AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight() / 2.0f * (1.0f + diff) - 21 * AndroidUtilities.density + 27 * AndroidUtilities.density * diff;
             avatarImage.setTranslationX(-AndroidUtilities.dp(47) * diff);
             avatarImage.setTranslationY((float) Math.ceil(avatarY));
             nameTextView.setTranslationX(-21 * AndroidUtilities.density * diff);

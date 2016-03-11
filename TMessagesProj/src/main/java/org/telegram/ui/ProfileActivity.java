@@ -548,14 +548,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if (i == 0) {
                                 try {
-                                    if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                        clipboard.setText("@" + user.username);
-                                    } else {
-                                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                        android.content.ClipData clip = android.content.ClipData.newPlainText("label", "@" + user.username);
-                                        clipboard.setPrimaryClip(clip);
-                                    }
+                                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    android.content.ClipData clip = android.content.ClipData.newPlainText("label", "@" + user.username);
+                                    clipboard.setPrimaryClip(clip);
                                 } catch (Exception e) {
                                     FileLog.e("tmessages", e);
                                 }
@@ -583,14 +578,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                                 }
                             } else if (i == 1) {
                                 try {
-                                    if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                        clipboard.setText("+" + user.phone);
-                                    } else {
-                                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                        android.content.ClipData clip = android.content.ClipData.newPlainText("label", "+" + user.phone);
-                                        clipboard.setPrimaryClip(clip);
-                                    }
+                                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                    android.content.ClipData clip = android.content.ClipData.newPlainText("label", "+" + user.phone);
+                                    clipboard.setPrimaryClip(clip);
                                 } catch (Exception e) {
                                     FileLog.e("tmessages", e);
                                 }
@@ -645,14 +635,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             try {
-                                if (Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                    clipboard.setText(info.about);
-                                } else {
-                                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
-                                    android.content.ClipData clip = android.content.ClipData.newPlainText("label", info.about);
-                                    clipboard.setPrimaryClip(clip);
-                                }
+                                android.content.ClipboardManager clipboard = (android.content.ClipboardManager) ApplicationLoader.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE);
+                                android.content.ClipData clip = android.content.ClipData.newPlainText("label", info.about);
+                                clipboard.setPrimaryClip(clip);
                             } catch (Exception e) {
                                 FileLog.e("tmessages", e);
                             }
@@ -1112,7 +1097,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
     private void needLayout() {
         FrameLayout.LayoutParams layoutParams;
-        int newTop = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight();
+        int newTop = AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight();
         if (listView != null && !openAnimationInProgress) {
             layoutParams = (FrameLayout.LayoutParams) listView.getLayoutParams();
             if (layoutParams.topMargin != newTop) {
@@ -1129,7 +1114,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             listView.setTopGlowOffset(extraHeight);
 
             if (writeButton != null) {
-                writeButton.setTranslationY((actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
+                writeButton.setTranslationY(AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight() + extraHeight - AndroidUtilities.dp(29.5f));
 
 
                 if (!openAnimationInProgress) {
@@ -1176,7 +1161,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
             }
 
-            float avatarY = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight() / 2.0f * (1.0f + diff) - 21 * AndroidUtilities.density + 27 * AndroidUtilities.density * diff;
+            float avatarY = AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight() / 2.0f * (1.0f + diff) - 21 * AndroidUtilities.density + 27 * AndroidUtilities.density * diff;
             avatarImage.setScaleX((42 + 18 * diff) / 42.0f);
             avatarImage.setScaleY((42 + 18 * diff) / 42.0f);
             avatarImage.setTranslationX(-AndroidUtilities.dp(47) * diff);
