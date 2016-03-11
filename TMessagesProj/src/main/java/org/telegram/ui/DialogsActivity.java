@@ -760,7 +760,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (dialogsSearchAdapter != null) {
             dialogsSearchAdapter.notifyDataSetChanged();
         }
-        if (checkPermission && !onlySelect && Build.VERSION.SDK_INT >= 23) {
+        if (checkPermission && !onlySelect) {
             Activity activity = getParentActivity();
             if (activity != null) {
                 checkPermission = false;

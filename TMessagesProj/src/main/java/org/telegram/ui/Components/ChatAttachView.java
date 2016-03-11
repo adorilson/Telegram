@@ -152,7 +152,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
         });
 
         views[9] = progressView = new EmptyTextProgressView(context);
-        if (Build.VERSION.SDK_INT >= 23 && getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             progressView.setText(LocaleController.getString("PermissionStorage", R.string.PermissionStorage));
             progressView.setTextSize(16);
         } else {
@@ -265,7 +265,7 @@ public class ChatAttachView extends FrameLayout implements NotificationCenter.No
             sendPhotosButton.textView.setText(LocaleController.formatString("SendItems", R.string.SendItems, String.format("(%d)", count)));
         }
 
-        if (Build.VERSION.SDK_INT >= 23 && getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (getContext().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             progressView.setText(LocaleController.getString("PermissionStorage", R.string.PermissionStorage));
             progressView.setTextSize(16);
         } else {

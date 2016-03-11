@@ -1285,28 +1285,7 @@ public class ContactsController {
     }
 
     private boolean hasContactsPermission() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return ApplicationLoader.applicationContext.checkSelfPermission(android.Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-        }
-        Cursor cursor = null;
-        try {
-            ContentResolver cr = ApplicationLoader.applicationContext.getContentResolver();
-            cursor = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projectionPhones, null, null, null);
-            if (cursor == null || cursor.getCount() == 0) {
-                return false;
-            }
-        } catch (Exception e) {
-            FileLog.e("tmessages", e);
-        } finally {
-            try {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            } catch (Exception e) {
-                FileLog.e("tmessages", e);
-            }
-        }
-        return true;
+        return ApplicationLoader.applicationContext.checkSelfPermission(android.Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void performWriteContactsToPhoneBookInternal(ArrayList<TLRPC.TL_contact> contactsArray) {

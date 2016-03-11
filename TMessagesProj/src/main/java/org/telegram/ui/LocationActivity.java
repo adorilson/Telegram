@@ -374,13 +374,11 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
             locationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        Activity activity = getParentActivity();
-                        if (activity != null) {
-                            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                showPermissionAlert();
-                                return;
-                            }
+                    Activity activity = getParentActivity();
+                    if (activity != null) {
+                        if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            showPermissionAlert();
+                            return;
                         }
                     }
                     if (myLocation != null && googleMap != null) {
@@ -526,13 +524,11 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
             locationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Build.VERSION.SDK_INT >= 23) {
-                        Activity activity = getParentActivity();
-                        if (activity != null) {
-                            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                showPermissionAlert();
-                                return;
-                            }
+                    Activity activity = getParentActivity();
+                    if (activity != null) {
+                        if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            showPermissionAlert();
+                            return;
                         }
                     }
                     if (myLocation != null && googleMap != null) {
@@ -719,7 +715,7 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
 
     private void fixLayoutInternal(final boolean resume) {
         if (listView != null) {
-            int height = (actionBar.getOccupyStatusBar() ? AndroidUtilities.statusBarHeight : 0) + ActionBar.getCurrentActionBarHeight();
+            int height = AndroidUtilities.statusBarHeight + ActionBar.getCurrentActionBarHeight();
             int viewHeight = fragmentView.getMeasuredHeight();
             if (viewHeight == 0) {
                 return;
@@ -897,7 +893,7 @@ public class LocationActivity extends BaseFragment implements NotificationCenter
         }
         updateUserData();
         fixLayoutInternal(true);
-        if (checkPermission && Build.VERSION.SDK_INT >= 23) {
+        if (checkPermission) {
             Activity activity = getParentActivity();
             if (activity != null) {
                 checkPermission = false;

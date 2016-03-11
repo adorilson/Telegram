@@ -441,11 +441,9 @@ public class PasscodeActivity extends BaseFragment implements NotificationCenter
         passcodeDetailRow = rowCount++;
         if (UserConfig.passcodeHash.length() > 0) {
             try {
-                if (Build.VERSION.SDK_INT >= 23) {
-                    FingerprintManagerCompat fingerprintManager = FingerprintManagerCompat.from(ApplicationLoader.applicationContext);
-                    if (fingerprintManager.isHardwareDetected()) {
-                        fingerprintRow = rowCount++;
-                    }
+                FingerprintManagerCompat fingerprintManager = FingerprintManagerCompat.from(ApplicationLoader.applicationContext);
+                if (fingerprintManager.isHardwareDetected()) {
+                    fingerprintRow = rowCount++;
                 }
             } catch (Throwable e) {
                 FileLog.e("tmessages", e);

@@ -634,11 +634,9 @@ public class ChatActivityEnterView extends FrameLayoutFixed implements Notificat
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     if (parentFragment != null) {
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            if (parentActivity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                                parentActivity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 3);
-                                return false;
-                            }
+                        if (parentActivity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            parentActivity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 3);
+                            return false;
                         }
 
                         String action;

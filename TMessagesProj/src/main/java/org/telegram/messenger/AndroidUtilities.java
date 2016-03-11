@@ -795,7 +795,7 @@ public class AndroidUtilities {
     }
 
     private static File getAlbumDir() {
-        if (Build.VERSION.SDK_INT >= 23 && ApplicationLoader.applicationContext.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ApplicationLoader.applicationContext.checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             return FileLoader.getInstance().getDirectory(FileLoader.MEDIA_DIR_CACHE);
         }
         File storageDir = null;

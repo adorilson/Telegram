@@ -831,7 +831,7 @@ public class PasscodeView extends FrameLayout {
             }
         }
         try {
-            if (Build.VERSION.SDK_INT >= 23 && cancellationSignal != null) {
+            if (cancellationSignal != null) {
                 cancellationSignal.cancel();
                 cancellationSignal = null;
             }
@@ -842,7 +842,7 @@ public class PasscodeView extends FrameLayout {
 
     private void checkFingerprint() {
         Activity parentActivity = (Activity) getContext();
-        if (Build.VERSION.SDK_INT >= 23 && parentActivity != null && UserConfig.useFingerprint && !ApplicationLoader.mainInterfacePaused) {
+        if (parentActivity != null && UserConfig.useFingerprint && !ApplicationLoader.mainInterfacePaused) {
             try {
                 if (fingerprintDialog != null && fingerprintDialog.isShowing()) {
                     return;

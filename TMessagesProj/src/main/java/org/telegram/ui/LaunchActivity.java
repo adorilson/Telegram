@@ -1829,7 +1829,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     @Override
     public void onActionModeStarted(ActionMode mode) {
         super.onActionModeStarted(mode);
-        if (Build.VERSION.SDK_INT >= 23 && mode.getType() == ActionMode.TYPE_FLOATING) {
+        if (mode.getType() == ActionMode.TYPE_FLOATING) {
             return;
         }
         actionBarLayout.onActionModeStarted(mode);
@@ -1842,7 +1842,7 @@ public class LaunchActivity extends Activity implements ActionBarLayout.ActionBa
     @Override
     public void onActionModeFinished(ActionMode mode) {
         super.onActionModeFinished(mode);
-        if (Build.VERSION.SDK_INT >= 23 && mode.getType() == ActionMode.TYPE_FLOATING) {
+        if (mode.getType() == ActionMode.TYPE_FLOATING) {
             return;
         }
         actionBarLayout.onActionModeFinished(mode);

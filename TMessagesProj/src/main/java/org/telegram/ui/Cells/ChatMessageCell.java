@@ -1089,7 +1089,7 @@ public class ChatMessageCell extends ChatBaseCell {
     @Override
     public void onProvideStructure(ViewStructure structure) {
         super.onProvideStructure(structure);
-        if (allowAssistant && Build.VERSION.SDK_INT >= 23) {
+        if (allowAssistant) {
             structure.setText(currentMessageObject.messageText);
         }
     }
