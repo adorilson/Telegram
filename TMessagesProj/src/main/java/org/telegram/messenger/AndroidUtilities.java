@@ -191,7 +191,7 @@ public class AndroidUtilities {
     }
 
     public static void unlockOrientation(Activity activity) {
-        if (activity == null || Build.VERSION.SDK_INT < 9) {
+        if (activity == null) {
             return;
         }
         try {

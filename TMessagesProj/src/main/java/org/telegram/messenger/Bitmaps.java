@@ -196,9 +196,8 @@ public class Bitmaps {
         bitmap.setDensity(source.getDensity());
         bitmap.setHasAlpha(source.hasAlpha());
 
-        if (Build.VERSION.SDK_INT >= 19) {
-            bitmap.setPremultiplied(source.isPremultiplied());
-        }
+        bitmap.setPremultiplied(source.isPremultiplied());
+
         canvas.setBitmap(bitmap);
         canvas.drawBitmap(source, srcR, dstR, paint);
         try {

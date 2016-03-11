@@ -567,25 +567,15 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
             checkAutodownloadSettings();
         }
 
-        if (Build.VERSION.SDK_INT >= 16) {
-            mediaProjections = new String[]{
-                    MediaStore.Images.ImageColumns.DATA,
-                    MediaStore.Images.ImageColumns.DISPLAY_NAME,
-                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN,
-                    MediaStore.Images.ImageColumns.TITLE,
-                    MediaStore.Images.ImageColumns.WIDTH,
-                    MediaStore.Images.ImageColumns.HEIGHT
-            };
-        } else {
-            mediaProjections = new String[]{
-                    MediaStore.Images.ImageColumns.DATA,
-                    MediaStore.Images.ImageColumns.DISPLAY_NAME,
-                    MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN,
-                    MediaStore.Images.ImageColumns.TITLE
-            };
-        }
+        mediaProjections = new String[]{
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.ImageColumns.DISPLAY_NAME,
+                MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                MediaStore.Images.ImageColumns.DATE_TAKEN,
+                MediaStore.Images.ImageColumns.TITLE,
+                MediaStore.Images.ImageColumns.WIDTH,
+                MediaStore.Images.ImageColumns.HEIGHT
+        };
 
         try {
             ApplicationLoader.applicationContext.getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false, new GalleryObserverExternal());
@@ -980,10 +970,9 @@ public class MediaController implements NotificationCenter.NotificationCenterDel
                     String title = cursor.getString(4);
                     int photoW = 0;
                     int photoH = 0;
-                    if (Build.VERSION.SDK_INT >= 16) {
-                        photoW = cursor.getInt(5);
-                        photoH = cursor.getInt(6);
-                    }
+
+                    photoW = cursor.getInt(5);
+                    photoH = cursor.getInt(6);
                     if (data != null && data.toLowerCase().contains("screenshot") ||
                             display_name != null && display_name.toLowerCase().contains("screenshot") ||
                             album_name != null && album_name.toLowerCase().contains("screenshot") ||

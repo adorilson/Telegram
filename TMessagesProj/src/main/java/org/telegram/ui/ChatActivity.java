@@ -1704,9 +1704,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             mentionListView.setPadding(0, AndroidUtilities.dp(2), 0, 0);
             mentionListView.setClipToPadding(true);
             mentionListView.setDisallowInterceptTouchEvents(true);
-            if (Build.VERSION.SDK_INT > 8) {
-                mentionListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
-            }
+            mentionListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
             contentView.addView(mentionListView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 110, Gravity.LEFT | Gravity.BOTTOM));
 
             mentionListView.setAdapter(mentionsAdapter = new MentionsAdapter(context, false, new MentionsAdapter.MentionsAdapterDelegate() {

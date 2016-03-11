@@ -1387,9 +1387,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         mentionListView.setBackgroundColor(0x7f000000);
         mentionListView.setVisibility(View.GONE);
         mentionListView.setClipToPadding(true);
-        if (Build.VERSION.SDK_INT > 8) {
-            mentionListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
-        }
+        mentionListView.setOverScrollMode(ListView.OVER_SCROLL_NEVER);
         containerView.addView(mentionListView, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 110, Gravity.LEFT | Gravity.BOTTOM));
 
         mentionListView.setAdapter(mentionsAdapter = new MentionsAdapter(parentActivity, true, new MentionsAdapter.MentionsAdapterDelegate() {
